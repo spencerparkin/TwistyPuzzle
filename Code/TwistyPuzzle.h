@@ -17,6 +17,7 @@ public:
 
 	enum Type
 	{
+		DEBUG,
 		CLASSIC_2x2x2,
 		CLASSIC_3x3x3,
 		CLASSIC_4x4x4,
@@ -29,17 +30,17 @@ public:
 	void Clear( void );
 	void SetType( Type type );
 	Type GetType( void ) const { return type; }
-	void Render( _3DMath::Renderer& renderer );
+	void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform );
 
 	class Face
 	{
 	public:
 
-		Face( void );
+		Face( _3DMath::Polygon* polygon );
 		~Face( void );
 
 		_3DMath::Vector color;
-		_3DMath::Polygon polygon;
+		_3DMath::Polygon* polygon;
 		_3DMath::AffineTransform transform;
 		bool tessellationNeeded;
 	};

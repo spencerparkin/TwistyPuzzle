@@ -32,6 +32,38 @@ void TwistyPuzzle::SetType( Type type )
 
 	switch( type )
 	{
+		case DEBUG:
+		{
+			Face* face = new Face( new _3DMath::Polygon() );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( 0.5, -2.0, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( 3.0, -2.0, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( 3.0, -1.0, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( 2.0, -1.8, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( 3.5, 2.5, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( 1.0, 1.0, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( 0.5, 3.0, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -2.0, 3.1, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -2.0, 1.8, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -0.4, 2.2, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -0.5, 1.0, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -2.6, 0.5, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -2.6, 2.0, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -2.5, 2.0, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -2.5, 2.5, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -3.5, 2.5, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -3.5, -1.0, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -2.5, -1.0, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -2.5, -0.5, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -0.5, -1.5, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -1.0, -2.5, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -1.5, -2.0, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -2.0, -3.0, 0.0 ) );
+			face->polygon->vertexArray->push_back( _3DMath::Vector( -1.0, -3.5, 0.0 ) );
+			face->color.Set( 1.0, 1.0, 1.0 );
+			faceList.push_back( face );
+
+			break;
+		}
 		case CLASSIC_2x2x2:
 		{
 			MakeBox( 10.0, 10.0, 10.0 );
@@ -74,72 +106,77 @@ void TwistyPuzzle::SetType( Type type )
 
 void TwistyPuzzle::MakeBox( double width, double height, double depth )
 {
-	Face* face = new Face();
-	face->polygon.vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, depth / 2.0 ) );
+	Face* face = new Face( new _3DMath::Polygon() );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, depth / 2.0 ) );
 	face->color.Set( 1.0, 1.0, 1.0 );
 	faceList.push_back( face );
 
-	face = new Face();
-	face->polygon.vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, -depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, -depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, -depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, -depth / 2.0 ) );
+	face = new Face( new _3DMath::Polygon() );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, -depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, -depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, -depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, -depth / 2.0 ) );
 	face->color.Set( 1.0, 1.0, 0.0 );
 	faceList.push_back( face );
 
-	face = new Face();
-	face->polygon.vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, -depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, -depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, depth / 2.0 ) );
+	face = new Face( new _3DMath::Polygon() );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, -depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, -depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, depth / 2.0 ) );
 	face->color.Set( 1.0, 0.0, 0.0 );
 	faceList.push_back( face );
 
-	face = new Face();
-	face->polygon.vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, -depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, -depth / 2.0 ) );
+	face = new Face( new _3DMath::Polygon() );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, -depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, -depth / 2.0 ) );
 	face->color.Set( 1.0, 0.5, 0.0 );
 	faceList.push_back( face );
 
-	face = new Face();
-	face->polygon.vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, -depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, -depth / 2.0 ) );
+	face = new Face( new _3DMath::Polygon() );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, -depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, -depth / 2.0 ) );
 	face->color.Set( 0.0, 0.0, 1.0 );
 	faceList.push_back( face );
 
-	face = new Face();
-	face->polygon.vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, -depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, -depth / 2.0 ) );
-	face->polygon.vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, depth / 2.0 ) );
+	face = new Face( new _3DMath::Polygon() );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, -depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, -depth / 2.0 ) );
+	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, depth / 2.0 ) );
 	face->color.Set( 0.0, 1.0, 0.0 );
 	faceList.push_back( face );
 }
 
-void TwistyPuzzle::Render( _3DMath::Renderer& renderer )
+void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform )
 {
 	// TODO: Turn on back-face culling.
 
 	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
 	{
 		Face* face = *iter;
+		if( !face->polygon )
+			continue;
 
 		if( face->tessellationNeeded )
 		{
-			face->polygon.Tessellate();
+			face->polygon->Tessellate();
 			face->tessellationNeeded = false;
 		}
 
+		_3DMath::AffineTransform renderTransform;
+		renderTransform.Concatinate( face->transform, transform );
+
 		renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_SOLID;
 		renderer.Color( face->color );
-		renderer.DrawPolygon( face->polygon, &face->transform );
+		renderer.DrawPolygon( *face->polygon, &renderTransform );
 	}
 
 	// TODO: Draw selectecd cut-shape?
@@ -149,15 +186,16 @@ void TwistyPuzzle::Render( _3DMath::Renderer& renderer )
 //                               TwistyPuzzle::Face
 //---------------------------------------------------------------------------------
 
-TwistyPuzzle::Face::Face( void )
+TwistyPuzzle::Face::Face( _3DMath::Polygon* polygon )
 {
+	this->polygon = polygon;
 	tessellationNeeded = true;
-
 	transform.Identity();
 }
 
 TwistyPuzzle::Face::~Face( void )
 {
+	delete polygon;
 }
 
 //---------------------------------------------------------------------------------

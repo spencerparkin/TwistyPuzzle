@@ -10,11 +10,18 @@ int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE
 
 Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList )
 {
+	eyeDistance = 20.0;
+	mouseDragging = false;
+
 	context = nullptr;
 	renderer = new GLRenderer();
 
 	Bind( wxEVT_PAINT, &Canvas::OnPaint, this );
 	Bind( wxEVT_SIZE, &Canvas::OnSize, this );
+	Bind( wxEVT_LEFT_DOWN, &Canvas::OnMouseLeftDown, this );
+	Bind( wxEVT_LEFT_UP, &Canvas::OnMouseLeftUp, this );
+	Bind( wxEVT_MOTION, &Canvas::OnMouseMotion, this );
+	Bind( wxEVT_MOUSE_CAPTURE_LOST, &Canvas::OnMouseCaptureLost, this );
 }
 
 /*virtual*/ Canvas::~Canvas( void )
@@ -23,9 +30,59 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	delete renderer;
 }
 
+void Canvas::OnMouseLeftDown( wxMouseEvent& event )
+{
+	mouseDragging = true;
+	mouseDragLastPos = event.GetPosition();
+	CaptureMouse();
+}
+
+void Canvas::OnMouseLeftUp( wxMouseEvent& event )
+{
+	mouseDragging = false;
+	ReleaseCapture();
+}
+
+void Canvas::OnMouseMotion( wxMouseEvent& event )
+{
+	if( mouseDragging )
+	{
+		wxPoint mouseCurrentPos = event.GetPosition();
+		wxPoint mouseDelta = mouseCurrentPos - mouseDragLastPos;
+		mouseDragLastPos = mouseCurrentPos;
+
+		double rotationRate = 0.01;
+		double xAngle = rotationRate * double( mouseDelta.y );
+		double yAngle = rotationRate * double( mouseDelta.x );
+
+		_3DMath::Vector xAxis( 1.0, 0.0, 0.0 );
+		_3DMath::Vector yAxis( 0.0, 1.0, 0.0 );
+
+		_3DMath::AffineTransform rotation;
+
+		rotation.linearTransform.SetRotation( xAxis, xAngle );
+		transform.Concatinate( rotation );
+
+		rotation.linearTransform.SetRotation( yAxis, yAngle );
+		transform.Concatinate( rotation );
+
+		Refresh();
+	}
+}
+
+void Canvas::OnMouseCaptureLost( wxMouseCaptureLostEvent& event )
+{
+	mouseDragging = false;
+}
+
 void Canvas::OnPaint( wxPaintEvent& event )
 {
 	BindContext();
+
+	glEnable( GL_DEPTH_TEST );
+	glEnable( GL_CULL_FACE );
+	glCullFace( GL_BACK );
+	glFrontFace( GL_CCW );
 
 	glClearColor( 0.0, 0.0, 0.0, 1.0 );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -41,9 +98,9 @@ void Canvas::OnPaint( wxPaintEvent& event )
 
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
-	gluLookAt( 0.0, 0.0, 20.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
+	gluLookAt( 0.0, 0.0, eyeDistance, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
 
-	wxGetApp().GetPuzzle()->Render( *renderer );
+	wxGetApp().GetPuzzle()->Render( *renderer, transform );
 
 	glFlush();
 
