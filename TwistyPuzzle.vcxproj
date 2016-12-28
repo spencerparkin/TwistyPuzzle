@@ -148,12 +148,14 @@
     <ClInclude Include="Code\Application.h" />
     <ClInclude Include="Code\Canvas.h" />
     <ClInclude Include="Code\Frame.h" />
+    <ClInclude Include="Code\GLRenderer.h" />
     <ClInclude Include="Code\TwistyPuzzle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp" />
     <ClCompile Include="Code\Canvas.cpp" />
     <ClCompile Include="Code\Frame.cpp" />
+    <ClCompile Include="Code\GLRenderer.cpp" />
     <ClCompile Include="Code\TwistyPuzzle.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

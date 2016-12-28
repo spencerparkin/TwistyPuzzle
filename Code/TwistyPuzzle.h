@@ -6,6 +6,7 @@
 #include <Polygon.h>
 #include <AffineTransform.h>
 #include <wx/glcanvas.h>
+#include <Renderer.h>
 
 class TwistyPuzzle
 {
@@ -28,7 +29,7 @@ public:
 	void Clear( void );
 	void SetType( Type type );
 	Type GetType( void ) const { return type; }
-	void Render( void );
+	void Render( _3DMath::Renderer& renderer );
 
 	class Face
 	{
@@ -37,9 +38,10 @@ public:
 		Face( void );
 		~Face( void );
 
+		_3DMath::Vector color;
 		_3DMath::Polygon polygon;
-		bool tessellationNeeded;
 		_3DMath::AffineTransform transform;
+		bool tessellationNeeded;
 	};
 
 	typedef std::list< Face* > FaceList;
@@ -63,6 +65,8 @@ public:
 	typedef std::list< CutShape* > CutShapeList;
 
 private:
+
+	void MakeBox( double width, double height, double depth );
 
 	Type type;
 	FaceList faceList;

@@ -19,6 +19,9 @@
     <ClInclude Include="Code\Canvas.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="Code\GLRenderer.h">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -31,6 +34,9 @@
       <Filter>Code</Filter>
     </ClCompile>
     <ClCompile Include="Code\Canvas.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\GLRenderer.cpp">
       <Filter>Code</Filter>
     </ClCompile>
   </ItemGroup>

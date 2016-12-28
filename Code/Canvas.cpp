@@ -3,6 +3,7 @@
 #include "Canvas.h"
 #include "TwistyPuzzle.h"
 #include "Application.h"
+#include "GLRenderer.h"
 #include <gl/GLU.h>
 
 int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
@@ -10,6 +11,7 @@ int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE
 Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList )
 {
 	context = nullptr;
+	renderer = new GLRenderer();
 
 	Bind( wxEVT_PAINT, &Canvas::OnPaint, this );
 	Bind( wxEVT_SIZE, &Canvas::OnSize, this );
@@ -18,6 +20,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 /*virtual*/ Canvas::~Canvas( void )
 {
 	delete context;
+	delete renderer;
 }
 
 void Canvas::OnPaint( wxPaintEvent& event )
@@ -38,9 +41,9 @@ void Canvas::OnPaint( wxPaintEvent& event )
 
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
-	gluLookAt( 0.0, 0.0, -10.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0 );
+	gluLookAt( 0.0, 0.0, 20.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
 
-	wxGetApp().GetPuzzle()->Render();
+	wxGetApp().GetPuzzle()->Render( *renderer );
 
 	glFlush();
 
