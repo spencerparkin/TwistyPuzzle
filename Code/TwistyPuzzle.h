@@ -7,6 +7,7 @@
 #include <AffineTransform.h>
 #include <wx/glcanvas.h>
 #include <Renderer.h>
+#include <Line.h>
 
 class TwistyPuzzle
 {
@@ -57,9 +58,8 @@ public:
 		void CutAndCapture( FaceList& faceList );
 
 		_3DMath::Surface* surface;
-		_3DMath::Vector unitRotationAxis;
-		double rotationAngle;
-		double rotationDivisor;
+		_3DMath::Line axisOfRotation;
+		double rotationAngleForSingleTurn;
 		FaceList capturedFaceList;
 	};
 

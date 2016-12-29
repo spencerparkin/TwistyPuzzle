@@ -70,20 +70,20 @@ void TwistyPuzzle::SetType( Type type )
 
 			CutShape* cutShape = new CutShape();
 			cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, 0.0 ), _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
-			cutShape->rotationDivisor = 4.0;
-			cutShape->unitRotationAxis.Set( 1.0, 0.0, 0.0 );
+			cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
+			cutShape->axisOfRotation.normal.Set( 1.0, 0.0, 0.0 );
 			cutShapeList.push_back( cutShape );
 
 			cutShape = new CutShape();
 			cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, 0.0 ), _3DMath::Vector( 0.0, 1.0, 0.0 ) ) );
-			cutShape->rotationDivisor = 4.0;
-			cutShape->unitRotationAxis.Set( 0.0, 1.0, 0.0 );
+			cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
+			cutShape->axisOfRotation.normal.Set( 0.0, 1.0, 0.0 );
 			cutShapeList.push_back( cutShape );
 
 			cutShape = new CutShape();
 			cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, 0.0 ), _3DMath::Vector( 0.0, 0.0, 1.0 ) ) );
-			cutShape->rotationDivisor = 4.0;
-			cutShape->unitRotationAxis.Set( 0.0, 1.0, 0.0 );
+			cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
+			cutShape->axisOfRotation.normal.Set( 0.0, 0.0, 1.0 );
 			cutShapeList.push_back( cutShape );
 
 			break;
@@ -174,12 +174,31 @@ void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTra
 		_3DMath::AffineTransform renderTransform;
 		renderTransform.Concatinate( face->transform, transform );
 
-		renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_SOLID;
+		renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
 		renderer.Color( face->color );
 		renderer.DrawPolygon( *face->polygon, &renderTransform );
 	}
 
-	// TODO: Draw selectecd cut-shape?
+	// TODO: Draw these with alpha-blending turned on.
+	// TODO: Use OpenGL selection mechanism on these so that we can select the cut-shape?
+
+	_3DMath::LinearTransform normalTransform;
+	transform.linearTransform.GetNormalTransform( normalTransform );
+
+	for( CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
+	{
+		CutShape* cutShape = *iter;
+
+		_3DMath::Vector vector, position, color;
+
+		transform.Transform( cutShape->axisOfRotation.center, position );
+		normalTransform.Transform( cutShape->axisOfRotation.normal, vector );
+
+		vector.Scale( 10.0 );
+
+		color.Set( 0.5, 0.5, 0.5 );
+		renderer.DrawVector( vector, cutShape->axisOfRotation.center, color, 0.5, 0.5 );
+	}
 }
 
 //---------------------------------------------------------------------------------
@@ -204,9 +223,9 @@ TwistyPuzzle::Face::~Face( void )
 
 TwistyPuzzle::CutShape::CutShape( void )
 {
-	rotationDivisor = 1.0;
-	rotationAngle = 0.0;
-
+	axisOfRotation.center.Set( 0.0, 0.0, 0.0 );
+	axisOfRotation.normal.Set( 0.0, 0.0, 1.0 );
+	rotationAngleForSingleTurn = 0.0;
 	surface = nullptr;
 }
 
