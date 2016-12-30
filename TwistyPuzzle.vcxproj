@@ -149,6 +149,8 @@
     <ClInclude Include="Code\Canvas.h" />
     <ClInclude Include="Code\Frame.h" />
     <ClInclude Include="Code\GLRenderer.h" />
+    <ClInclude Include="Code\Rubiks2x2x2.h" />
+    <ClInclude Include="Code\Rubiks3x3x3.h" />
     <ClInclude Include="Code\TwistyPuzzle.h" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +158,8 @@
     <ClCompile Include="Code\Canvas.cpp" />
     <ClCompile Include="Code\Frame.cpp" />
     <ClCompile Include="Code\GLRenderer.cpp" />
+    <ClCompile Include="Code\Rubiks2x2x2.cpp" />
+    <ClCompile Include="Code\Rubiks3x3x3.cpp" />
     <ClCompile Include="Code\TwistyPuzzle.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

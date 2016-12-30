@@ -3,13 +3,14 @@
 #include "Application.h"
 #include "Frame.h"
 #include "TwistyPuzzle.h"
+#include "Rubiks3x3x3.h"
 
 wxIMPLEMENT_APP( Application );
 
 Application::Application( void )
 {
 	frame = nullptr;
-	puzzle = new TwistyPuzzle();
+	puzzle = nullptr;
 }
 
 /*virtual*/ Application::~Application( void )
@@ -19,7 +20,8 @@ Application::Application( void )
 
 /*virtual*/ bool Application::OnInit( void )
 {
-	puzzle->SetType( TwistyPuzzle::CLASSIC_2x2x2 );
+	puzzle = new Rubiks3x3x3();
+	puzzle->Reset();
 
 	frame = new Frame();
 	frame->Show();

@@ -5,11 +5,13 @@
 #include "Application.h"
 #include "GLRenderer.h"
 #include <gl/GLU.h>
+#include <HandleObject.h>
 
 int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
 
 Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList )
 {
+	selectedObjectHandle = 0;
 	eyeDistance = 20.0;
 	mouseDragging = false;
 
@@ -18,6 +20,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 
 	Bind( wxEVT_PAINT, &Canvas::OnPaint, this );
 	Bind( wxEVT_SIZE, &Canvas::OnSize, this );
+	Bind( wxEVT_RIGHT_DOWN, &Canvas::OnMouseRightDown, this );
 	Bind( wxEVT_LEFT_DOWN, &Canvas::OnMouseLeftDown, this );
 	Bind( wxEVT_LEFT_UP, &Canvas::OnMouseLeftUp, this );
 	Bind( wxEVT_MOTION, &Canvas::OnMouseMotion, this );
@@ -28,6 +31,14 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 {
 	delete context;
 	delete renderer;
+}
+
+void Canvas::OnMouseRightDown( wxMouseEvent& event )
+{
+	wxPoint mousePos = event.GetPosition();
+	selectedObjectHandle = 0;
+	Render( GL_SELECT, &mousePos, &selectedObjectHandle );
+	Refresh();
 }
 
 void Canvas::OnMouseLeftDown( wxMouseEvent& event )
@@ -75,14 +86,35 @@ void Canvas::OnMouseCaptureLost( wxMouseCaptureLostEvent& event )
 	mouseDragging = false;
 }
 
-void Canvas::OnPaint( wxPaintEvent& event )
+void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* objectHandle /*= nullptr*/ )
 {
 	BindContext();
+
+	if( objectHandle )
+		*objectHandle = 0;
+
+	int hitBufferSize = 0;
+	unsigned int* hitBuffer = nullptr;
+
+	if( renderMode == GL_SELECT )
+	{
+		hitBufferSize = 512;
+		hitBuffer = new unsigned int[ hitBufferSize ];
+		glSelectBuffer( hitBufferSize, hitBuffer );
+		glRenderMode( GL_SELECT );
+		glInitNames();
+		glPushName(0);
+	}
 
 	glEnable( GL_DEPTH_TEST );
 	glEnable( GL_CULL_FACE );
 	glCullFace( GL_BACK );
 	glFrontFace( GL_CCW );
+	glEnable( GL_LINE_SMOOTH );
+	glEnable( GL_BLEND );
+	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+	glHint( GL_LINE_SMOOTH_HINT, GL_DONT_CARE );
+	glShadeModel( GL_SMOOTH );
 
 	glClearColor( 0.0, 0.0, 0.0, 1.0 );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -94,17 +126,60 @@ void Canvas::OnPaint( wxPaintEvent& event )
 
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
+
+	if( renderMode == GL_SELECT && mousePos )
+	{
+		GLdouble x = mousePos->x;
+		GLdouble y = GLdouble( viewport[3] ) - GLdouble( mousePos->y );
+		GLdouble w = 2.0;
+		GLdouble h = 2.0;
+		gluPickMatrix( x, y, w, h, viewport );
+	}
+
 	gluPerspective( 60.0, aspectRatio, 0.1, 1000.0 );
 
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
 	gluLookAt( 0.0, 0.0, eyeDistance, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
 
-	wxGetApp().GetPuzzle()->Render( *renderer, transform );
+	wxGetApp().GetPuzzle()->Render( *renderer, transform, renderMode, selectedObjectHandle );
 
 	glFlush();
 
-	SwapBuffers();
+	if( renderMode == GL_RENDER )
+		SwapBuffers();
+	else if( renderMode == GL_SELECT )
+	{
+		int hitCount = glRenderMode( GL_RENDER );
+
+		if( objectHandle )
+		{
+			*objectHandle = 0;
+			unsigned int* hitRecord = hitBuffer;
+			float smallestZ = 0.0;
+			for( int i = 0; i < hitCount; i++ )
+			{
+				unsigned int nameCount = hitRecord[0];
+				float minZ = float( hitRecord[1] ) / float( 0x7FFFFFFFF );
+				if( nameCount == 1 )
+				{
+					if( !*objectHandle || minZ < smallestZ )
+					{
+						smallestZ = minZ;
+						*objectHandle = ( signed )hitRecord[3];
+					}
+				}
+				hitRecord += 3 + nameCount;
+			}
+		}
+
+		delete[] hitBuffer;
+	}
+}
+
+void Canvas::OnPaint( wxPaintEvent& event )
+{
+	Render( GL_RENDER );
 }
 
 void Canvas::OnSize( wxSizeEvent& event )

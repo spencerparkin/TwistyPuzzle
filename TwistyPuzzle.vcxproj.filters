@@ -5,6 +5,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Code\PuzzleDerivatives">
+      <UniqueIdentifier>{715da95b-6501-4e92-a1fa-9e46b3b4e808}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Application.h">
@@ -22,6 +25,12 @@
     <ClInclude Include="Code\GLRenderer.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Rubiks2x2x2.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Rubiks3x3x3.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -38,6 +47,12 @@
     </ClCompile>
     <ClCompile Include="Code\GLRenderer.cpp">
       <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Rubiks2x2x2.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Rubiks3x3x3.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

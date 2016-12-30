@@ -7,6 +7,7 @@
 #include <AffineTransform.h>
 #include <wx/glcanvas.h>
 #include <Renderer.h>
+#include <HandleObject.h>
 #include <Line.h>
 
 class TwistyPuzzle
@@ -16,22 +17,9 @@ public:
 	TwistyPuzzle( void );
 	virtual ~TwistyPuzzle( void );
 
-	enum Type
-	{
-		DEBUG,
-		CLASSIC_2x2x2,
-		CLASSIC_3x3x3,
-		CLASSIC_4x4x4,
-		BUBBLOID_3x3x4,
-		BUBBLOID_3x4x4,
-		CURVEY_COPTER,
-		REX_CUBE,
-	};
-
 	void Clear( void );
-	void SetType( Type type );
-	Type GetType( void ) const { return type; }
-	void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform );
+	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle );
+	virtual void Reset( void ) = 0;
 
 	class Face
 	{
@@ -48,7 +36,7 @@ public:
 
 	typedef std::list< Face* > FaceList;
 
-	class CutShape
+	class CutShape : public _3DMath::HandleObject
 	{
 	public:
 
@@ -65,11 +53,10 @@ public:
 
 	typedef std::list< CutShape* > CutShapeList;
 
-private:
+protected:
 
 	void MakeBox( double width, double height, double depth );
 
-	Type type;
 	FaceList faceList;
 	CutShapeList cutShapeList;
 };

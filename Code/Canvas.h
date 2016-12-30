@@ -23,10 +23,12 @@ private:
 	void OnSize( wxSizeEvent& event );
 	void OnMouseLeftDown( wxMouseEvent& event );
 	void OnMouseLeftUp( wxMouseEvent& event );
+	void OnMouseRightDown( wxMouseEvent& event );
 	void OnMouseMotion( wxMouseEvent& event );
 	void OnMouseCaptureLost( wxMouseCaptureLostEvent& event );
 
 	void BindContext( void );
+	void Render( GLenum renderMode, wxPoint* mousePos = nullptr, int* objectHandle = nullptr );
 
 	wxGLContext* context;
 	GLRenderer* renderer;
@@ -34,6 +36,7 @@ private:
 	double eyeDistance;
 	wxPoint mouseDragLastPos;
 	bool mouseDragging;
+	int selectedObjectHandle;
 };
 
 // Canvas.h
