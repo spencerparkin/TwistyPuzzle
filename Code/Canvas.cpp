@@ -25,6 +25,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	Bind( wxEVT_LEFT_UP, &Canvas::OnMouseLeftUp, this );
 	Bind( wxEVT_MOTION, &Canvas::OnMouseMotion, this );
 	Bind( wxEVT_MOUSE_CAPTURE_LOST, &Canvas::OnMouseCaptureLost, this );
+	Bind( wxEVT_MOUSEWHEEL, &Canvas::OnMouseWheel, this );
 }
 
 /*virtual*/ Canvas::~Canvas( void )
@@ -136,7 +137,7 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 		gluPickMatrix( x, y, w, h, viewport );
 	}
 
-	gluPerspective( 60.0, aspectRatio, 0.1, 1000.0 );
+	gluPerspective( 70.0, aspectRatio, 0.1, 1000.0 );
 
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
@@ -188,6 +189,34 @@ void Canvas::OnSize( wxSizeEvent& event )
 	glViewport( 0, 0, size.GetWidth(), size.GetHeight() );
 
 	Refresh();
+}
+
+void Canvas::OnMouseWheel( wxMouseEvent& event )
+{
+	double wheelDelta = event.GetWheelDelta();
+	double wheelRotation = event.GetWheelRotation();
+	int wheelClicks = int( wheelRotation / wheelDelta );
+
+	TwistyPuzzle::Rotation::Direction direction = TwistyPuzzle::Rotation::DIR_CCW;
+	if( wheelClicks < 0 )
+	{
+		direction = TwistyPuzzle::Rotation::DIR_CW;
+		wheelClicks = -wheelClicks;
+	}
+
+	for( int i = 0; i < wheelClicks; i++ )
+	{
+		TwistyPuzzle::Rotation* rotation = new TwistyPuzzle::Rotation( selectedObjectHandle, direction, 1 );
+		wxGetApp().GetPuzzle()->EnqueueRotation( rotation );
+	}
+}
+
+void Canvas::Animate( void )
+{
+	timeKeeper.MarkCurrentTime();
+
+	if( wxGetApp().GetPuzzle()->ProcessRotationQueue( timeKeeper ) )
+		Refresh();
 }
 
 void Canvas::BindContext( void )

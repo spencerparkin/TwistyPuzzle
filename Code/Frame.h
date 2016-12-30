@@ -3,6 +3,7 @@
 #pragma once
 
 #include <wx/frame.h>
+#include <wx/timer.h>
 
 class Canvas;
 
@@ -18,11 +19,15 @@ private:
 	enum
 	{
 		ID_Exit = wxID_HIGHEST,
+		ID_Timer,
 	};
 
 	void OnExit( wxCommandEvent& event );
+	void OnTimer( wxTimerEvent& event );
 
 	Canvas* canvas;
+
+	wxTimer timer;
 };
 
 // Frame.h

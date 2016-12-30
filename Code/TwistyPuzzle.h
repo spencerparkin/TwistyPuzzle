@@ -9,6 +9,7 @@
 #include <Renderer.h>
 #include <HandleObject.h>
 #include <Line.h>
+#include <TimeKeeper.h>
 
 class TwistyPuzzle
 {
@@ -21,6 +22,25 @@ public:
 	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle );
 	virtual void Reset( void ) = 0;
 
+	class Rotation
+	{
+	public:
+
+		enum Direction { DIR_CW, DIR_CCW };
+
+		Rotation( int cutShapeHandle, Direction direction, int turnCount );
+		~Rotation( void );
+
+		int cutShapeHandle;
+		Direction direction;
+		int turnCount;
+	};
+
+	typedef std::list< Rotation* > RotationList;
+
+	void EnqueueRotation( Rotation* rotation );
+	bool ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper );
+
 	class Face
 	{
 	public:
@@ -30,7 +50,8 @@ public:
 
 		_3DMath::Vector color;
 		_3DMath::Polygon* polygon;
-		_3DMath::AffineTransform transform;
+		_3DMath::Line axisOfRotation;
+		double rotationAngleForAnimation;
 		bool tessellationNeeded;
 	};
 
@@ -43,12 +64,11 @@ public:
 		CutShape( void );
 		~CutShape( void );
 
-		void CutAndCapture( FaceList& faceList );
+		void CutAndCapture( FaceList& faceList, FaceList& capturedFaceList );
 
 		_3DMath::Surface* surface;
 		_3DMath::Line axisOfRotation;
 		double rotationAngleForSingleTurn;
-		FaceList capturedFaceList;
 	};
 
 	typedef std::list< CutShape* > CutShapeList;
@@ -59,6 +79,7 @@ protected:
 
 	FaceList faceList;
 	CutShapeList cutShapeList;
+	RotationList rotationQueue;
 };
 
 // TwistyPuzzle.h

@@ -5,6 +5,7 @@
 #include <wx/glcanvas.h>
 #include <Vector.h>
 #include <AffineTransform.h>
+#include <TimeKeeper.h>
 
 class GLRenderer;
 
@@ -17,10 +18,13 @@ public:
 	Canvas( wxWindow* parent );
 	virtual ~Canvas( void );
 
+	void Animate( void );
+
 private:
 
 	void OnPaint( wxPaintEvent& event );
 	void OnSize( wxSizeEvent& event );
+	void OnMouseWheel( wxMouseEvent& event );
 	void OnMouseLeftDown( wxMouseEvent& event );
 	void OnMouseLeftUp( wxMouseEvent& event );
 	void OnMouseRightDown( wxMouseEvent& event );
@@ -37,6 +41,7 @@ private:
 	wxPoint mouseDragLastPos;
 	bool mouseDragging;
 	int selectedObjectHandle;
+	_3DMath::TimeKeeper timeKeeper;
 };
 
 // Canvas.h

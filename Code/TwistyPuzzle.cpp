@@ -21,6 +21,71 @@ void TwistyPuzzle::Clear( void )
 {
 	_3DMath::FreeList< Face >( faceList );
 	_3DMath::FreeList< CutShape >( cutShapeList );
+	_3DMath::FreeList< Rotation >( rotationQueue );
+}
+
+void TwistyPuzzle::EnqueueRotation( Rotation* rotation )
+{
+	rotationQueue.push_back( rotation );
+}
+
+bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
+{
+	bool motion = false;
+
+	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
+	{
+		Face* face = *iter;
+		if( face->rotationAngleForAnimation != 0.0 )
+		{
+			double rotationRateRadiansPerSecond = -face->rotationAngleForAnimation * 0.2;
+			double thresholdAngle = 0.01;
+
+			if( fabs( face->rotationAngleForAnimation ) < thresholdAngle )
+				face->rotationAngleForAnimation = 0.0;
+			else
+				face->rotationAngleForAnimation += rotationRateRadiansPerSecond * timeKeeper.GetDeltaTimeSeconds();
+
+			motion = true;
+		}
+	}
+
+	if( !motion )
+	{
+		if( rotationQueue.size() == 0 )
+			return false;
+
+		RotationList::iterator iter = rotationQueue.begin();
+		Rotation* rotation = *iter;
+		rotationQueue.erase( iter );
+
+		CutShape* cutShape = ( CutShape* )_3DMath::HandleObject::Dereference( rotation->cutShapeHandle );
+		if( cutShape )
+		{
+			FaceList capturedFaceList;
+			cutShape->CutAndCapture( faceList, capturedFaceList );
+
+			double rotationAngle = double( rotation->turnCount ) * cutShape->rotationAngleForSingleTurn;
+			if( rotation->direction == Rotation::DIR_CW )
+				rotationAngle = -rotationAngle;
+			rotationAngle = fmod( rotationAngle, 2.0 * M_PI );
+
+			_3DMath::AffineTransform transform;
+			transform.SetRotation( cutShape->axisOfRotation, rotationAngle );
+
+			for( FaceList::iterator iter = capturedFaceList.begin(); iter != capturedFaceList.end(); iter++ )
+			{
+				Face* face = *iter;
+				face->polygon->Transform( transform );
+				face->axisOfRotation = cutShape->axisOfRotation;
+				face->rotationAngleForAnimation = -rotationAngle;
+			}
+		}
+
+		delete rotation;
+	}
+
+	return true;
 }
 
 void TwistyPuzzle::MakeBox( double width, double height, double depth )
@@ -91,7 +156,15 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 			}
 
 			_3DMath::AffineTransform renderTransform;
-			renderTransform.Concatinate( face->transform, transform );
+
+			if( face->rotationAngleForAnimation == 0.0 )
+				renderTransform = transform;
+			else
+			{
+				_3DMath::AffineTransform animationTransform;
+				animationTransform.SetRotation( face->axisOfRotation, face->rotationAngleForAnimation );
+				renderTransform.Concatinate( animationTransform, transform );
+			}
 
 			renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_SOLID;
 			renderer.Color( face->color );
@@ -138,7 +211,7 @@ TwistyPuzzle::Face::Face( _3DMath::Polygon* polygon )
 {
 	this->polygon = polygon;
 	tessellationNeeded = true;
-	transform.Identity();
+	rotationAngleForAnimation = 0.0;
 }
 
 TwistyPuzzle::Face::~Face( void )
@@ -163,7 +236,22 @@ TwistyPuzzle::CutShape::~CutShape( void )
 	delete surface;
 }
 
-void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList )
+void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& capturedFaceList )
+{
+}
+
+//---------------------------------------------------------------------------------
+//                              TwistyPuzzle::Rotation
+//---------------------------------------------------------------------------------
+
+TwistyPuzzle::Rotation::Rotation( int cutShapeHandle, Direction direction, int turnCount )
+{
+	this->cutShapeHandle = cutShapeHandle;
+	this->direction = direction;
+	this->turnCount = turnCount;
+}
+
+TwistyPuzzle::Rotation::~Rotation( void )
 {
 }
 
