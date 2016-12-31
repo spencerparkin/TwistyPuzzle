@@ -2,8 +2,6 @@
 
 #pragma once
 
-#pragma once
-
 #include "TwistyPuzzle.h"
 
 class Rubiks3x3x3 : public TwistyPuzzle

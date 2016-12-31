@@ -3,7 +3,7 @@
 #include "Application.h"
 #include "Frame.h"
 #include "TwistyPuzzle.h"
-#include "Rubiks3x3x3.h"
+#include "Bubbloid4x4x5.h"
 
 wxIMPLEMENT_APP( Application );
 
@@ -20,7 +20,7 @@ Application::Application( void )
 
 /*virtual*/ bool Application::OnInit( void )
 {
-	puzzle = new Rubiks3x3x3();
+	puzzle = new Bubbloid4x4x5();
 	puzzle->Reset();
 
 	frame = new Frame();
