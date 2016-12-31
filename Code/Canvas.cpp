@@ -193,20 +193,20 @@ void Canvas::OnSize( wxSizeEvent& event )
 
 void Canvas::OnMouseWheel( wxMouseEvent& event )
 {
-	double wheelDelta = event.GetWheelDelta();
-	double wheelRotation = event.GetWheelRotation();
-	int wheelClicks = int( wheelRotation / wheelDelta );
-
-	TwistyPuzzle::Rotation::Direction direction = TwistyPuzzle::Rotation::DIR_CCW;
-	if( wheelClicks < 0 )
+	if( selectedObjectHandle )
 	{
-		direction = TwistyPuzzle::Rotation::DIR_CW;
-		wheelClicks = -wheelClicks;
-	}
+		double wheelDelta = event.GetWheelDelta();
+		double wheelRotation = event.GetWheelRotation();
+		int wheelClicks = int( wheelRotation / wheelDelta );
 
-	for( int i = 0; i < wheelClicks; i++ )
-	{
-		TwistyPuzzle::Rotation* rotation = new TwistyPuzzle::Rotation( selectedObjectHandle, direction, 1 );
+		TwistyPuzzle::Rotation::Direction direction = TwistyPuzzle::Rotation::DIR_CW;
+		if( wheelClicks < 0 )
+		{
+			direction = TwistyPuzzle::Rotation::DIR_CCW;
+			wheelClicks = -wheelClicks;
+		}
+
+		TwistyPuzzle::Rotation* rotation = new TwistyPuzzle::Rotation( selectedObjectHandle, direction, wheelClicks );
 		wxGetApp().GetPuzzle()->EnqueueRotation( rotation );
 	}
 }

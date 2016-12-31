@@ -38,7 +38,7 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 		Face* face = *iter;
 		if( face->rotationAngleForAnimation != 0.0 )
 		{
-			double rotationRateRadiansPerSecond = -face->rotationAngleForAnimation * 0.2;
+			double rotationRateRadiansPerSecond = -face->rotationAngleForAnimation * 10.0;
 			double thresholdAngle = 0.01;
 
 			if( fabs( face->rotationAngleForAnimation ) < thresholdAngle )
@@ -172,8 +172,6 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 		}
 	}
 
-	// TODO: Draw these with alpha-blending turned on.
-
 	_3DMath::LinearTransform normalTransform;
 	transform.linearTransform.GetNormalTransform( normalTransform );
 
@@ -189,9 +187,9 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 		vector.Scale( 10.0 );
 
 		if( cutShape->GetHandle() == selectedObjectHandle )
-			color.Set( 1.0, 0.8, 0.8 );
+			color.Set( 0.8, 0.8, 0.8 );
 		else
-			color.Set( 1.0, 0.5, 0.5 );
+			color.Set( 0.5, 0.5, 0.5 );
 
 		if( renderMode == GL_SELECT )
 			glLoadName( cutShape->GetHandle() );
@@ -238,6 +236,54 @@ TwistyPuzzle::CutShape::~CutShape( void )
 
 void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& capturedFaceList )
 {
+	capturedFaceList.clear();
+
+	FaceList::iterator iter = faceList.begin();
+	while( iter != faceList.end() )
+	{
+		FaceList::iterator nextIter = iter;
+		nextIter++;
+
+		Face* face = *iter;
+
+		_3DMath::PolygonList polygonList;
+		if( face->polygon->SplitAgainstSurface( surface, polygonList, 0.1 ) )
+		{
+			while( polygonList.size() > 0 )
+			{
+				_3DMath::PolygonList::iterator polyIter = polygonList.begin();
+				_3DMath::Polygon* polygon = *polyIter;
+				polygonList.erase( polyIter );
+				Face* newFace = new Face( polygon );
+				newFace->color = face->color;
+				faceList.push_front( newFace );
+			}
+
+			delete face;
+			faceList.erase( iter );
+		}
+
+		iter = nextIter;
+	}
+
+	iter = faceList.begin();
+	while( iter != faceList.end() )
+	{
+		Face* face = *iter;
+
+		for( int i = 0; i < ( signed )face->polygon->vertexArray->size(); i++ )
+		{
+			const _3DMath::Vector& point = ( *face->polygon->vertexArray )[i];
+			_3DMath::Surface::Side side = surface->GetSide( point );
+			if( side == _3DMath::Surface::OUTSIDE )
+			{
+				capturedFaceList.push_back( face );
+				break;
+			}
+		}
+
+		iter++;
+	}
 }
 
 //---------------------------------------------------------------------------------
