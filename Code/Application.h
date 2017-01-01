@@ -16,8 +16,9 @@ public:
 
 	virtual bool OnInit( void ) override;
 
-	Frame* Getframe( void ) { return frame; }
+	Frame* GetFrame( void ) { return frame; }
 	TwistyPuzzle* GetPuzzle( void ) { return puzzle; }
+	void SetPuzzle( TwistyPuzzle* puzzle );
 
 private:
 

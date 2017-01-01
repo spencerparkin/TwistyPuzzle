@@ -8,6 +8,8 @@ class Bubbloid4x4x5 : public TwistyPuzzle
 {
 public:
 
+	wxDECLARE_DYNAMIC_CLASS( Bubbloid4x4x5 );
+
 	Bubbloid4x4x5( void );
 	virtual ~Bubbloid4x4x5( void );
 

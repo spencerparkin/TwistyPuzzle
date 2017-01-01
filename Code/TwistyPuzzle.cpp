@@ -8,6 +8,8 @@
 //                                  TwistyPuzzle
 //---------------------------------------------------------------------------------
 
+wxIMPLEMENT_ABSTRACT_CLASS( TwistyPuzzle, wxObject )
+
 TwistyPuzzle::TwistyPuzzle( void )
 {
 }
@@ -65,7 +67,7 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 			FaceList capturedFaceList;
 			cutShape->CutAndCapture( faceList, capturedFaceList );
 
-			double rotationAngle = double( rotation->turnCount ) * cutShape->rotationAngleForSingleTurn;
+			double rotationAngle = rotation->turnCount * cutShape->rotationAngleForSingleTurn;
 			if( rotation->direction == Rotation::DIR_CW )
 				rotationAngle = -rotationAngle;
 			rotationAngle = fmod( rotationAngle, 2.0 * M_PI );
@@ -166,7 +168,7 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 				renderTransform.Concatinate( animationTransform, transform );
 			}
 
-			renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_SOLID;
+			renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
 			renderer.Color( face->color );
 			renderer.DrawPolygon( *face->polygon, &renderTransform );
 		}
@@ -290,7 +292,7 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 //                              TwistyPuzzle::Rotation
 //---------------------------------------------------------------------------------
 
-TwistyPuzzle::Rotation::Rotation( int cutShapeHandle, Direction direction, int turnCount )
+TwistyPuzzle::Rotation::Rotation( int cutShapeHandle, Direction direction, double turnCount )
 {
 	this->cutShapeHandle = cutShapeHandle;
 	this->direction = direction;

@@ -11,9 +11,11 @@
 #include <Line.h>
 #include <TimeKeeper.h>
 
-class TwistyPuzzle
+class TwistyPuzzle : public wxObject
 {
 public:
+
+	wxDECLARE_ABSTRACT_CLASS( TwistyPuzzle );
 
 	TwistyPuzzle( void );
 	virtual ~TwistyPuzzle( void );
@@ -28,12 +30,12 @@ public:
 
 		enum Direction { DIR_CW, DIR_CCW };
 
-		Rotation( int cutShapeHandle, Direction direction, int turnCount );
+		Rotation( int cutShapeHandle, Direction direction, double turnCount );
 		~Rotation( void );
 
 		int cutShapeHandle;
 		Direction direction;
-		int turnCount;
+		double turnCount;
 	};
 
 	typedef std::list< Rotation* > RotationList;

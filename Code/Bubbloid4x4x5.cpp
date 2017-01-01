@@ -4,6 +4,8 @@
 #include <Surface.h>
 #include <Sphere.h>
 
+wxIMPLEMENT_DYNAMIC_CLASS( Bubbloid4x4x5, TwistyPuzzle );
+
 Bubbloid4x4x5::Bubbloid4x4x5( void )
 {
 }

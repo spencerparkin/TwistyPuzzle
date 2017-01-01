@@ -4,6 +4,8 @@
 #include <Surface.h>
 #include <Plane.h>
 
+wxIMPLEMENT_DYNAMIC_CLASS( Rubiks2x2x2, TwistyPuzzle );
+
 Rubiks2x2x2::Rubiks2x2x2( void )
 {
 }

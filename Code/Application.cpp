@@ -29,4 +29,10 @@ Application::Application( void )
 	return true;
 }
 
+void Application::SetPuzzle( TwistyPuzzle* puzzle )
+{
+	delete this->puzzle;
+	this->puzzle = puzzle;
+}
+
 // Application.cpp
