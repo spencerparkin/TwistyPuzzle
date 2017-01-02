@@ -177,6 +177,21 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 	_3DMath::LinearTransform normalTransform;
 	transform.linearTransform.GetNormalTransform( normalTransform );
 
+	if( renderMode == GL_RENDER )
+	{
+		for( CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
+		{
+			CutShape* cutShape = *iter;
+			if( cutShape->GetHandle() == selectedObjectHandle )
+			{
+				_3DMath::Vector color( 0.5, 0.5, 0.5 );
+				glDepthMask( GL_FALSE );
+				renderer.DrawSurface( *cutShape->surface, color, 0.2, &transform );
+				glDepthMask( GL_TRUE );
+			}
+		}
+	}
+
 	for( CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
 	{
 		CutShape* cutShape = *iter;
@@ -195,9 +210,6 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 
 		if( renderMode == GL_SELECT )
 			glLoadName( cutShape->GetHandle() );
-
-		if( renderMode == GL_RENDER && cutShape->GetHandle() == selectedObjectHandle )
-			renderer.DrawSurface( *cutShape->surface, color, 0.5, &transform );
 
 		renderer.DrawVector( vector, cutShape->axisOfRotation.center, color, 0.5, 0.5 );
 	}
@@ -227,6 +239,7 @@ TwistyPuzzle::CutShape::CutShape( void )
 {
 	axisOfRotation.center.Set( 0.0, 0.0, 0.0 );
 	axisOfRotation.normal.Set( 0.0, 0.0, 1.0 );
+	captureSide = _3DMath::Surface::OUTSIDE;
 	rotationAngleForSingleTurn = 0.0;
 	surface = nullptr;
 }
@@ -272,16 +285,25 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 	while( iter != faceList.end() )
 	{
 		Face* face = *iter;
+		int insideCount = 0;
+		int outsideCount = 0;
 
 		for( int i = 0; i < ( signed )face->polygon->vertexArray->size(); i++ )
 		{
 			const _3DMath::Vector& point = ( *face->polygon->vertexArray )[i];
 			_3DMath::Surface::Side side = surface->GetSide( point );
-			if( side == _3DMath::Surface::OUTSIDE )
-			{
-				capturedFaceList.push_back( face );
-				break;
-			}
+			if( side == _3DMath::Surface::INSIDE )
+				insideCount++;
+			else if( side == _3DMath::Surface::OUTSIDE )
+				outsideCount++;
+		}
+
+		wxASSERT( insideCount == 0 || outsideCount == 0 );
+
+		if( ( insideCount > 0 && captureSide == _3DMath::Surface::INSIDE ) ||
+			( outsideCount > 0 && captureSide == _3DMath::Surface::OUTSIDE ) )
+		{
+			capturedFaceList.push_back( face );
 		}
 
 		iter++;

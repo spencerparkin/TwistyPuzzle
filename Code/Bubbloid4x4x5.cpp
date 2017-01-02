@@ -25,6 +25,7 @@ Bubbloid4x4x5::Bubbloid4x4x5( void )
 	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
 	cutShape->axisOfRotation.normal.Set( -1.0, 1.0, 1.0 );
 	cutShape->axisOfRotation.normal.Normalize();
+	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -32,6 +33,7 @@ Bubbloid4x4x5::Bubbloid4x4x5( void )
 	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
 	cutShape->axisOfRotation.normal.Set( 1.0, 1.0, 1.0 );
 	cutShape->axisOfRotation.normal.Normalize();
+	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -39,6 +41,7 @@ Bubbloid4x4x5::Bubbloid4x4x5( void )
 	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
 	cutShape->axisOfRotation.normal.Set( -1.0, 1.0, -1.0 );
 	cutShape->axisOfRotation.normal.Normalize();
+	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -46,6 +49,7 @@ Bubbloid4x4x5::Bubbloid4x4x5( void )
 	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
 	cutShape->axisOfRotation.normal.Set( 1.0, 1.0, -1.0 );
 	cutShape->axisOfRotation.normal.Normalize();
+	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -53,6 +57,7 @@ Bubbloid4x4x5::Bubbloid4x4x5( void )
 	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
 	cutShape->axisOfRotation.normal.Set( -1.0, -1.0, 1.0 );
 	cutShape->axisOfRotation.normal.Normalize();
+	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -60,6 +65,7 @@ Bubbloid4x4x5::Bubbloid4x4x5( void )
 	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
 	cutShape->axisOfRotation.normal.Set( 1.0, -1.0, 1.0 );
 	cutShape->axisOfRotation.normal.Normalize();
+	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -67,6 +73,7 @@ Bubbloid4x4x5::Bubbloid4x4x5( void )
 	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
 	cutShape->axisOfRotation.normal.Set( -1.0, -1.0, -1.0 );
 	cutShape->axisOfRotation.normal.Normalize();
+	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -74,6 +81,7 @@ Bubbloid4x4x5::Bubbloid4x4x5( void )
 	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
 	cutShape->axisOfRotation.normal.Set( 1.0, -1.0, -1.0 );
 	cutShape->axisOfRotation.normal.Normalize();
+	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
 }
 

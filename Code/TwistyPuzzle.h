@@ -10,6 +10,7 @@
 #include <HandleObject.h>
 #include <Line.h>
 #include <TimeKeeper.h>
+#include <Surface.h>
 
 class TwistyPuzzle : public wxObject
 {
@@ -70,6 +71,7 @@ public:
 
 		_3DMath::Surface* surface;
 		_3DMath::Line axisOfRotation;
+		_3DMath::Surface::Side captureSide;
 		double rotationAngleForSingleTurn;
 	};
 
