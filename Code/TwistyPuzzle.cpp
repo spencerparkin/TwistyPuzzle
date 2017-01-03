@@ -310,6 +310,9 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 		Face* face = *iter;
 		face->UpdateTessellationIfNeeded();
 		
+		// TODO: For every center of every triangle in the tessellation,
+		//       which side is it on?  Favor the side most found on.
+
 		_3DMath::Vector center;
 		face->polygon->GetTriangleAverageCenter( center );
 
