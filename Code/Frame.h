@@ -26,6 +26,10 @@ private:
 		ID_About,
 		ID_DrawWireFrame,
 		ID_DrawSolid,
+		ID_Scramble,
+		ID_Solve,
+		ID_Save,
+		ID_Load,
 		ID_Puzzle,		// This needs to be the last ID.
 	};
 
@@ -36,6 +40,10 @@ private:
 	void OnPuzzleType( wxCommandEvent& event );
 	void OnUpdateUI( wxUpdateUIEvent& event );
 	void OnAbout( wxCommandEvent& event );
+	void OnScramble( wxCommandEvent& event );
+	void OnSolve( wxCommandEvent& event );
+	void OnSave( wxCommandEvent& event );
+	void OnLoad( wxCommandEvent& event );
 
 	class PuzzleMenuItemUserData : public wxObject
 	{

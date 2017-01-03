@@ -141,35 +141,21 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 	faceList.push_back( face );
 }
 
+/*virtual*/ void TwistyPuzzle::IncrementallySolve( RotationList& rotationList ) const
+{
+}
+
 /*virtual*/ void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle )
 {
-	if( renderMode == GL_RENDER )
-	{
-		for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
-		{
-			Face* face = *iter;
-			if( !face->polygon )
-				continue;
-
-			face->UpdateTessellationIfNeeded();
-
-			_3DMath::AffineTransform renderTransform;
-			if( face->rotationAngleForAnimation == 0.0 )
-				renderTransform = transform;
-			else
-			{
-				_3DMath::AffineTransform animationTransform;
-				animationTransform.SetRotation( face->axisOfRotation, face->rotationAngleForAnimation );
-				renderTransform.Concatinate( animationTransform, transform );
-			}
-
-			renderer.Color( face->color );
-			renderer.DrawPolygon( *face->polygon, &renderTransform );
-		}
-	}
-
 	_3DMath::LinearTransform normalTransform;
 	transform.linearTransform.GetNormalTransform( normalTransform );
+
+	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
+	{
+		Face* face = *iter;
+		face->UpdateTessellationIfNeeded();
+		face->Render( renderer, renderMode, transform, normalTransform );
+	}
 
 	if( renderMode == GL_RENDER )
 	{
@@ -231,6 +217,40 @@ void TwistyPuzzle::Face::UpdateTessellationIfNeeded( void )
 	{
 		polygon->Tessellate();
 		tessellationNeeded = false;
+	}
+}
+
+void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform ) const
+{
+	// TODO: We might select faces, but until then bail if we're not in render mode.
+	if( renderMode != GL_RENDER )
+		return;
+	
+	glLineWidth( 2.5f );
+
+	_3DMath::AffineTransform renderTransform;
+
+	_3DMath::AffineTransform animationTransform;
+	animationTransform.SetRotation( axisOfRotation, rotationAngleForAnimation );
+	renderTransform.Concatinate( animationTransform, transform );
+
+	renderer.Color( color );
+	renderer.DrawPolygon( *polygon, &renderTransform );
+
+	if( renderer.drawStyle == _3DMath::Renderer::DRAW_STYLE_SOLID )
+	{
+		renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
+
+		_3DMath::AffineTransform scaleTransform;
+		scaleTransform.linearTransform.SetScale( 1.01 );
+
+		_3DMath::AffineTransform silhouetteTransform;
+		silhouetteTransform.Concatinate( scaleTransform, renderTransform );
+
+		renderer.Color( _3DMath::Vector( 0.0, 0.0, 0.0 ), 1.0 );
+		renderer.DrawPolygon( *polygon, &silhouetteTransform );
+
+		renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_SOLID;
 	}
 }
 

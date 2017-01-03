@@ -40,6 +40,9 @@
     <ClInclude Include="Code\FlowerBox.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
+    <ClInclude Include="Code\CurvyCopter.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">

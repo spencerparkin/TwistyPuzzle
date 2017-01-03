@@ -149,6 +149,7 @@
     <ClInclude Include="Code\Bubbloid3x3x3.h" />
     <ClInclude Include="Code\Bubbloid4x4x5.h" />
     <ClInclude Include="Code\Canvas.h" />
+    <ClInclude Include="Code\CurvyCopter.h" />
     <ClInclude Include="Code\FlowerBox.h" />
     <ClInclude Include="Code\Frame.h" />
     <ClInclude Include="Code\GLRenderer.h" />

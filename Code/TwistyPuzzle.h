@@ -41,6 +41,12 @@ public:
 
 	typedef std::list< Rotation* > RotationList;
 
+	// Compute and return a sequence of rotations that gets us closer, if
+	// not all the way, to the solved state of the puzzle.  The method is
+	// called until an empty list is returned.
+	virtual void IncrementallySolve( RotationList& rotationList ) const;
+	virtual bool SolveSupported( void ) const { return false; }
+
 	void EnqueueRotation( Rotation* rotation );
 	bool ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper );
 
@@ -52,6 +58,7 @@ public:
 		~Face( void );
 
 		void UpdateTessellationIfNeeded( void );
+		void Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform ) const;
 
 		_3DMath::Vector color;
 		_3DMath::Polygon* polygon;

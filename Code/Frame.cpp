@@ -9,10 +9,23 @@
 #include <wx/menu.h>
 #include <wx/aboutdlg.h>
 
+// TODO: Add rotation history feature.
+// TODO: Add rotatoin axis labeling and text sequence interface.
+
 Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPosition, wxSize( 700, 700 ) ), timer( this, ID_Timer )
 {
 	wxMenu* programMenu = new wxMenu();
 	wxMenuItem* exitMenuItem = new wxMenuItem( programMenu, ID_Exit, "Exit", "Exit this program." );
+	wxMenuItem* scrambleMenuItem = new wxMenuItem( programMenu, ID_Scramble, "Scramble", "Scramble the twisty puzzle." );
+	wxMenuItem* solveMenuItem = new wxMenuItem( programMenu, ID_Solve, "Solve", "Solve the twisty puzzle." );
+	wxMenuItem* saveMenuItem = new wxMenuItem( programMenu, ID_Save, "Save", "Save the twisty puzzle to file." );
+	wxMenuItem* loadMenuItem = new wxMenuItem( programMenu, ID_Load, "Load", "Load a twisty puzzle from file." );
+	programMenu->Append( saveMenuItem );
+	programMenu->Append( loadMenuItem );
+	programMenu->AppendSeparator();
+	programMenu->Append( scrambleMenuItem );
+	programMenu->Append( solveMenuItem );
+	programMenu->AppendSeparator();
 	programMenu->Append( exitMenuItem );
 
 	wxMenu* puzzleMenu = CreatePuzzleMenu();
@@ -48,13 +61,36 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_MENU, &Frame::OnDrawWireFrame, this, ID_DrawWireFrame );
 	Bind( wxEVT_MENU, &Frame::OnDrawSolid, this, ID_DrawSolid );
 	Bind( wxEVT_MENU, &Frame::OnAbout, this, ID_About );
+	Bind( wxEVT_MENU, &Frame::OnScramble, this, ID_Scramble );
+	Bind( wxEVT_MENU, &Frame::OnSolve, this, ID_Solve );
+	Bind( wxEVT_MENU, &Frame::OnSave, this, ID_Save );
+	Bind( wxEVT_MENU, &Frame::OnLoad, this, ID_Load );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawWireFrame );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawSolid );
+	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_Solve );
 
 	timer.Start(0);
 }
 
 /*virtual*/ Frame::~Frame( void )
+{
+}
+
+void Frame::OnScramble( wxCommandEvent& event )
+{
+	// TODO: Queue up a bunch of random rotations.
+	//       Don't forget about puzzles that support jumbling.
+}
+
+void Frame::OnSolve( wxCommandEvent& event )
+{
+}
+
+void Frame::OnSave( wxCommandEvent& event )
+{
+}
+
+void Frame::OnLoad( wxCommandEvent& event )
 {
 }
 
@@ -154,6 +190,11 @@ void Frame::OnUpdateUI( wxUpdateUIEvent& event )
 			case ID_DrawSolid:
 			{
 				event.Check( canvas->GetRenderer()->drawStyle == _3DMath::Renderer::DRAW_STYLE_SOLID ? true : false );
+				break;
+			}
+			case ID_Solve:
+			{
+				event.Enable( wxGetApp().GetPuzzle()->SolveSupported() ? true : false );
 				break;
 			}
 		}
