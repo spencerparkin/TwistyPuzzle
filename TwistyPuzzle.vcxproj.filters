@@ -43,6 +43,9 @@
     <ClInclude Include="Code\CurvyCopter.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
+    <ClInclude Include="Code\CurvyCopter3.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -73,6 +76,12 @@
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
     <ClCompile Include="Code\FlowerBox.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\CurvyCopter.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\CurvyCopter3.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
   </ItemGroup>
