@@ -285,7 +285,7 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 		Face* face = *iter;
 
 		_3DMath::PolygonList polygonList;
-		if( face->polygon->SplitAgainstSurface( surface, polygonList, 0.1 ) )
+		if( face->polygon->SplitAgainstSurface( surface, polygonList, 1.0 ) )
 		{
 			while( polygonList.size() > 0 )
 			{
