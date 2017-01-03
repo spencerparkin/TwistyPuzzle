@@ -4,6 +4,7 @@
 #include "Canvas.h"
 #include "Application.h"
 #include "TwistyPuzzle.h"
+#include "GLRenderer.h"
 #include <wx/sizer.h>
 #include <wx/menu.h>
 
@@ -15,9 +16,16 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 
 	wxMenu* puzzleMenu = CreatePuzzleMenu();
 
+	wxMenu* renderMenu = new wxMenu();
+	wxMenuItem* drawWireFrameMenuItem = new wxMenuItem( renderMenu, ID_DrawWireFrame, "Draw Wire-Frame", "Draw the twisty frame as a bunch of line segments.", wxITEM_CHECK );
+	wxMenuItem* drawSolidMenuItem = new wxMenuItem( renderMenu, ID_DrawSolid, "Draw Solid", "Draw the twisty puzzle as a bunch of solid triangles.", wxITEM_CHECK );
+	renderMenu->Append( drawWireFrameMenuItem );
+	renderMenu->Append( drawSolidMenuItem );
+
 	wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append( programMenu, "Program" );
 	menuBar->Append( puzzleMenu, "Puzzle" );
+	menuBar->Append( renderMenu, "Render" );
 	SetMenuBar( menuBar );
 
 	wxStatusBar* statusBar = new wxStatusBar( this );
@@ -31,12 +39,28 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 
 	Bind( wxEVT_MENU, &Frame::OnExit, this, ID_Exit );
 	Bind( wxEVT_TIMER, &Frame::OnTimer, this, ID_Timer );
+	Bind( wxEVT_MENU, &Frame::OnDrawWireFrame, this, ID_DrawWireFrame );
+	Bind( wxEVT_MENU, &Frame::OnDrawSolid, this, ID_DrawSolid );
+	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawWireFrame );
+	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawSolid );
 
 	timer.Start(0);
 }
 
 /*virtual*/ Frame::~Frame( void )
 {
+}
+
+void Frame::OnDrawWireFrame( wxCommandEvent& event )
+{
+	canvas->GetRenderer()->drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
+	canvas->Refresh();
+}
+
+void Frame::OnDrawSolid( wxCommandEvent& event )
+{
+	canvas->GetRenderer()->drawStyle = _3DMath::Renderer::DRAW_STYLE_SOLID;
+	canvas->Refresh();
 }
 
 void Frame::OnExit( wxCommandEvent& event )
@@ -97,6 +121,22 @@ void Frame::OnUpdateUI( wxUpdateUIEvent& event )
 			event.Check( true );
 		else
 			event.Check( false );
+	}
+	else
+	{
+		switch( event.GetId() )
+		{
+			case ID_DrawWireFrame:
+			{
+				event.Check( canvas->GetRenderer()->drawStyle == _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME ? true : false );
+				break;
+			}
+			case ID_DrawSolid:
+			{
+				event.Check( canvas->GetRenderer()->drawStyle == _3DMath::Renderer::DRAW_STYLE_SOLID ? true : false );
+				break;
+			}
+		}
 	}
 }
 

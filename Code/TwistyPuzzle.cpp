@@ -159,6 +159,10 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 
 			_3DMath::AffineTransform renderTransform;
 
+			// TODO: If we're rendering wire frame, we might shrink the polygon about its center
+			//       just a tad so that it's easy to see the lines that would otherwise be co-
+			//       incident with other lines.
+
 			if( face->rotationAngleForAnimation == 0.0 )
 				renderTransform = transform;
 			else
@@ -168,7 +172,6 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 				renderTransform.Concatinate( animationTransform, transform );
 			}
 
-			renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
 			renderer.Color( face->color );
 			renderer.DrawPolygon( *face->polygon, &renderTransform );
 		}
@@ -291,7 +294,7 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 		for( int i = 0; i < ( signed )face->polygon->vertexArray->size(); i++ )
 		{
 			const _3DMath::Vector& point = ( *face->polygon->vertexArray )[i];
-			_3DMath::Surface::Side side = surface->GetSide( point );
+			_3DMath::Surface::Side side = surface->GetSide( point, 0.05 );	// No, we should not need an epsilon this big!
 			if( side == _3DMath::Surface::INSIDE )
 				insideCount++;
 			else if( side == _3DMath::Surface::OUTSIDE )

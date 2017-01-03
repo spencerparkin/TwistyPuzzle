@@ -20,6 +20,8 @@ public:
 
 	void Animate( void );
 
+	GLRenderer* GetRenderer( void ) { return renderer; }
+
 private:
 
 	void OnPaint( wxPaintEvent& event );
