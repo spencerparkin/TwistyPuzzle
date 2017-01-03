@@ -151,18 +151,9 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 			if( !face->polygon )
 				continue;
 
-			if( face->tessellationNeeded )
-			{
-				face->polygon->Tessellate();
-				face->tessellationNeeded = false;
-			}
+			face->UpdateTessellationIfNeeded();
 
 			_3DMath::AffineTransform renderTransform;
-
-			// TODO: If we're rendering wire frame, we might shrink the polygon about its center
-			//       just a tad so that it's easy to see the lines that would otherwise be co-
-			//       incident with other lines.
-
 			if( face->rotationAngleForAnimation == 0.0 )
 				renderTransform = transform;
 			else
@@ -234,6 +225,15 @@ TwistyPuzzle::Face::~Face( void )
 	delete polygon;
 }
 
+void TwistyPuzzle::Face::UpdateTessellationIfNeeded( void )
+{
+	if( tessellationNeeded )
+	{
+		polygon->Tessellate();
+		tessellationNeeded = false;
+	}
+}
+
 //---------------------------------------------------------------------------------
 //                               TwistyPuzzle::CutShape
 //---------------------------------------------------------------------------------
@@ -288,9 +288,10 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 	while( iter != faceList.end() )
 	{
 		Face* face = *iter;
+		face->UpdateTessellationIfNeeded();
 		
 		_3DMath::Vector center;
-		face->polygon->GetIntegratedCenter( center, 0.5 );
+		face->polygon->GetTriangleAverageCenter( center );
 
 		_3DMath::Surface::Side side = surface->GetSide( center );
 		if( side == captureSide )

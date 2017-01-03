@@ -51,6 +51,8 @@ public:
 		Face( _3DMath::Polygon* polygon );
 		~Face( void );
 
+		void UpdateTessellationIfNeeded( void );
+
 		_3DMath::Vector color;
 		_3DMath::Polygon* polygon;
 		_3DMath::Line axisOfRotation;

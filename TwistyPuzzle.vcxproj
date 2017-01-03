@@ -149,6 +149,7 @@
     <ClInclude Include="Code\Bubbloid3x3x3.h" />
     <ClInclude Include="Code\Bubbloid4x4x5.h" />
     <ClInclude Include="Code\Canvas.h" />
+    <ClInclude Include="Code\FlowerBox.h" />
     <ClInclude Include="Code\Frame.h" />
     <ClInclude Include="Code\GLRenderer.h" />
     <ClInclude Include="Code\Rubiks2x2x2.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="Code\Bubbloid3x3x3.cpp" />
     <ClCompile Include="Code\Bubbloid4x4x5.cpp" />
     <ClCompile Include="Code\Canvas.cpp" />
+    <ClCompile Include="Code\FlowerBox.cpp" />
     <ClCompile Include="Code\Frame.cpp" />
     <ClCompile Include="Code\GLRenderer.cpp" />
     <ClCompile Include="Code\Rubiks2x2x2.cpp" />
