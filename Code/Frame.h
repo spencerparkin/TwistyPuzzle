@@ -23,6 +23,7 @@ private:
 	{
 		ID_Exit = wxID_HIGHEST,
 		ID_Timer,
+		ID_About,
 		ID_DrawWireFrame,
 		ID_DrawSolid,
 		ID_Puzzle,		// This needs to be the last ID.
@@ -34,6 +35,7 @@ private:
 	void OnDrawSolid( wxCommandEvent& event );
 	void OnPuzzleType( wxCommandEvent& event );
 	void OnUpdateUI( wxUpdateUIEvent& event );
+	void OnAbout( wxCommandEvent& event );
 
 	class PuzzleMenuItemUserData : public wxObject
 	{

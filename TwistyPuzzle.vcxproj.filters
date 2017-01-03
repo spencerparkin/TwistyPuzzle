@@ -34,6 +34,9 @@
     <ClInclude Include="Code\Bubbloid4x4x5.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Bubbloid3x3x3.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -58,6 +61,9 @@
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
     <ClCompile Include="Code\Bubbloid4x4x5.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Bubbloid3x3x3.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
   </ItemGroup>

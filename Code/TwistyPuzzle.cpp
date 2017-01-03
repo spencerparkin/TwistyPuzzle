@@ -214,7 +214,7 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 		if( renderMode == GL_SELECT )
 			glLoadName( cutShape->GetHandle() );
 
-		renderer.DrawVector( vector, cutShape->axisOfRotation.center, color, 0.5, 0.5 );
+		renderer.DrawVector( vector, position, color, 0.5, 0.5 );
 	}
 }
 
@@ -288,26 +288,13 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 	while( iter != faceList.end() )
 	{
 		Face* face = *iter;
-		int insideCount = 0;
-		int outsideCount = 0;
+		
+		_3DMath::Vector center;
+		face->polygon->GetIntegratedCenter( center, 0.5 );
 
-		for( int i = 0; i < ( signed )face->polygon->vertexArray->size(); i++ )
-		{
-			const _3DMath::Vector& point = ( *face->polygon->vertexArray )[i];
-			_3DMath::Surface::Side side = surface->GetSide( point, 0.05 );	// No, we should not need an epsilon this big!
-			if( side == _3DMath::Surface::INSIDE )
-				insideCount++;
-			else if( side == _3DMath::Surface::OUTSIDE )
-				outsideCount++;
-		}
-
-		wxASSERT( insideCount == 0 || outsideCount == 0 );
-
-		if( ( insideCount > 0 && captureSide == _3DMath::Surface::INSIDE ) ||
-			( outsideCount > 0 && captureSide == _3DMath::Surface::OUTSIDE ) )
-		{
+		_3DMath::Surface::Side side = surface->GetSide( center );
+		if( side == captureSide )
 			capturedFaceList.push_back( face );
-		}
 
 		iter++;
 	}

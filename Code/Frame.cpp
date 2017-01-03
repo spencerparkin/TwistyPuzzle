@@ -7,6 +7,7 @@
 #include "GLRenderer.h"
 #include <wx/sizer.h>
 #include <wx/menu.h>
+#include <wx/aboutdlg.h>
 
 Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPosition, wxSize( 700, 700 ) ), timer( this, ID_Timer )
 {
@@ -22,10 +23,15 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	renderMenu->Append( drawWireFrameMenuItem );
 	renderMenu->Append( drawSolidMenuItem );
 
+	wxMenu* helpMenu = new wxMenu();
+	wxMenuItem* aboutMenuItem = new wxMenuItem( helpMenu, ID_About, "About", "Show the about box." );
+	helpMenu->Append( aboutMenuItem );
+
 	wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append( programMenu, "Program" );
 	menuBar->Append( puzzleMenu, "Puzzle" );
 	menuBar->Append( renderMenu, "Render" );
+	menuBar->Append( helpMenu, "Help" );
 	SetMenuBar( menuBar );
 
 	wxStatusBar* statusBar = new wxStatusBar( this );
@@ -41,6 +47,7 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_TIMER, &Frame::OnTimer, this, ID_Timer );
 	Bind( wxEVT_MENU, &Frame::OnDrawWireFrame, this, ID_DrawWireFrame );
 	Bind( wxEVT_MENU, &Frame::OnDrawSolid, this, ID_DrawSolid );
+	Bind( wxEVT_MENU, &Frame::OnAbout, this, ID_About );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawWireFrame );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawSolid );
 
@@ -49,6 +56,19 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 
 /*virtual*/ Frame::~Frame( void )
 {
+}
+
+void Frame::OnAbout( wxCommandEvent& event )
+{
+	wxAboutDialogInfo aboutDialogInfo;
+
+	aboutDialogInfo.SetName( "Twisty Puzzle" );
+	aboutDialogInfo.SetVersion( "1.0" );
+	aboutDialogInfo.SetDescription( "This program is distributed under the MIT license." );
+	aboutDialogInfo.SetCopyright( "Copyright (C) 2017 Spencer T. Parkin (spencertparkin@gmail.com)" );
+	aboutDialogInfo.SetWebSite( "https://github.com/spencerparkin/TwistyPuzzle" );
+
+	wxAboutBox( aboutDialogInfo );
 }
 
 void Frame::OnDrawWireFrame( wxCommandEvent& event )
