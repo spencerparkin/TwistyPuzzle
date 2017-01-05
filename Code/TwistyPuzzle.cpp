@@ -309,15 +309,35 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 	{
 		Face* face = *iter;
 		face->UpdateTessellationIfNeeded();
-		
-		// TODO: For every center of every triangle in the tessellation,
-		//       which side is it on?  Favor the side most found on.
 
-		_3DMath::Vector center;
-		face->polygon->GetTriangleAverageCenter( center );
+		int insideCount = 0;
+		int outsideCount = 0;
 
-		_3DMath::Surface::Side side = surface->GetSide( center );
-		if( side == captureSide )
+		_3DMath::IndexTriangleList::const_iterator triangleIter = face->polygon->indexTriangleList->cbegin();
+		while( triangleIter != face->polygon->indexTriangleList->cend() )
+		{
+			const _3DMath::IndexTriangle& indexTriangle = *triangleIter;
+
+			_3DMath::Triangle triangle;
+			indexTriangle.GetTriangle( triangle, face->polygon->vertexArray );
+
+			_3DMath::Vector triangleCenter;
+			triangle.GetCenter( triangleCenter );
+
+			_3DMath::Surface::Side side = surface->GetSide( triangleCenter );
+			if( side == _3DMath::Surface::INSIDE )
+				insideCount++;
+			else if( side == _3DMath::Surface::OUTSIDE )
+				outsideCount++;
+
+			triangleIter++;
+		}
+
+		_3DMath::Surface::Side dominantSide = _3DMath::Surface::OUTSIDE;
+		if( insideCount > outsideCount )
+			dominantSide = _3DMath::Surface::INSIDE;
+
+		if( dominantSide == captureSide )
 			capturedFaceList.push_back( face );
 
 		iter++;
