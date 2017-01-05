@@ -37,7 +37,10 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	renderMenu->Append( drawSolidMenuItem );
 
 	wxMenu* helpMenu = new wxMenu();
+	wxMenuItem* documentationMenuItem = new wxMenuItem( helpMenu, ID_Documentation, "Documentation", "Bring up a window with documentation for this program." );
 	wxMenuItem* aboutMenuItem = new wxMenuItem( helpMenu, ID_About, "About", "Show the about box." );
+	helpMenu->Append( documentationMenuItem );
+	helpMenu->AppendSeparator();
 	helpMenu->Append( aboutMenuItem );
 
 	wxMenuBar* menuBar = new wxMenuBar();
@@ -60,6 +63,7 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_TIMER, &Frame::OnTimer, this, ID_Timer );
 	Bind( wxEVT_MENU, &Frame::OnDrawWireFrame, this, ID_DrawWireFrame );
 	Bind( wxEVT_MENU, &Frame::OnDrawSolid, this, ID_DrawSolid );
+	Bind( wxEVT_MENU, &Frame::OnDocumentation, this, ID_Documentation );
 	Bind( wxEVT_MENU, &Frame::OnAbout, this, ID_About );
 	Bind( wxEVT_MENU, &Frame::OnScramble, this, ID_Scramble );
 	Bind( wxEVT_MENU, &Frame::OnSolve, this, ID_Solve );
@@ -92,6 +96,11 @@ void Frame::OnSave( wxCommandEvent& event )
 
 void Frame::OnLoad( wxCommandEvent& event )
 {
+}
+
+void Frame::OnDocumentation( wxCommandEvent& event )
+{
+	// TODO: Create frame for documentation window containing a wxHtmlWindow control serving files out of a zip.
 }
 
 void Frame::OnAbout( wxCommandEvent& event )

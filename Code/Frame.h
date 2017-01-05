@@ -23,6 +23,7 @@ private:
 	{
 		ID_Exit = wxID_HIGHEST,
 		ID_Timer,
+		ID_Documentation,
 		ID_About,
 		ID_DrawWireFrame,
 		ID_DrawSolid,
@@ -44,6 +45,7 @@ private:
 	void OnSolve( wxCommandEvent& event );
 	void OnSave( wxCommandEvent& event );
 	void OnLoad( wxCommandEvent& event );
+	void OnDocumentation( wxCommandEvent& event );
 
 	class PuzzleMenuItemUserData : public wxObject
 	{

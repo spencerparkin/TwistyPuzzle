@@ -4,6 +4,7 @@
 #include "Frame.h"
 #include "TwistyPuzzle.h"
 #include "Rubiks3x3x3.h"
+#include <wx/fs_arc.h>
 
 wxIMPLEMENT_APP( Application );
 
@@ -20,6 +21,9 @@ Application::Application( void )
 
 /*virtual*/ bool Application::OnInit( void )
 {
+	wxImage::AddHandler( new wxPNGHandler() );
+	wxFileSystem::AddHandler( new wxArchiveFSHandler() );
+
 	puzzle = new Rubiks3x3x3();
 	puzzle->Reset();
 
