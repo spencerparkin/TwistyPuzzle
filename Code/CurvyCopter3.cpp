@@ -20,6 +20,8 @@ CurvyCopter3::CurvyCopter3( void )
 
 	MakeBox( 10.0, 10.0, 10.0 );
 
+	// TODO: Do some math to figure out the partial turn for the jumble move.
+
 	double radius = 5.0 * sqrt( 4.0 / 9.0 + 1.0 );
 
 	CutShape* cutShape = new CutShape();

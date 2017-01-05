@@ -12,6 +12,9 @@
 #include <TimeKeeper.h>
 #include <Surface.h>
 
+// TODO: It would be interesting if we based a puzzle off of, say, cone-shaped cut objects.
+//       This would require that we trace out parts of conic sections.  Calculus methods would be in order?
+
 class TwistyPuzzle : public wxObject
 {
 public:

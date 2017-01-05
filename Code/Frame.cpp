@@ -142,6 +142,9 @@ wxMenu* Frame::CreatePuzzleMenu( void )
 		if( classInfo != baseClassInfo && classInfo->IsKindOf( baseClassInfo ) )
 		{
 			wxString className = classInfo->GetClassName();
+
+			// TODO: Sort this by class name.
+
 			wxMenuItem* puzzleMenuItem = new wxMenuItem( puzzleMenu, itemId, className, "Create a twisty puzzle of type \"" + className + "\".", wxITEM_CHECK );
 			puzzleMenu->Append( puzzleMenuItem );
 
