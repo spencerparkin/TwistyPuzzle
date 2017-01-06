@@ -18,7 +18,7 @@ Megaminx::Megaminx( void )
 {
 	Clear();
 
-	MakeDodecahedron( 5.0 );
+	MakePolyhedron( DODECAHEDRON, 5.0 );
 
 	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
 	{

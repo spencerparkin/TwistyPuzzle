@@ -146,14 +146,40 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 	faceList.push_back( face );
 }
 
-void TwistyPuzzle::MakeDodecahedron( double radius )
+void TwistyPuzzle::MakePolyhedron( Polyhedron polyhedron, double radius )
 {
 	_3DMath::TriangleMesh triangleMesh;
 
-	triangleMesh.AddSymmetricVertices( _3DMath::Vector( 1.0, 1.0, 1.0 ) );
-	triangleMesh.AddSymmetricVertices( _3DMath::Vector( 0.0, 1.0 / PHI, PHI ) );
-	triangleMesh.AddSymmetricVertices( _3DMath::Vector( 1.0 / PHI, PHI, 0.0 ) );
-	triangleMesh.AddSymmetricVertices( _3DMath::Vector( PHI, 0.0, 1.0 / PHI ) );
+	switch( polyhedron )
+	{
+		case DODECAHEDRON:
+		{
+			triangleMesh.AddSymmetricVertices( _3DMath::Vector( 1.0, 1.0, 1.0 ) );
+			triangleMesh.AddSymmetricVertices( _3DMath::Vector( 0.0, 1.0 / PHI, PHI ) );
+			triangleMesh.AddSymmetricVertices( _3DMath::Vector( 1.0 / PHI, PHI, 0.0 ) );
+			triangleMesh.AddSymmetricVertices( _3DMath::Vector( PHI, 0.0, 1.0 / PHI ) );
+			break;
+		}
+		case ICOSAHEDRON:
+		{
+			triangleMesh.AddSymmetricVertices( _3DMath::Vector( 0.0, 1.0, PHI ) );
+			triangleMesh.AddSymmetricVertices( _3DMath::Vector( 1.0, PHI, 0.0 ) );
+			triangleMesh.AddSymmetricVertices( _3DMath::Vector( PHI, 0.0, 1.0 ) );
+			break;
+		}
+		case HEXADRON:
+		{
+			break;
+		}
+		case OCTAHEDRON:
+		{
+			break;
+		}
+		case TETRAHEDRON:
+		{
+			break;
+		}
+	}
 
 	_3DMath::AffineTransform transform;
 	transform.linearTransform.SetScale( radius );
@@ -173,15 +199,6 @@ void TwistyPuzzle::MakeDodecahedron( double radius )
 		face->color = ColorTable( i++ );
 		faceList.push_back( face );
 	}
-}
-
-void TwistyPuzzle::MakeIcosahedron( double radius )
-{
-	_3DMath::TriangleMesh triangleMesh;
-
-	triangleMesh.AddSymmetricVertices( _3DMath::Vector( 0.0, 1.0, PHI ) );
-	triangleMesh.AddSymmetricVertices( _3DMath::Vector( 1.0, PHI, 0.0 ) );
-	triangleMesh.AddSymmetricVertices( _3DMath::Vector( PHI, 0.0, 1.0 ) );
 }
 
 _3DMath::Vector TwistyPuzzle::red( 1.0, 0.0, 0.0 );

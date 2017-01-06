@@ -92,6 +92,8 @@ public:
 		_3DMath::Line axisOfRotation;
 		_3DMath::Surface::Side captureSide;
 		double rotationAngleForSingleTurn;
+
+		// TODO: Add label to cut-shape so that we can use that when rendering axes and when executing a given sequence?
 	};
 
 	typedef std::list< CutShape* > CutShapeList;
@@ -99,8 +101,17 @@ public:
 protected:
 
 	void MakeBox( double width, double height, double depth );
-	void MakeIcosahedron( double radius );
-	void MakeDodecahedron( double radius );
+
+	enum Polyhedron
+	{
+		HEXADRON,
+		OCTAHEDRON,
+		ICOSAHEDRON,
+		DODECAHEDRON,
+		TETRAHEDRON,
+	};
+
+	void MakePolyhedron( Polyhedron polyhedron, double radius );
 
 	static _3DMath::Vector ColorTable( int index );
 
