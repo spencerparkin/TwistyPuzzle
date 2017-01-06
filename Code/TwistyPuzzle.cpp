@@ -373,6 +373,41 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 	}
 }
 
+// TODO: There is a bug here; this logic does not always give us what we want.
+bool TwistyPuzzle::Face::IsCapturedByCutShape( CutShape* cutShape )
+{
+	UpdateTessellationIfNeeded();
+
+	int insideCount = 0;
+	int outsideCount = 0;
+
+	_3DMath::IndexTriangleList::const_iterator triangleIter = polygon->indexTriangleList->cbegin();
+	while( triangleIter != polygon->indexTriangleList->cend() )
+	{
+		const _3DMath::IndexTriangle& indexTriangle = *triangleIter;
+
+		_3DMath::Triangle triangle;
+		indexTriangle.GetTriangle( triangle, polygon->vertexArray );
+
+		_3DMath::Vector triangleCenter;
+		triangle.GetCenter( triangleCenter );
+
+		_3DMath::Surface::Side side = cutShape->surface->GetSide( triangleCenter );
+		if( side == _3DMath::Surface::INSIDE )
+			insideCount++;
+		else if( side == _3DMath::Surface::OUTSIDE )
+			outsideCount++;
+
+		triangleIter++;
+	}
+
+	_3DMath::Surface::Side dominantSide = _3DMath::Surface::OUTSIDE;
+	if( insideCount > outsideCount )
+		dominantSide = _3DMath::Surface::INSIDE;
+
+	return( dominantSide == cutShape->captureSide ) ? true : false;
+}
+
 //---------------------------------------------------------------------------------
 //                               TwistyPuzzle::CutShape
 //---------------------------------------------------------------------------------
@@ -423,43 +458,11 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 		iter = nextIter;
 	}
 
-	iter = faceList.begin();
-	while( iter != faceList.end() )
+	for( iter = faceList.begin(); iter != faceList.end(); iter++ )
 	{
 		Face* face = *iter;
-		face->UpdateTessellationIfNeeded();
-
-		int insideCount = 0;
-		int outsideCount = 0;
-
-		_3DMath::IndexTriangleList::const_iterator triangleIter = face->polygon->indexTriangleList->cbegin();
-		while( triangleIter != face->polygon->indexTriangleList->cend() )
-		{
-			const _3DMath::IndexTriangle& indexTriangle = *triangleIter;
-
-			_3DMath::Triangle triangle;
-			indexTriangle.GetTriangle( triangle, face->polygon->vertexArray );
-
-			_3DMath::Vector triangleCenter;
-			triangle.GetCenter( triangleCenter );
-
-			_3DMath::Surface::Side side = surface->GetSide( triangleCenter );
-			if( side == _3DMath::Surface::INSIDE )
-				insideCount++;
-			else if( side == _3DMath::Surface::OUTSIDE )
-				outsideCount++;
-
-			triangleIter++;
-		}
-
-		_3DMath::Surface::Side dominantSide = _3DMath::Surface::OUTSIDE;
-		if( insideCount > outsideCount )
-			dominantSide = _3DMath::Surface::INSIDE;
-
-		if( dominantSide == captureSide )
+		if( face->IsCapturedByCutShape( this ) )
 			capturedFaceList.push_back( face );
-
-		iter++;
 	}
 }
 

@@ -74,6 +74,7 @@ public:
 
 		void UpdateTessellationIfNeeded( void );
 		void Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform ) const;
+		bool IsCapturedByCutShape( CutShape* cutShape );
 
 		_3DMath::Vector color;
 		_3DMath::Polygon* polygon;
