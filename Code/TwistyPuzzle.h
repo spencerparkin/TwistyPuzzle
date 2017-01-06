@@ -15,6 +15,9 @@
 // TODO: It would be interesting if we based a puzzle off of, say, cone-shaped cut objects.
 //       This would require that we trace out parts of conic sections.  Calculus methods would be in order?
 
+// TODO: Ideas for puzzles we could implement: Skweb, master skweb, pyraminx, face-turning octahedron,
+//       corner-turning octahedron, 2x2x3, 3x3x2, there are many more.
+
 class TwistyPuzzle : public wxObject
 {
 public:
@@ -23,6 +26,9 @@ public:
 
 	TwistyPuzzle( void );
 	virtual ~TwistyPuzzle( void );
+
+	bool Load( const wxString& file );
+	bool Save( const wxString& file ) const;
 
 	virtual void Clear( void );
 	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle );
@@ -95,6 +101,11 @@ protected:
 	void MakeBox( double width, double height, double depth );
 	void MakeIcosahedron( double radius );
 	void MakeDodecahedron( double radius );
+
+	static _3DMath::Vector ColorTable( int index );
+
+	static _3DMath::Vector red, green, blue, magenta, cyan, yellow;
+	static _3DMath::Vector orange, maroon, white, pink, lime, indigo;
 
 	FaceList faceList;
 	CutShapeList cutShapeList;

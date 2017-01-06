@@ -170,23 +170,8 @@ void TwistyPuzzle::MakeDodecahedron( double radius )
 	{
 		_3DMath::Polygon* polygon = *iter;
 		Face* face = new Face( polygon );
+		face->color = ColorTable( i++ );
 		faceList.push_back( face );
-
-		switch( i++ )
-		{
-			case 0 : face->color.Set( 0.5, 0.5, 0.5 ); break;
-			case 1 : face->color.Set( 1.0, 0.0, 0.0 ); break;
-			case 2 : face->color.Set( 0.0, 1.0, 0.0 ); break;
-			case 3 : face->color.Set( 0.0, 0.0, 1.0 ); break;
-			case 4 : face->color.Set( 1.0, 1.0, 0.0 ); break;
-			case 5 : face->color.Set( 0.0, 1.0, 1.0 ); break;
-			case 6 : face->color.Set( 1.0, 0.0, 1.0 ); break;
-			case 7 : face->color.Set( 1.0, 0.5, 0.5 ); break;
-			case 8 : face->color.Set( 0.5, 1.0, 0.5 ); break;
-			case 9 : face->color.Set( 0.5, 0.5, 1.0 ); break;
-			case 10: face->color.Set( 0.0, 0.5, 1.0 ); break;
-			case 11: face->color.Set( 1.0, 0.5, 0.0 ); break;
-		}
 	}
 }
 
@@ -197,6 +182,52 @@ void TwistyPuzzle::MakeIcosahedron( double radius )
 	triangleMesh.AddSymmetricVertices( _3DMath::Vector( 0.0, 1.0, PHI ) );
 	triangleMesh.AddSymmetricVertices( _3DMath::Vector( 1.0, PHI, 0.0 ) );
 	triangleMesh.AddSymmetricVertices( _3DMath::Vector( PHI, 0.0, 1.0 ) );
+}
+
+_3DMath::Vector TwistyPuzzle::red( 1.0, 0.0, 0.0 );
+_3DMath::Vector TwistyPuzzle::green( 0.0, 1.0, 0.0 );
+_3DMath::Vector TwistyPuzzle::blue( 0.0, 0.0, 1.0 );
+_3DMath::Vector TwistyPuzzle::magenta( 1.0, 0.0, 1.0 );
+_3DMath::Vector TwistyPuzzle::cyan( 0.0, 1.0, 1.0 );
+_3DMath::Vector TwistyPuzzle::yellow( 1.0, 1.0, 0.0 );
+_3DMath::Vector TwistyPuzzle::orange( 1.0, 0.5, 0.0 );
+_3DMath::Vector TwistyPuzzle::maroon( 153.0 / 255.0, 0.0, 56.0 / 255.0 );
+_3DMath::Vector TwistyPuzzle::white( 1.0, 1.0, 1.0 );
+_3DMath::Vector TwistyPuzzle::pink( 249.0 / 255.0, 0.0, 162.0 );
+_3DMath::Vector TwistyPuzzle::lime( 174.0 / 255.0, 249.0 / 255.0, 44.0 / 255.0 );
+_3DMath::Vector TwistyPuzzle::indigo( 94.0 / 255.0, 120.0 / 255.0, 249.0 / 255.0 );
+
+/*static*/ _3DMath::Vector TwistyPuzzle::ColorTable( int index )
+{
+	_3DMath::Vector* table[] =
+	{
+		&red,
+		&green,
+		&blue,
+		&magenta,
+		&cyan,
+		&yellow,
+		&orange,
+		&maroon,
+		&white,
+		&pink,
+		&lime,
+		&indigo,
+	};
+
+	int tableSize = sizeof( table ) / sizeof( _3DMath::Vector* );
+
+	return *table[ index % tableSize ];
+}
+
+bool TwistyPuzzle::Load( const wxString& file )
+{
+	return false;
+}
+
+bool TwistyPuzzle::Save( const wxString& file ) const
+{
+	return false;
 }
 
 /*virtual*/ void TwistyPuzzle::IncrementallySolve( RotationList& rotationList ) const

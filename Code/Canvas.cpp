@@ -7,6 +7,11 @@
 #include <gl/GLU.h>
 #include <HandleObject.h>
 
+// TODO: It would be well worth it to implement face selection and dragging as a
+//       means of manipulating the puzzle, because it's much faster and more intuitive
+//       than the current interface.  The selected face and dragging direction can
+//       clue us into which cut-shape to rotate and how to rotate it.
+
 int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
 
 Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList )

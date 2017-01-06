@@ -30,11 +30,12 @@ Megaminx::Megaminx( void )
 		_3DMath::Vector normal;
 		center.GetNormalized( normal );
 
-		center.Scale( 0.8 );
+		center.Scale( 0.7 );
 
 		CutShape* cutShape = new CutShape();
 		cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( center, normal ) );
 		cutShape->axisOfRotation.normal = normal;
+		cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 5.0;
 		cutShape->captureSide = _3DMath::Surface::OUTSIDE;
 		cutShapeList.push_back( cutShape );
 	}
