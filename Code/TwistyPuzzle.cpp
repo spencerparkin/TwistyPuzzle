@@ -19,11 +19,16 @@ TwistyPuzzle::TwistyPuzzle( void )
 	Clear();
 }
 
-void TwistyPuzzle::Clear( void )
+/*virtual*/ void TwistyPuzzle::Clear( void )
 {
 	_3DMath::FreeList< Face >( faceList );
 	_3DMath::FreeList< CutShape >( cutShapeList );
 	_3DMath::FreeList< Rotation >( rotationQueue );
+}
+
+/*virtual*/ bool TwistyPuzzle::SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown )
+{
+	return false;
 }
 
 void TwistyPuzzle::EnqueueRotation( Rotation* rotation )

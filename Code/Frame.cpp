@@ -148,7 +148,7 @@ wxMenu* Frame::CreatePuzzleMenu( void )
 	const wxClassInfo* classInfo = wxClassInfo::GetFirst();
 	while( classInfo )
 	{
-		if( classInfo != baseClassInfo && classInfo->IsKindOf( baseClassInfo ) )
+		if( classInfo != baseClassInfo && classInfo->IsKindOf( baseClassInfo ) && classInfo->IsDynamic() )
 		{
 			wxString className = classInfo->GetClassName();
 

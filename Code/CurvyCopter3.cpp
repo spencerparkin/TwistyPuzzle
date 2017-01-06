@@ -4,7 +4,7 @@
 #include <Surface.h>
 #include <Sphere.h>
 
-wxIMPLEMENT_DYNAMIC_CLASS( CurvyCopter3, TwistyPuzzle );
+wxIMPLEMENT_DYNAMIC_CLASS( CurvyCopter3, CurvyCopterBase );
 
 CurvyCopter3::CurvyCopter3( void )
 {
@@ -14,111 +14,15 @@ CurvyCopter3::CurvyCopter3( void )
 {
 }
 
-/*virtual*/ void CurvyCopter3::Reset( void )
+/*virtual*/ double CurvyCopter3::CutSphereRadius( void )
 {
-	Clear();
+	return 5.0 * sqrt( 4.0 / 9.0 + 1.0 );
+}
 
-	MakeBox( 10.0, 10.0, 10.0 );
-
-	// TODO: Do some math to figure out the partial turn for the jumble move.
-
-	double radius = 5.0 * sqrt( 4.0 / 9.0 + 1.0 );
-
-	CutShape* cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, 5.0, 0.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = M_PI;
-	cutShape->axisOfRotation.normal.Set( 1.0, 1.0, 0.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
-
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, 5.0, 0.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = M_PI;
-	cutShape->axisOfRotation.normal.Set( -1.0, 1.0, 0.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
-
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, 5.0, 5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = M_PI;
-	cutShape->axisOfRotation.normal.Set( 0.0, 1.0, 1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
-
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, 5.0, -5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = M_PI;
-	cutShape->axisOfRotation.normal.Set( 0.0, 1.0, -1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
-
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, -5.0, 0.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = M_PI;
-	cutShape->axisOfRotation.normal.Set( 1.0, -1.0, 0.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
-
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, -5.0, 0.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = M_PI;
-	cutShape->axisOfRotation.normal.Set( -1.0, -1.0, 0.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
-
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, -5.0, 5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = M_PI;
-	cutShape->axisOfRotation.normal.Set( 0.0, -1.0, 1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
-
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, -5.0, -5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = M_PI;
-	cutShape->axisOfRotation.normal.Set( 0.0, -1.0, -1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
-
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, 0.0, -5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = M_PI;
-	cutShape->axisOfRotation.normal.Set( -1.0, 0.0, -1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
-
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, 0.0, -5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = M_PI;
-	cutShape->axisOfRotation.normal.Set( 1.0, 0.0, -1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
-
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, 0.0, 5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = M_PI;
-	cutShape->axisOfRotation.normal.Set( -1.0, 0.0, 1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
-
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, 0.0, 5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = M_PI;
-	cutShape->axisOfRotation.normal.Set( 1.0, 0.0, 1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
+/*virtual*/ double CurvyCopter3::CalcJumbleTurnAmount( void )
+{
+	// TODO: Figure this out.
+	return 0.0;
 }
 
 // CurvyCopter3.cpp

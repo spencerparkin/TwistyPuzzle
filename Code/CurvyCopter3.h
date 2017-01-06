@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "TwistyPuzzle.h"
+#include "CurvyCopterBase.h"
 
-class CurvyCopter3 : public TwistyPuzzle
+class CurvyCopter3 : public CurvyCopterBase
 {
 public:
 
@@ -13,7 +13,8 @@ public:
 	CurvyCopter3( void );
 	virtual ~CurvyCopter3( void );
 
-	virtual void Reset( void ) override;
+	virtual double CalcJumbleTurnAmount( void ) override;
+	virtual double CutSphereRadius( void ) override;
 };
 
 // CurvyCopter3.h

@@ -151,6 +151,7 @@
     <ClInclude Include="Code\Canvas.h" />
     <ClInclude Include="Code\CurvyCopter.h" />
     <ClInclude Include="Code\CurvyCopter3.h" />
+    <ClInclude Include="Code\CurvyCopterBase.h" />
     <ClInclude Include="Code\FlowerBox.h" />
     <ClInclude Include="Code\Frame.h" />
     <ClInclude Include="Code\GLRenderer.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="Code\Canvas.cpp" />
     <ClCompile Include="Code\CurvyCopter.cpp" />
     <ClCompile Include="Code\CurvyCopter3.cpp" />
+    <ClCompile Include="Code\CurvyCopterBase.cpp" />
     <ClCompile Include="Code\FlowerBox.cpp" />
     <ClCompile Include="Code\Frame.cpp" />
     <ClCompile Include="Code\GLRenderer.cpp" />

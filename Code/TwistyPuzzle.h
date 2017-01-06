@@ -24,9 +24,10 @@ public:
 	TwistyPuzzle( void );
 	virtual ~TwistyPuzzle( void );
 
-	void Clear( void );
+	virtual void Clear( void );
 	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle );
 	virtual void Reset( void ) = 0;
+	virtual bool SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown );
 
 	class Rotation
 	{

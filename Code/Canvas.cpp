@@ -206,8 +206,13 @@ void Canvas::OnMouseWheel( wxMouseEvent& event )
 			wheelClicks = -wheelClicks;
 		}
 
-		TwistyPuzzle::Rotation* rotation = new TwistyPuzzle::Rotation( selectedObjectHandle, direction, wheelClicks );
-		wxGetApp().GetPuzzle()->EnqueueRotation( rotation );
+		if( event.AltDown() )
+			wxGetApp().GetPuzzle()->SpecialAction( wheelClicks, selectedObjectHandle, event.ShiftDown() );
+		else
+		{
+			TwistyPuzzle::Rotation* rotation = new TwistyPuzzle::Rotation( selectedObjectHandle, direction, wheelClicks );
+			wxGetApp().GetPuzzle()->EnqueueRotation( rotation );
+		}
 	}
 }
 

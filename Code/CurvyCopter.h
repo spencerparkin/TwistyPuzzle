@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "TwistyPuzzle.h"
+#include "CurvyCopterBase.h"
+#include <vector>
+#include <map>
 
-// TODO: Make the CurvyCopterTwo and CurvyCopterThree.
-// TODO: I think we can get the jumble move working.
-class CurvyCopter : public TwistyPuzzle
+class CurvyCopter : public CurvyCopterBase
 {
 public:
 
@@ -15,7 +15,8 @@ public:
 	CurvyCopter( void );
 	virtual ~CurvyCopter( void );
 
-	virtual void Reset( void ) override;
+	virtual double CalcJumbleTurnAmount( void ) override;
+	virtual double CutSphereRadius( void ) override;
 };
 
 // CurvyCopter.h
