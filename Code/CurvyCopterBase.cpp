@@ -12,6 +12,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 
 /*virtual*/ CurvyCopterBase::~CurvyCopterBase( void )
 {
+	Clear();
 }
 
 /*virtual*/ void CurvyCopterBase::Clear( void )
@@ -183,7 +184,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	jumble = new Jumble;
 	jumble->adjCutShapeHandles.push_back( cutShapeI->GetHandle() );
 	jumble->adjCutShapeHandles.push_back( cutShapeE->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeC->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( cutShapeJ->GetHandle() );
 	jumble->adjCutShapeHandles.push_back( cutShapeF->GetHandle() );
 	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeH->GetHandle(), jumble ) );
 
@@ -204,7 +205,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	jumble = new Jumble;
 	jumble->adjCutShapeHandles.push_back( cutShapeB->GetHandle() );
 	jumble->adjCutShapeHandles.push_back( cutShapeG->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeJ->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( cutShapeC->GetHandle() );
 	jumble->adjCutShapeHandles.push_back( cutShapeF->GetHandle() );
 	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeK->GetHandle(), jumble ) );
 
