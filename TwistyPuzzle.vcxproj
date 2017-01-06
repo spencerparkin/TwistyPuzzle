@@ -154,6 +154,7 @@
     <ClInclude Include="Code\FlowerBox.h" />
     <ClInclude Include="Code\Frame.h" />
     <ClInclude Include="Code\GLRenderer.h" />
+    <ClInclude Include="Code\Megaminx.h" />
     <ClInclude Include="Code\Permutation.h" />
     <ClInclude Include="Code\Rubiks2x2x2.h" />
     <ClInclude Include="Code\Rubiks3x3x3.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="Code\FlowerBox.cpp" />
     <ClCompile Include="Code\Frame.cpp" />
     <ClCompile Include="Code\GLRenderer.cpp" />
+    <ClCompile Include="Code\Megaminx.cpp" />
     <ClCompile Include="Code\Permutation.cpp" />
     <ClCompile Include="Code\Rubiks2x2x2.cpp" />
     <ClCompile Include="Code\Rubiks3x3x3.cpp" />

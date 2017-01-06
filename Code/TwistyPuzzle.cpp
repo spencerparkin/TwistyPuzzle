@@ -141,6 +141,59 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 	faceList.push_back( face );
 }
 
+void TwistyPuzzle::MakeDodecahedron( double radius )
+{
+	_3DMath::TriangleMesh triangleMesh;
+
+	triangleMesh.AddSymmetricVertices( _3DMath::Vector( 1.0, 1.0, 1.0 ) );
+	triangleMesh.AddSymmetricVertices( _3DMath::Vector( 0.0, 1.0 / PHI, PHI ) );
+	triangleMesh.AddSymmetricVertices( _3DMath::Vector( 1.0 / PHI, PHI, 0.0 ) );
+	triangleMesh.AddSymmetricVertices( _3DMath::Vector( PHI, 0.0, 1.0 / PHI ) );
+
+	_3DMath::AffineTransform transform;
+	transform.linearTransform.SetScale( radius );
+	triangleMesh.Transform( transform );
+
+	triangleMesh.FindConvexHull();
+
+	_3DMath::PolygonList polygonFaceList;
+	triangleMesh.GeneratePolygonFaceList( polygonFaceList );
+
+	int i = 0;
+
+	for( _3DMath::PolygonList::iterator iter = polygonFaceList.begin(); iter != polygonFaceList.end(); iter++ )
+	{
+		_3DMath::Polygon* polygon = *iter;
+		Face* face = new Face( polygon );
+		faceList.push_back( face );
+
+		switch( i++ )
+		{
+			case 0 : face->color.Set( 0.5, 0.5, 0.5 ); break;
+			case 1 : face->color.Set( 1.0, 0.0, 0.0 ); break;
+			case 2 : face->color.Set( 0.0, 1.0, 0.0 ); break;
+			case 3 : face->color.Set( 0.0, 0.0, 1.0 ); break;
+			case 4 : face->color.Set( 1.0, 1.0, 0.0 ); break;
+			case 5 : face->color.Set( 0.0, 1.0, 1.0 ); break;
+			case 6 : face->color.Set( 1.0, 0.0, 1.0 ); break;
+			case 7 : face->color.Set( 1.0, 0.5, 0.5 ); break;
+			case 8 : face->color.Set( 0.5, 1.0, 0.5 ); break;
+			case 9 : face->color.Set( 0.5, 0.5, 1.0 ); break;
+			case 10: face->color.Set( 0.0, 0.5, 1.0 ); break;
+			case 11: face->color.Set( 1.0, 0.5, 0.0 ); break;
+		}
+	}
+}
+
+void TwistyPuzzle::MakeIcosahedron( double radius )
+{
+	_3DMath::TriangleMesh triangleMesh;
+
+	triangleMesh.AddSymmetricVertices( _3DMath::Vector( 0.0, 1.0, PHI ) );
+	triangleMesh.AddSymmetricVertices( _3DMath::Vector( 1.0, PHI, 0.0 ) );
+	triangleMesh.AddSymmetricVertices( _3DMath::Vector( PHI, 0.0, 1.0 ) );
+}
+
 /*virtual*/ void TwistyPuzzle::IncrementallySolve( RotationList& rotationList ) const
 {
 }

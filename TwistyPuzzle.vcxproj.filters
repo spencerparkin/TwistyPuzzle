@@ -49,6 +49,9 @@
     <ClInclude Include="Code\Permutation.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Megaminx.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -89,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="Code\Permutation.cpp">
       <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Megaminx.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

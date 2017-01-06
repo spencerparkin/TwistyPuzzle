@@ -92,6 +92,8 @@ public:
 protected:
 
 	void MakeBox( double width, double height, double depth );
+	void MakeIcosahedron( double radius );
+	void MakeDodecahedron( double radius );
 
 	FaceList faceList;
 	CutShapeList cutShapeList;
