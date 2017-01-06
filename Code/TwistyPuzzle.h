@@ -92,8 +92,6 @@ public:
 		_3DMath::Line axisOfRotation;
 		_3DMath::Surface::Side captureSide;
 		double rotationAngleForSingleTurn;
-
-		// TODO: Add label to cut-shape so that we can use that when rendering axes and when executing a given sequence?
 	};
 
 	typedef std::list< CutShape* > CutShapeList;
