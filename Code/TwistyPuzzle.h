@@ -22,6 +22,8 @@ class TwistyPuzzle : public wxObject
 {
 public:
 
+	class CutShape;
+
 	wxDECLARE_ABSTRACT_CLASS( TwistyPuzzle );
 
 	TwistyPuzzle( void );
@@ -51,6 +53,8 @@ public:
 	};
 
 	typedef std::list< Rotation* > RotationList;
+
+	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation );
 
 	// Compute and return a sequence of rotations that gets us closer, if
 	// not all the way, to the solved state of the puzzle.  The method is

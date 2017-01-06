@@ -69,27 +69,40 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 		CutShape* cutShape = ( CutShape* )_3DMath::HandleObject::Dereference( rotation->cutShapeHandle );
 		if( cutShape )
 		{
-			FaceList capturedFaceList;
-			cutShape->CutAndCapture( faceList, capturedFaceList );
-
-			double rotationAngle = rotation->turnCount * cutShape->rotationAngleForSingleTurn;
-			if( rotation->direction == Rotation::DIR_CW )
-				rotationAngle = -rotationAngle;
-			rotationAngle = fmod( rotationAngle, 2.0 * M_PI );
-
-			_3DMath::AffineTransform transform;
-			transform.SetRotation( cutShape->axisOfRotation, rotationAngle );
-
-			for( FaceList::iterator iter = capturedFaceList.begin(); iter != capturedFaceList.end(); iter++ )
+			if( ApplyCutShapeWithRotation( cutShape, rotation ) )
 			{
-				Face* face = *iter;
-				face->polygon->Transform( transform );
-				face->axisOfRotation = cutShape->axisOfRotation;
-				face->rotationAngleForAnimation = -rotationAngle;
+				if( !rotation->isHistory )
+				{
+					// TODO: Add to history buffer.
+				}
 			}
 		}
 
 		delete rotation;
+	}
+
+	return true;
+}
+
+/*virtual*/ bool TwistyPuzzle::ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation )
+{
+	FaceList capturedFaceList;
+	cutShape->CutAndCapture( faceList, capturedFaceList );
+
+	double rotationAngle = rotation->turnCount * cutShape->rotationAngleForSingleTurn;
+	if( rotation->direction == Rotation::DIR_CW )
+		rotationAngle = -rotationAngle;
+	rotationAngle = fmod( rotationAngle, 2.0 * M_PI );
+
+	_3DMath::AffineTransform transform;
+	transform.SetRotation( cutShape->axisOfRotation, rotationAngle );
+
+	for( FaceList::iterator iter = capturedFaceList.begin(); iter != capturedFaceList.end(); iter++ )
+	{
+		Face* face = *iter;
+		face->polygon->Transform( transform );
+		face->axisOfRotation = cutShape->axisOfRotation;
+		face->rotationAngleForAnimation = -rotationAngle;
 	}
 
 	return true;

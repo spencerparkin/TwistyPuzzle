@@ -9,8 +9,12 @@
 
 // TODO: It would be well worth it to implement face selection and dragging as a
 //       means of manipulating the puzzle, because it's much faster and more intuitive
-//       than the current interface.  The selected face and dragging direction can
-//       clue us into which cut-shape to rotate and how to rotate it.
+//       than the current interface.  The selected face and dragging direction of that
+//       face can clue us into which cut-shape to rotate and how to rotate it.
+//       Make subroutine that, given a face, returns all cut-shapes that capture it.
+//       Refactor to use that routine in all appriopriate places.  Project all applicable
+//       cut-shape axes into the view plane and compare mouse motion vector to determine
+//       which axes to use and how much to rotate about it.
 
 int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
 

@@ -101,6 +101,7 @@ void Frame::OnLoad( wxCommandEvent& event )
 void Frame::OnDocumentation( wxCommandEvent& event )
 {
 	// TODO: Create frame for documentation window containing a wxHtmlWindow control serving files out of a zip.
+	//       Document some algorithms in the documentation?
 }
 
 void Frame::OnAbout( wxCommandEvent& event )
