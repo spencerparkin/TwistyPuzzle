@@ -459,6 +459,7 @@ TwistyPuzzle::Rotation::Rotation( int cutShapeHandle, Direction direction, doubl
 	this->cutShapeHandle = cutShapeHandle;
 	this->direction = direction;
 	this->turnCount = turnCount;
+	isHistory = false;
 }
 
 TwistyPuzzle::Rotation::~Rotation( void )

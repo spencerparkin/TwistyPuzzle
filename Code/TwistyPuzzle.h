@@ -47,6 +47,7 @@ public:
 		int cutShapeHandle;
 		Direction direction;
 		double turnCount;
+		bool isHistory;
 	};
 
 	typedef std::list< Rotation* > RotationList;
@@ -119,6 +120,8 @@ protected:
 	FaceList faceList;
 	CutShapeList cutShapeList;
 	RotationList rotationQueue;
+
+	// TODO: Store rotation history here.  Support forward/backward methods in this class.  Add to history during rotation queue processing.
 };
 
 // TwistyPuzzle.h
