@@ -54,6 +54,7 @@ public:
 
 	typedef std::list< Rotation* > RotationList;
 
+	virtual Rotation* CalculateNearestRotation( CutShape* cutShape, double currentRotationAngle );
 	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation );
 
 	// Compute and return a sequence of rotations that gets us closer, if
@@ -65,7 +66,7 @@ public:
 	void EnqueueRotation( Rotation* rotation );
 	bool ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper );
 
-	class Face
+	class Face : public _3DMath::HandleObject
 	{
 	public:
 
@@ -74,7 +75,7 @@ public:
 
 		void UpdateTessellationIfNeeded( void );
 		void Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform ) const;
-		bool IsCapturedByCutShape( CutShape* cutShape );
+		bool IsCapturedByCutShape( CutShape* cutShape ) const;
 
 		_3DMath::Vector color;
 		_3DMath::Polygon* polygon;
@@ -93,6 +94,7 @@ public:
 		~CutShape( void );
 
 		void CutAndCapture( FaceList& faceList, FaceList& capturedFaceList );
+		void Capture( const FaceList& faceList, FaceList& capturedFaceList );
 
 		_3DMath::Surface* surface;
 		_3DMath::Line axisOfRotation;
@@ -101,8 +103,6 @@ public:
 	};
 
 	typedef std::list< CutShape* > CutShapeList;
-
-protected:
 
 	void MakeBox( double width, double height, double depth );
 

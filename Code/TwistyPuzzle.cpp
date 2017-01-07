@@ -66,7 +66,8 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 		Rotation* rotation = *iter;
 		rotationQueue.erase( iter );
 
-		CutShape* cutShape = ( CutShape* )_3DMath::HandleObject::Dereference( rotation->cutShapeHandle );
+		_3DMath::HandleObject* object = _3DMath::HandleObject::Dereference( rotation->cutShapeHandle );
+		CutShape* cutShape = dynamic_cast< CutShape* >( object );
 		if( cutShape )
 		{
 			if( ApplyCutShapeWithRotation( cutShape, rotation ) )
@@ -102,7 +103,7 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 		Face* face = *iter;
 		face->polygon->Transform( transform );
 		face->axisOfRotation = cutShape->axisOfRotation;
-		face->rotationAngleForAnimation = -rotationAngle;
+		face->rotationAngleForAnimation -= rotationAngle;
 	}
 
 	return true;
@@ -264,6 +265,17 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 {
 }
 
+/*virtual*/ TwistyPuzzle::Rotation* TwistyPuzzle::CalculateNearestRotation( CutShape* cutShape, double currentRotationAngle )
+{
+	double turnCount = fmod( currentRotationAngle, cutShape->rotationAngleForSingleTurn );
+	turnCount = floor( turnCount );
+	if( fabs( turnCount ) < EPSILON )
+		return nullptr;
+
+	Rotation* rotation = new Rotation( cutShape->GetHandle(), Rotation::DIR_CCW, turnCount );
+	return rotation;
+}
+
 /*virtual*/ void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle )
 {
 	_3DMath::LinearTransform normalTransform;
@@ -341,10 +353,6 @@ void TwistyPuzzle::Face::UpdateTessellationIfNeeded( void )
 
 void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform ) const
 {
-	// TODO: We might select faces, but until then bail if we're not in render mode.
-	if( renderMode != GL_RENDER )
-		return;
-	
 	glLineWidth( 2.5f );
 
 	_3DMath::AffineTransform renderTransform;
@@ -353,10 +361,13 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 	animationTransform.SetRotation( axisOfRotation, rotationAngleForAnimation );
 	renderTransform.Concatinate( animationTransform, transform );
 
+	if( renderMode == GL_SELECT )
+		glLoadName( GetHandle() );
+
 	renderer.Color( color );
 	renderer.DrawPolygon( *polygon, &renderTransform );
 
-	if( renderer.drawStyle == _3DMath::Renderer::DRAW_STYLE_SOLID )
+	if( renderer.drawStyle == _3DMath::Renderer::DRAW_STYLE_SOLID && renderMode == GL_RENDER )
 	{
 		renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
 
@@ -374,9 +385,9 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 }
 
 // TODO: There is a bug here; this logic does not always give us what we want.
-bool TwistyPuzzle::Face::IsCapturedByCutShape( CutShape* cutShape )
+bool TwistyPuzzle::Face::IsCapturedByCutShape( CutShape* cutShape ) const
 {
-	UpdateTessellationIfNeeded();
+	const_cast< Face* >( this )->UpdateTessellationIfNeeded();
 
 	int insideCount = 0;
 	int outsideCount = 0;
@@ -458,7 +469,12 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 		iter = nextIter;
 	}
 
-	for( iter = faceList.begin(); iter != faceList.end(); iter++ )
+	Capture( faceList, capturedFaceList );
+}
+
+void TwistyPuzzle::CutShape::Capture( const FaceList& faceList, FaceList& capturedFaceList )
+{
+	for( FaceList::const_iterator iter = faceList.cbegin(); iter != faceList.cend(); iter++ )
 	{
 		Face* face = *iter;
 		if( face->IsCapturedByCutShape( this ) )

@@ -7,20 +7,14 @@
 #include <gl/GLU.h>
 #include <HandleObject.h>
 
-// TODO: It would be well worth it to implement face selection and dragging as a
-//       means of manipulating the puzzle, because it's much faster and more intuitive
-//       than the current interface.  The selected face and dragging direction of that
-//       face can clue us into which cut-shape to rotate and how to rotate it.
-//       Project all applicable cut-shape axes into the view plane and compare mouse
-//       motion vector to determine which axes to use and how much to rotate about it.
-
 int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
 
 Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList )
 {
 	selectedObjectHandle = 0;
 	eyeDistance = 20.0;
-	mouseDragging = false;
+	mouseDragMode = DRAG_MODE_NONE;
+	grip = nullptr;
 
 	context = nullptr;
 	renderer = new GLRenderer();
@@ -39,6 +33,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 {
 	delete context;
 	delete renderer;
+	delete grip;
 }
 
 void Canvas::OnMouseRightDown( wxMouseEvent& event )
@@ -47,51 +42,92 @@ void Canvas::OnMouseRightDown( wxMouseEvent& event )
 	selectedObjectHandle = 0;
 	Render( GL_SELECT, &mousePos, &selectedObjectHandle );
 	Refresh();
+	mouseDragMode = DRAG_MODE_ROTATE_FACES;
+	mouseDragLastPos = mousePos;
+	mouseDragClickPos = mousePos;
+	CaptureMouse();
+
+	if( grip )
+	{
+		delete grip;
+		grip = nullptr;
+	}
+}
+
+void Canvas::OnMouseRightUp( wxMouseEvent& event )
+{
+	if( grip )
+	{
+		grip->CommitRotation( this );
+		delete grip;
+		grip = nullptr;
+	}
+
+	mouseDragMode = DRAG_MODE_NONE;
+	ReleaseCapture();
 }
 
 void Canvas::OnMouseLeftDown( wxMouseEvent& event )
 {
-	mouseDragging = true;
+	mouseDragMode = DRAG_MODE_ORIENT_PUZZLE;
 	mouseDragLastPos = event.GetPosition();
 	CaptureMouse();
 }
 
 void Canvas::OnMouseLeftUp( wxMouseEvent& event )
 {
-	mouseDragging = false;
+	mouseDragMode = DRAG_MODE_NONE;
 	ReleaseCapture();
 }
 
 void Canvas::OnMouseMotion( wxMouseEvent& event )
 {
-	if( mouseDragging )
+	mouseDragCurrentPos = event.GetPosition();
+	wxPoint mouseDragDelta = mouseDragCurrentPos - mouseDragLastPos;
+	mouseDragLastPos = mouseDragCurrentPos;
+
+	switch( mouseDragMode )
 	{
-		wxPoint mouseCurrentPos = event.GetPosition();
-		wxPoint mouseDelta = mouseCurrentPos - mouseDragLastPos;
-		mouseDragLastPos = mouseCurrentPos;
+		case DRAG_MODE_ORIENT_PUZZLE:
+		{
+			double rotationRate = 0.01;
+			double xAngle = rotationRate * double( mouseDragDelta.y );
+			double yAngle = rotationRate * double( mouseDragDelta.x );
 
-		double rotationRate = 0.01;
-		double xAngle = rotationRate * double( mouseDelta.y );
-		double yAngle = rotationRate * double( mouseDelta.x );
+			_3DMath::Vector xAxis( 1.0, 0.0, 0.0 );
+			_3DMath::Vector yAxis( 0.0, 1.0, 0.0 );
 
-		_3DMath::Vector xAxis( 1.0, 0.0, 0.0 );
-		_3DMath::Vector yAxis( 0.0, 1.0, 0.0 );
+			_3DMath::AffineTransform rotation;
 
-		_3DMath::AffineTransform rotation;
+			rotation.linearTransform.SetRotation( xAxis, xAngle );
+			transform.Concatinate( rotation );
 
-		rotation.linearTransform.SetRotation( xAxis, xAngle );
-		transform.Concatinate( rotation );
+			rotation.linearTransform.SetRotation( yAxis, yAngle );
+			transform.Concatinate( rotation );
 
-		rotation.linearTransform.SetRotation( yAxis, yAngle );
-		transform.Concatinate( rotation );
+			Refresh();
+			break;
+		}
+		case DRAG_MODE_ROTATE_FACES:
+		{
+			if( !grip )
+				grip = new Grip();
 
-		Refresh();
+			grip->PartiallyRotate( this );
+			break;
+		}
 	}
 }
 
 void Canvas::OnMouseCaptureLost( wxMouseCaptureLostEvent& event )
 {
-	mouseDragging = false;
+	if( grip )
+	{
+		delete grip;
+		grip = nullptr;
+	}
+
+	mouseDragMode = DRAG_MODE_NONE;
 }
 
 void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* objectHandle /*= nullptr*/ )
@@ -237,6 +273,129 @@ void Canvas::BindContext( void )
 		context = new wxGLContext( this );
 
 	SetCurrent( *context );
+}
+
+Canvas::Grip::Grip( void )
+{
+}
+
+Canvas::Grip::~Grip( void )
+{
+}
+
+int Canvas::Grip::DetermineEffectedCutShape( Canvas* canvas, _3DMath::Vector& mouseVector )
+{
+	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
+	if( !puzzle )
+		return 0;
+
+	_3DMath::HandleObject* object = _3DMath::HandleObject::Dereference( canvas->selectedObjectHandle );
+	TwistyPuzzle::Face* face = dynamic_cast< TwistyPuzzle::Face* >( object );
+	if( !face )
+		return 0;
+
+	wxPoint mouseDragDelta = canvas->mouseDragCurrentPos - canvas->mouseDragClickPos;
+	mouseVector.Set( mouseDragDelta.x, -mouseDragDelta.y, 0.0 );
+	mouseVector.Scale( 0.5 );
+
+	_3DMath::AffineTransform transformInverse;
+	canvas->transform.GetInverse( transformInverse );
+
+	_3DMath::LinearTransform normalTransform;
+	transformInverse.linearTransform.GetNormalTransform( normalTransform );
+
+	normalTransform.Transform( mouseVector );
+
+	_3DMath::Vector unitMouseVector;
+	mouseVector.GetNormalized( unitMouseVector );
+
+	double smallestDot = 1.0;
+	int cutShapeHandle = 0;
+
+	for( TwistyPuzzle::CutShapeList::iterator iter = puzzle->cutShapeList.begin(); iter != puzzle->cutShapeList.end(); iter++ )
+	{
+		TwistyPuzzle::CutShape* cutShape = *iter;
+		if( face->IsCapturedByCutShape( cutShape ) )
+		{
+			double dot = cutShape->axisOfRotation.normal.Dot( unitMouseVector );
+			if( fabs( dot ) < fabs( smallestDot ) )
+			{
+				smallestDot = dot;
+				cutShapeHandle = cutShape->GetHandle();
+			}
+		}
+	}
+
+	return cutShapeHandle;
+}
+
+bool Canvas::Grip::PartiallyRotate( Canvas* canvas )
+{
+	_3DMath::Vector mouseVector;
+	int cutShapeHandle = DetermineEffectedCutShape( canvas, mouseVector );
+	if( !cutShapeHandle )
+		return false;
+
+	TwistyPuzzle::CutShape* cutShape = dynamic_cast< TwistyPuzzle::CutShape* >( _3DMath::HandleObject::Dereference( cutShapeHandle ) );
+	if( cutShape )
+	{
+		TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
+
+		TwistyPuzzle::FaceList capturedFaceList;
+		cutShape->Capture( puzzle->faceList, capturedFaceList );
+
+		double rotationAngle = CalculateRotationAngle( mouseVector );
+
+		_3DMath::LinearTransform linearTransform;
+		linearTransform.xAxis = mouseVector;
+		linearTransform.yAxis = cutShape->axisOfRotation.normal;
+		linearTransform.zAxis.Set( 0.0, 0.0, 1.0 );
+
+		double det = linearTransform.Determinant();
+		if( det < 0.0 )
+			rotationAngle = -rotationAngle;
+
+		for( TwistyPuzzle::FaceList::iterator iter = capturedFaceList.begin(); iter != capturedFaceList.end(); iter++ )
+		{
+			TwistyPuzzle::Face* face = *iter;
+			face->rotationAngleForAnimation = rotationAngle;
+		}
+
+		canvas->Refresh();
+	}
+
+	return true;
+}
+
+double Canvas::Grip::CalculateRotationAngle( const _3DMath::Vector& mouseVector )
+{
+	return mouseVector.Length() * 0.5;
+}
+
+bool Canvas::Grip::CommitRotation( Canvas* canvas )
+{
+	_3DMath::Vector mouseVector;
+	int cutShapeHandle = DetermineEffectedCutShape( canvas, mouseVector );
+	if( !cutShapeHandle )
+		return false;
+
+	TwistyPuzzle::CutShape* cutShape = dynamic_cast< TwistyPuzzle::CutShape* >( _3DMath::HandleObject::Dereference( cutShapeHandle ) );
+	if( cutShape )
+	{
+		TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
+
+		double rotationAngle = CalculateRotationAngle( mouseVector );
+
+		TwistyPuzzle::Rotation* rotation = puzzle->CalculateNearestRotation( cutShape, rotationAngle );
+		if( rotation )
+			puzzle->EnqueueRotation( rotation );
+
+		// TODO: May need to process queue once here before painting occurs?
+
+		canvas->Refresh();
+	}
+
+	return false;
 }
 
 // Canvas.cpp
