@@ -106,20 +106,25 @@ void Frame::OnSolve( wxCommandEvent& event )
 {
 }
 
-void Frame::OnSave( wxCommandEvent& event )
+bool Frame::Save( void )
 {
 	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
-	
+
 	wxFileDialog fileDialog( this, "Save puzzle to file.", wxEmptyString, wxEmptyString, "XML file (*.xml)|*.xml", wxFD_SAVE );
 	if( fileDialog.ShowModal() == wxID_OK )
 	{
 		wxString file = fileDialog.GetPath();
 		if( !puzzle->Save( file ) )
+		{
 			wxMessageBox( "Failed to save.", "Error", wxCENTRE | wxICON_ERROR, this );
+			return false;
+		}
 	}
+
+	return true;
 }
 
-void Frame::OnLoad( wxCommandEvent& event )
+bool Frame::Load( void )
 {
 	wxFileDialog fileDialog( this, "Load puzzle from file.", wxEmptyString, wxEmptyString, "XML file (*.xml)|*.xml", wxFD_OPEN | wxFD_FILE_MUST_EXIST );
 	if( fileDialog.ShowModal() == wxID_OK )
@@ -132,8 +137,35 @@ void Frame::OnLoad( wxCommandEvent& event )
 		{
 			delete puzzle;
 			wxMessageBox( "Failed to load.", "Error", wxCENTRE | wxICON_ERROR, this );
+			return false;
 		}
 	}
+
+	return true;
+}
+
+void Frame::OnSave( wxCommandEvent& event )
+{
+	Save();
+}
+
+void Frame::OnLoad( wxCommandEvent& event )
+{
+	if( SaveProtect() )
+		Load();
+}
+
+bool Frame::SaveProtect( void )
+{
+	TwistyPuzzle* twistyPuzzle = wxGetApp().GetPuzzle();
+	if( twistyPuzzle->needsSaving )
+	{
+		int response = wxMessageBox( "Would you like to save your current puzzle before continuing?", "Unsaved Puzzle", wxCENTRE | wxICON_QUESTION, this );
+		if( response == wxID_CANCEL || ( response == wxID_YES && !Save() ) )
+			return false;
+	}
+
+	return true;
 }
 
 void Frame::OnDocumentation( wxCommandEvent& event )
@@ -210,12 +242,15 @@ wxMenu* Frame::CreatePuzzleMenu( void )
 
 void Frame::OnPuzzleType( wxCommandEvent& event )
 {
-	PuzzleMenuItemUserData* userData = ( PuzzleMenuItemUserData* )event.GetEventUserData();
+	if( SaveProtect() )
+	{
+		PuzzleMenuItemUserData* userData = ( PuzzleMenuItemUserData* )event.GetEventUserData();
 
-	TwistyPuzzle* puzzle = ( TwistyPuzzle* )userData->classInfo->CreateObject();
-	puzzle->Reset();
-	wxGetApp().SetPuzzle( puzzle );
-	wxGetApp().GetFrame()->GetCanvas()->Refresh();
+		TwistyPuzzle* puzzle = ( TwistyPuzzle* )userData->classInfo->CreateObject();
+		puzzle->Reset();
+		wxGetApp().SetPuzzle( puzzle );
+		wxGetApp().GetFrame()->GetCanvas()->Refresh();
+	}
 }
 
 void Frame::OnUpdateUI( wxUpdateUIEvent& event )

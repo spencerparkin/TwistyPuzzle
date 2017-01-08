@@ -56,6 +56,9 @@ private:
 	};
 
 	wxMenu* CreatePuzzleMenu( void );
+	bool SaveProtect( void );
+	bool Save( void );
+	bool Load( void );
 
 	Canvas* canvas;
 

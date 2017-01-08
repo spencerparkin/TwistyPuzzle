@@ -130,6 +130,7 @@ public:
 	CutShapeList cutShapeList;
 	RotationList rotationQueue;
 	double rotationSpeedCoeficient;
+	bool needsSaving;
 
 	// TODO: Store rotation history here.  Support forward/backward methods in this class.  Add to history during rotation queue processing.
 };

@@ -15,6 +15,7 @@ wxIMPLEMENT_ABSTRACT_CLASS( TwistyPuzzle, wxObject )
 TwistyPuzzle::TwistyPuzzle( void )
 {
 	rotationSpeedCoeficient = 10.0;
+	needsSaving = true;
 }
 
 /*virtual*/ TwistyPuzzle::~TwistyPuzzle( void )
@@ -120,6 +121,7 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 		face->rotationAngleForAnimation -= rotationAngle;
 	}
 
+	needsSaving = true;
 	return true;
 }
 
