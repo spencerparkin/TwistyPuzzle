@@ -1,0 +1,12 @@
+<html>
+	<head>
+		<title>Twisty Puzzle Documentation</title>
+	</head>
+	<body>
+		<h1>4. Program Defects</h1>
+		<p>
+		Please report bugs you find in the program <a href="https://github.com/spencerparkin/TwistyPuzzle/issues">here</a>.  This program was particularly challenging to write and it's certainly not perfect.
+		It seems to work reasonably well for the most part, but if you find a problem, please let me know.
+		</p>
+	</body>
+</html>

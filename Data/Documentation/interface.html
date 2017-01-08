@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<title>Twisty Puzzle Documentation</title>
+	</head>
+	<head>
+		<h1>2. Interfacing with the Puzzle</h1>
+		<p>
+		Upon program instantiation, you are immediately presented with a standard 3x3x3
+		Rubik's cube.  It is not immediately obvious, because not cuts are visible on the
+		cube, but if you click on the "Puzzle" menu, you'll see that the "Rubiks3x3x3" menu
+		item is checked.  You can use this menu to create other puzzle types.
+		</p>
+		<p>
+		In general, the often combersome nature of manipulating a virtual twisty puzzle can make
+		them much less fun to play with than their physical counter-parts.  The intuitiveness
+		and ease of the user-interface to such a puzzle, therefore, is of paramount importance;
+		and that is why a number of ways of manipulating the puzzle have been provided as
+		discussed in the following sub-sections.  Dispite these difficulties, however, there a
+		number of obvious advantages to a computer simulation.
+		</p>
+		<h2>2.1. Orienting the Puzzle</h2>
+		<p>
+		Holding down the left mouse button with the cursor inside the window's drawing area
+		while dragging the mouse, you'll see that the puzzle can be rotated so as to give you
+		a view of the puzzle from different perspectives.  As of this writing, it is the only
+		way of viewing the puzzle, but with practice, it is not hard to quickly orient the puzzle
+		into the desired view.
+		</p>
+		<h2>2.2. Rotating Sections of the Puzzle</h2>
+		<p>
+		There are two ways to do this using the mouse, and a third way using the keyboard.
+		</p>
+		<h3>2.2.1. Rotate by Cut-Shape</h3>
+		<p>
+		By now you've probably noticed a few semi-transparent arrows poking out of the puzzle.
+		These represent axes of rotation about which a cut-shape cuts-out and rotates a portion
+		of the puzzle.  After right-clicking on the arrow-tip of one of these axes, you'll see
+		the cut-shape appear.  You can then use the mouse wheel to rotate the portion of the puzzle
+		intersected by the cut-shape.
+		</p>
+		<h3>2.2.2. Rotate by Grip</h3>
+		<p>
+		This means of manipulating the puzzle was harder to implement and, consequently, a bit less reliable,
+		but it is far more intuitive and less tedious than the previous method.  As of this writing, it
+		is best to generate all cuts of the puzzle before using this method, which is often the case after
+		a good scrambling.  Go to the "Program" menu and select "Scramble".  After dismissing the subsequent
+		dialog, wait for the puzzle to scramble, then move your mouse cursor over a face of the puzzle.
+		Now, while holding down the right-mouse button, drag the mouse to see how the puzzle is manipulated.
+		</p>
+		<h3>2.2.3. Rotate by Sequence</h3>
+		<p>
+		Coming soon.
+		</p>
+	</head>
+</html>
