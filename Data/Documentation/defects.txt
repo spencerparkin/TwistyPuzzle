@@ -7,6 +7,8 @@
 		<p>
 		Please report bugs you find in the program <a href="https://github.com/spencerparkin/TwistyPuzzle/issues">here</a>.  This program was particularly challenging to write and it's certainly not perfect.
 		It seems to work reasonably well for the most part, but if you find a problem, please let me know.
+		My thanks in advance for anyone who takes the time to file a bug report.  I can't promise I'll
+		be able to address every issue, but I will at least give it some serious thought.
 		</p>
 	</body>
 </html>
