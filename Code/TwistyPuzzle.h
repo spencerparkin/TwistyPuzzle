@@ -54,7 +54,7 @@ public:
 
 	typedef std::list< Rotation* > RotationList;
 
-	virtual Rotation* CalculateNearestRotation( CutShape* cutShape, double currentRotationAngle );
+	virtual Rotation* CalculateNearestRotation( CutShape* cutShape, double rotationAngle );
 	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation );
 
 	// Compute and return a sequence of rotations that gets us closer, if
@@ -94,7 +94,6 @@ public:
 		~CutShape( void );
 
 		void CutAndCapture( FaceList& faceList, FaceList& capturedFaceList );
-		void Capture( const FaceList& faceList, FaceList& capturedFaceList );
 
 		_3DMath::Surface* surface;
 		_3DMath::Line axisOfRotation;

@@ -47,8 +47,7 @@ private:
 		bool PartiallyRotate( Canvas* canvas );
 		bool CommitRotation( Canvas* canvas );
 
-		int DetermineEffectedCutShape( Canvas* canvas, _3DMath::Vector& mouseVector );
-		double CalculateRotationAngle( const _3DMath::Vector& mouseVector );
+		int DetermineCutShapeAndRotation( Canvas* canvas, double& rotationAngle );
 	};
 
 	wxGLContext* context;

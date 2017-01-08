@@ -265,9 +265,9 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 {
 }
 
-/*virtual*/ TwistyPuzzle::Rotation* TwistyPuzzle::CalculateNearestRotation( CutShape* cutShape, double currentRotationAngle )
+/*virtual*/ TwistyPuzzle::Rotation* TwistyPuzzle::CalculateNearestRotation( CutShape* cutShape, double rotationAngle )
 {
-	double turnCount = fmod( currentRotationAngle, cutShape->rotationAngleForSingleTurn );
+	double turnCount = fmod( rotationAngle, cutShape->rotationAngleForSingleTurn );
 	turnCount = floor( turnCount );
 	if( fabs( turnCount ) < EPSILON )
 		return nullptr;
@@ -469,11 +469,6 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 		iter = nextIter;
 	}
 
-	Capture( faceList, capturedFaceList );
-}
-
-void TwistyPuzzle::CutShape::Capture( const FaceList& faceList, FaceList& capturedFaceList )
-{
 	for( FaceList::const_iterator iter = faceList.cbegin(); iter != faceList.cend(); iter++ )
 	{
 		Face* face = *iter;

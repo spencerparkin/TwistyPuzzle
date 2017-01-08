@@ -82,7 +82,7 @@ SquareOne::SquareOne( void )
 	return TwistyPuzzle::ApplyCutShapeWithRotation( cutShape, rotation );
 }
 
-/*virtual*/ TwistyPuzzle::Rotation* SquareOne::CalculateNearestRotation( CutShape* cutShape, double currentRotationAngle )
+/*virtual*/ TwistyPuzzle::Rotation* SquareOne::CalculateNearestRotation( CutShape* cutShape, double rotationAngle )
 {
 	return nullptr;
 }
