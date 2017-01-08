@@ -17,6 +17,7 @@ TwistyPuzzle::TwistyPuzzle( void )
 {
 	rotationSpeedCoeficient = 10.0;
 	needsSaving = false;
+	rotationHistoryIter = rotationHistory.end();
 }
 
 /*virtual*/ TwistyPuzzle::~TwistyPuzzle( void )
@@ -29,11 +30,70 @@ TwistyPuzzle::TwistyPuzzle( void )
 	_3DMath::FreeList< Face >( faceList );
 	_3DMath::FreeList< CutShape >( cutShapeList );
 	_3DMath::FreeList< Rotation >( rotationQueue );
+	_3DMath::FreeList< Rotation >( rotationHistory );
 }
 
 /*virtual*/ bool TwistyPuzzle::SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown )
 {
 	return false;
+}
+
+void TwistyPuzzle::AddHistory( Rotation* newRotation )
+{
+	RotationList::iterator iter = rotationHistoryIter;
+	while( iter != rotationHistory.end() )
+	{
+		RotationList::iterator nextIter = iter;
+		nextIter++;
+		Rotation* rotation = *iter;
+		delete rotation;
+		rotationHistory.erase( iter );
+		iter = nextIter;
+	}
+
+	rotationHistory.push_back( newRotation );
+	rotationHistoryIter = rotationHistory.end();
+}
+
+void TwistyPuzzle::GoForward( void )
+{
+	if( CanGoForward() )
+	{
+		Rotation* rotation = *rotationHistoryIter;
+		Rotation* newRotation = new Rotation(0);
+		*newRotation = *rotation;
+		newRotation->isHistory = true;
+		EnqueueRotation( newRotation );
+		rotationHistoryIter++;
+	}
+}
+
+void TwistyPuzzle::GoBackward( void )
+{
+	if( CanGoBackward() )
+	{
+		rotationHistoryIter--;
+		Rotation* rotation = *rotationHistoryIter;
+		Rotation* newRotation = new Rotation(0);
+		*newRotation = *rotation;
+		newRotation->turnCount = -newRotation->turnCount;
+		newRotation->isHistory = true;
+		EnqueueRotation( newRotation );
+	}
+}
+
+bool TwistyPuzzle::CanGoForward( void )
+{
+	if( rotationHistoryIter == rotationHistory.end() )
+		return false;
+	return true;
+}
+
+bool TwistyPuzzle::CanGoBackward( void )
+{
+	if( rotationHistoryIter == rotationHistory.begin() )
+		return false;
+	return true;
 }
 
 /*static*/ TwistyPuzzle* TwistyPuzzle::AllocateUsingFile( const wxString& file )
@@ -101,6 +161,8 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 		if( rotation->newRotationSpeedCoeficient != 0.0 )
 			rotationSpeedCoeficient = rotation->newRotationSpeedCoeficient;
 
+		bool deleteRotation = true;
+
 		_3DMath::HandleObject* object = _3DMath::HandleObject::Dereference( rotation->cutShapeHandle );
 		CutShape* cutShape = dynamic_cast< CutShape* >( object );
 		if( cutShape )
@@ -109,12 +171,14 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 			{
 				if( !rotation->isHistory )
 				{
-					// TODO: Add to history buffer.
+					AddHistory( rotation );
+					deleteRotation = false;
 				}
 			}
 		}
 
-		delete rotation;
+		if( deleteRotation )
+			delete rotation;
 	}
 
 	return true;
@@ -363,6 +427,8 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 		if( !face->Save( xmlFaceNode ) )
 			return false;
 	}
+
+	// TODO: Save/restore history?
 
 	return true;
 }

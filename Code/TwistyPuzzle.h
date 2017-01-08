@@ -137,14 +137,21 @@ public:
 	static _3DMath::Vector red, green, blue, magenta, cyan, yellow;
 	static _3DMath::Vector orange, maroon, white, pink, lime, indigo;
 
+	void GoForward( void );
+	void GoBackward( void );
+
+	void AddHistory( Rotation* newRotation );
+
+	bool CanGoForward( void );
+	bool CanGoBackward( void );
+
 	FaceList faceList;
 	CutShapeList cutShapeList;
 	RotationList rotationQueue;
 	double rotationSpeedCoeficient;
 	mutable bool needsSaving;
-
-	// TODO: Store rotation history here.  Support forward/backward methods in this class.  Add to history during rotation queue processing.
-	//       Do we want to load/save the rotation history?
+	RotationList rotationHistory;
+	RotationList::iterator rotationHistoryIter;
 };
 
 // TwistyPuzzle.h

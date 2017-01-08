@@ -31,6 +31,8 @@ private:
 		ID_Solve,
 		ID_Save,
 		ID_Load,
+		ID_GoForward,
+		ID_GoBackward,
 		ID_Puzzle,		// This needs to be the last ID.
 	};
 
@@ -46,6 +48,8 @@ private:
 	void OnSave( wxCommandEvent& event );
 	void OnLoad( wxCommandEvent& event );
 	void OnDocumentation( wxCommandEvent& event );
+	void OnGoForward( wxCommandEvent& event );
+	void OnGoBackward( wxCommandEvent& event );
 
 	class PuzzleMenuItemUserData : public wxObject
 	{
