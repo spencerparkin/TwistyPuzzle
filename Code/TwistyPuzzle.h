@@ -11,6 +11,7 @@
 #include <Line.h>
 #include <TimeKeeper.h>
 #include <Surface.h>
+#include <Random.h>
 
 // TODO: It would be interesting if we based a puzzle off of, say, cone-shaped cut objects.
 //       This would require that we trace out parts of conic sections.  Calculus methods would be in order?
@@ -32,6 +33,8 @@ public:
 	bool Load( const wxString& file );
 	bool Save( const wxString& file ) const;
 
+	static TwistyPuzzle* AllocateUsingFile( const wxString& file );
+
 	virtual void Clear( void );
 	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle );
 	virtual void Reset( void ) = 0;
@@ -43,18 +46,20 @@ public:
 
 		enum Direction { DIR_CW, DIR_CCW };
 
-		Rotation( int cutShapeHandle, Direction direction, double turnCount );
+		Rotation( int cutShapeHandle, Direction direction = DIR_CW, double turnCount = 1.0 );
 		~Rotation( void );
 
 		int cutShapeHandle;
 		Direction direction;
 		double turnCount;
 		bool isHistory;
+		double newRotationSpeedCoeficient;
 	};
 
 	typedef std::list< Rotation* > RotationList;
 
 	virtual Rotation* CalculateNearestRotation( CutShape* cutShape, double rotationAngle );
+	virtual void EnqueueRandomRotations( _3DMath::Random& random, int rotationCount );
 	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation );
 
 	// Compute and return a sequence of rotations that gets us closer, if
@@ -124,6 +129,7 @@ public:
 	FaceList faceList;
 	CutShapeList cutShapeList;
 	RotationList rotationQueue;
+	double rotationSpeedCoeficient;
 
 	// TODO: Store rotation history here.  Support forward/backward methods in this class.  Add to history during rotation queue processing.
 };

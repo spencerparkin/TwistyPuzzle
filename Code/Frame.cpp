@@ -8,6 +8,9 @@
 #include <wx/sizer.h>
 #include <wx/menu.h>
 #include <wx/aboutdlg.h>
+#include <wx/numdlg.h>
+#include <wx/msgdlg.h>
+#include <wx/filedlg.h>
 
 // TODO: Add rotation history feature.
 // TODO: Add rotatoin axis labeling and text sequence interface.
@@ -82,8 +85,21 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 
 void Frame::OnScramble( wxCommandEvent& event )
 {
-	// TODO: Queue up a bunch of random rotations.
-	//       Don't forget about puzzles that support jumbling.
+	int rotationCount = ( int )wxGetNumberFromUser( "Scramble with how many rotations?", "Scrambles:", "Scramble", 50, 1, 500, wxGetApp().GetFrame() );
+
+	_3DMath::Random random;
+
+	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
+	
+	TwistyPuzzle::Rotation* rotation = new TwistyPuzzle::Rotation(0);
+	rotation->newRotationSpeedCoeficient = 20.0;
+	puzzle->EnqueueRotation( rotation );
+
+	puzzle->EnqueueRandomRotations( random, rotationCount );
+
+	rotation = new TwistyPuzzle::Rotation(0);
+	rotation->newRotationSpeedCoeficient = 10.0;
+	puzzle->EnqueueRotation( rotation );
 }
 
 void Frame::OnSolve( wxCommandEvent& event )
@@ -92,10 +108,32 @@ void Frame::OnSolve( wxCommandEvent& event )
 
 void Frame::OnSave( wxCommandEvent& event )
 {
+	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
+	
+	wxFileDialog fileDialog( this, "Save puzzle to file.", wxEmptyString, wxEmptyString, "XML file (*.xml)|*.xml", wxFD_SAVE );
+	if( fileDialog.ShowModal() == wxID_OK )
+	{
+		wxString file = fileDialog.GetPath();
+		if( !puzzle->Save( file ) )
+			wxMessageBox( "Failed to save.", "Error", wxCENTRE | wxICON_ERROR, this );
+	}
 }
 
 void Frame::OnLoad( wxCommandEvent& event )
 {
+	wxFileDialog fileDialog( this, "Load puzzle from file.", wxEmptyString, wxEmptyString, "XML file (*.xml)|*.xml", wxFD_OPEN | wxFD_FILE_MUST_EXIST );
+	if( fileDialog.ShowModal() == wxID_OK )
+	{
+		wxString file = fileDialog.GetPath();
+		TwistyPuzzle* puzzle = TwistyPuzzle::AllocateUsingFile( file );
+		if( puzzle->Load( file ) )
+			wxGetApp().SetPuzzle( puzzle );
+		else
+		{
+			delete puzzle;
+			wxMessageBox( "Failed to load.", "Error", wxCENTRE | wxICON_ERROR, this );
+		}
+	}
 }
 
 void Frame::OnDocumentation( wxCommandEvent& event )

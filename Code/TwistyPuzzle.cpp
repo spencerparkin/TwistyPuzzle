@@ -1,6 +1,8 @@
 // TwistyPuzzle.cpp
 
 #include "TwistyPuzzle.h"
+#include "Application.h"
+#include "Frame.h"
 #include <Surface.h>
 #include <ListFunctions.h>
 
@@ -12,6 +14,7 @@ wxIMPLEMENT_ABSTRACT_CLASS( TwistyPuzzle, wxObject )
 
 TwistyPuzzle::TwistyPuzzle( void )
 {
+	rotationSpeedCoeficient = 10.0;
 }
 
 /*virtual*/ TwistyPuzzle::~TwistyPuzzle( void )
@@ -31,6 +34,11 @@ TwistyPuzzle::TwistyPuzzle( void )
 	return false;
 }
 
+/*static*/ TwistyPuzzle* TwistyPuzzle::AllocateUsingFile( const wxString& file )
+{
+	return nullptr;
+}
+
 void TwistyPuzzle::EnqueueRotation( Rotation* rotation )
 {
 	rotationQueue.push_back( rotation );
@@ -45,7 +53,7 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 		Face* face = *iter;
 		if( face->rotationAngleForAnimation != 0.0 )
 		{
-			double rotationRateRadiansPerSecond = -face->rotationAngleForAnimation * 10.0;
+			double rotationRateRadiansPerSecond = -face->rotationAngleForAnimation * rotationSpeedCoeficient;
 			double thresholdAngle = 0.01;
 
 			if( fabs( face->rotationAngleForAnimation ) < thresholdAngle )
@@ -59,12 +67,18 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 
 	if( !motion )
 	{
+		wxString text = wxString::Format( "%d rotations queued.", rotationQueue.size() );
+		wxGetApp().GetFrame()->GetStatusBar()->SetStatusText( text );
+
 		if( rotationQueue.size() == 0 )
 			return false;
 
 		RotationList::iterator iter = rotationQueue.begin();
 		Rotation* rotation = *iter;
 		rotationQueue.erase( iter );
+
+		if( rotation->newRotationSpeedCoeficient != 0.0 )
+			rotationSpeedCoeficient = rotation->newRotationSpeedCoeficient;
 
 		_3DMath::HandleObject* object = _3DMath::HandleObject::Dereference( rotation->cutShapeHandle );
 		CutShape* cutShape = dynamic_cast< CutShape* >( object );
@@ -276,6 +290,28 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	return rotation;
 }
 
+/*virtual*/ void TwistyPuzzle::EnqueueRandomRotations( _3DMath::Random& random, int rotationCount )
+{
+	for( int i = 0; i < rotationCount; i++ )
+	{
+		int j = random.Integer( 0, cutShapeList.size() - 1 );
+		CutShapeList::iterator iter = cutShapeList.begin();
+		while( j > 0 )
+		{
+			iter++;
+			j--;
+		}
+
+		const CutShape* cutShape = *iter;
+
+		Rotation::Direction rotDir = Rotation::DIR_CCW;
+		if( random.Integer( 0, 1 ) )
+			rotDir = Rotation::DIR_CW;
+
+		EnqueueRotation( new Rotation( cutShape->GetHandle(), rotDir, 1.0 ) );
+	}
+}
+
 /*virtual*/ void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle )
 {
 	_3DMath::LinearTransform normalTransform;
@@ -481,12 +517,13 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 //                              TwistyPuzzle::Rotation
 //---------------------------------------------------------------------------------
 
-TwistyPuzzle::Rotation::Rotation( int cutShapeHandle, Direction direction, double turnCount )
+TwistyPuzzle::Rotation::Rotation( int cutShapeHandle, Direction direction /*= DIR_CCW*/, double turnCount /*= 1.0*/ )
 {
 	this->cutShapeHandle = cutShapeHandle;
 	this->direction = direction;
 	this->turnCount = turnCount;
 	isHistory = false;
+	newRotationSpeedCoeficient = 0.0;
 }
 
 TwistyPuzzle::Rotation::~Rotation( void )

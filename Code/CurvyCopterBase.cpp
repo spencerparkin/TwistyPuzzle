@@ -231,6 +231,13 @@ CurvyCopterBase::CurvyCopterBase( void )
 	if( iter == jumbleMap.end() )
 		return false;
 
+	EnqueueJumble( iter, shiftDown );
+	return true;
+}
+
+void CurvyCopterBase::EnqueueJumble( JumbleMap::iterator iter, bool shiftDown )
+{
+	int cutShapeHandle = iter->first;
 	const Jumble* jumble = iter->second;
 
 	int adjCutShapes[2] = { 0, 0 };
@@ -253,11 +260,32 @@ CurvyCopterBase::CurvyCopterBase( void )
 
 	EnqueueRotation( new Rotation( adjCutShapes[0], rotDir, jumbleTurnAmount ) );
 	EnqueueRotation( new Rotation( adjCutShapes[1], rotDir, jumbleTurnAmount ) );
-	EnqueueRotation( new Rotation( cutShape->GetHandle(), Rotation::DIR_CCW, 1.0 ) );
+	EnqueueRotation( new Rotation( cutShapeHandle, Rotation::DIR_CCW, 1.0 ) );
 	EnqueueRotation( new Rotation( adjCutShapes[0], rotDir, -jumbleTurnAmount ) );
 	EnqueueRotation( new Rotation( adjCutShapes[1], rotDir, -jumbleTurnAmount ) );
+}
 
-	return true;
+/*virtual*/ void CurvyCopterBase::EnqueueRandomRotations( _3DMath::Random& random, int rotationCount )
+{
+	while( rotationCount > 0 )
+	{
+		if( random.Integer( 0, 3 ) )
+			TwistyPuzzle::EnqueueRandomRotations( random, 1 );
+		else
+		{
+			int i = random.Integer( 0, cutShapeList.size() - 1 );
+			JumbleMap::iterator iter = jumbleMap.begin();
+			while( i > 0 )
+			{
+				iter++;
+				i--;
+			}
+
+			EnqueueJumble( iter, ( random.Integer( 0, 1 ) ? true : false ) );
+		}
+
+		rotationCount--;
+	}
 }
 
 // CurvyCopterBase.cpp

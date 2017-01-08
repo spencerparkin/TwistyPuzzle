@@ -16,6 +16,7 @@ public:
 	virtual void Clear( void ) override;
 	virtual void Reset( void ) override;
 	virtual bool SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown ) override;
+	virtual void EnqueueRandomRotations( _3DMath::Random& random, int rotationCount ) override;
 	virtual double CalcJumbleTurnAmount( void ) = 0;
 	virtual double CutSphereRadius( void ) = 0;
 
@@ -26,6 +27,8 @@ public:
 
 	typedef std::map< int, Jumble* > JumbleMap;
 	JumbleMap jumbleMap;
+
+	void EnqueueJumble( JumbleMap::iterator iter, bool shiftDown );
 };
 
 // CurvyCopterBase.h
