@@ -2,10 +2,11 @@
 
 #pragma once
 
+#include <wx/glcanvas.h>
+#include <wx/xml/xml.h>
 #include <Vector.h>
 #include <Polygon.h>
 #include <AffineTransform.h>
-#include <wx/glcanvas.h>
 #include <Renderer.h>
 #include <HandleObject.h>
 #include <Line.h>
@@ -32,6 +33,9 @@ public:
 
 	bool Load( const wxString& file );
 	bool Save( const wxString& file ) const;
+
+	virtual bool LoadFromXml( const wxXmlDocument& xmlDocument );
+	virtual bool SaveToXml( wxXmlDocument& xmlDocument ) const;
 
 	static TwistyPuzzle* AllocateUsingFile( const wxString& file );
 
@@ -81,6 +85,8 @@ public:
 		void UpdateTessellationIfNeeded( void );
 		void Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform ) const;
 		bool IsCapturedByCutShape( CutShape* cutShape ) const;
+		bool Save( wxXmlNode* xmlFaceNode ) const;
+		bool Load( const wxXmlNode* xmlFaceNode );
 
 		_3DMath::Vector color;
 		_3DMath::Polygon* polygon;
@@ -121,6 +127,11 @@ public:
 
 	void MakePolyhedron( Polyhedron polyhedron, double radius );
 
+	static bool SaveVector( const wxString& name, wxXmlNode* xmlNode, const _3DMath::Vector& vector );
+	static bool LoadVector( const wxString& name, const wxXmlNode* xmlNode, _3DMath::Vector& vector );
+	static bool SaveNumber( const wxString& name, wxXmlNode* xmlNode, double number );
+	static bool LoadNumber( const wxString& name, const wxXmlNode* xmlNode, double& number );
+
 	static _3DMath::Vector ColorTable( int index );
 
 	static _3DMath::Vector red, green, blue, magenta, cyan, yellow;
@@ -130,9 +141,10 @@ public:
 	CutShapeList cutShapeList;
 	RotationList rotationQueue;
 	double rotationSpeedCoeficient;
-	bool needsSaving;
+	mutable bool needsSaving;
 
 	// TODO: Store rotation history here.  Support forward/backward methods in this class.  Add to history during rotation queue processing.
+	//       Do we want to load/save the rotation history?
 };
 
 // TwistyPuzzle.h

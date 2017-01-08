@@ -5,6 +5,7 @@
 #include "Frame.h"
 #include <Surface.h>
 #include <ListFunctions.h>
+#include <wx/wfstream.h>
 
 //---------------------------------------------------------------------------------
 //                                  TwistyPuzzle
@@ -15,7 +16,7 @@ wxIMPLEMENT_ABSTRACT_CLASS( TwistyPuzzle, wxObject )
 TwistyPuzzle::TwistyPuzzle( void )
 {
 	rotationSpeedCoeficient = 10.0;
-	needsSaving = true;
+	needsSaving = false;
 }
 
 /*virtual*/ TwistyPuzzle::~TwistyPuzzle( void )
@@ -37,7 +38,26 @@ TwistyPuzzle::TwistyPuzzle( void )
 
 /*static*/ TwistyPuzzle* TwistyPuzzle::AllocateUsingFile( const wxString& file )
 {
-	return nullptr;
+	TwistyPuzzle* puzzle = nullptr;
+
+	wxXmlDocument xmlDocument;
+	wxFileInputStream fileInputStream( file );
+	if( xmlDocument.Load( fileInputStream ) )
+	{
+		wxXmlNode* xmlRootNode = xmlDocument.GetRoot();
+		if( xmlRootNode->GetName() == "TwistyPuzzle" )
+		{
+			wxString className = xmlRootNode->GetAttribute( "class_name" );
+			const wxClassInfo* classInfo = wxClassInfo::FindClass( className );
+			const wxClassInfo* baseClassInfo = wxClassInfo::FindClass( "TwistyPuzzle" );
+			if( classInfo && classInfo->IsKindOf( baseClassInfo ) )
+			{
+				puzzle = ( TwistyPuzzle* )classInfo->CreateObject();
+			}
+		}
+	}
+
+	return puzzle;
 }
 
 void TwistyPuzzle::EnqueueRotation( Rotation* rotation )
@@ -269,12 +289,82 @@ _3DMath::Vector TwistyPuzzle::indigo( 94.0 / 255.0, 120.0 / 255.0, 249.0 / 255.0
 
 bool TwistyPuzzle::Load( const wxString& file )
 {
-	return false;
+	wxXmlDocument xmlDocument;
+	wxFileInputStream fileInputStream( file );
+	if( !xmlDocument.Load( fileInputStream ) )
+		return false;
+
+	if( !LoadFromXml( xmlDocument ) )
+		return false;
+
+	return true;
 }
 
 bool TwistyPuzzle::Save( const wxString& file ) const
 {
-	return false;
+	wxXmlDocument xmlDocument;
+	if( !SaveToXml( xmlDocument ) )
+		return false;
+
+	wxFileOutputStream fileOutputStream( file );
+	if( !xmlDocument.Save( fileOutputStream ) )
+		return false;
+
+	needsSaving = false;
+	return true;
+}
+
+/*virtual*/ bool TwistyPuzzle::LoadFromXml( const wxXmlDocument& xmlDocument )
+{
+	const wxXmlNode* xmlRootNode = xmlDocument.GetRoot();
+
+	if( xmlRootNode->GetName() != "TwistyPuzzle" )
+		return false;
+
+	Reset();
+
+	_3DMath::FreeList< Face >( faceList );
+
+	for( wxXmlNode* xmlNode = xmlRootNode->GetChildren(); xmlNode; xmlNode = xmlNode->GetNext() )
+	{
+		if( xmlNode->GetName() == "FacePool" )
+		{
+			for( wxXmlNode* xmlFaceNode = xmlNode->GetChildren(); xmlFaceNode; xmlFaceNode = xmlFaceNode->GetNext() )
+			{
+				Face* face = new Face( new _3DMath::Polygon() );
+				faceList.push_back( face );
+
+				if( !face->Load( xmlFaceNode ) )
+					return false;
+			}
+		}
+	}
+
+	if( faceList.size() == 0 )
+		return false;
+
+	return true;
+}
+
+/*virtual*/ bool TwistyPuzzle::SaveToXml( wxXmlDocument& xmlDocument ) const
+{
+	wxXmlNode* xmlRootNode = new wxXmlNode( wxXML_ELEMENT_NODE, "TwistyPuzzle" );
+	xmlDocument.SetRoot( xmlRootNode );
+
+	wxClassInfo* classInfo = GetClassInfo();
+	wxString className = classInfo->GetClassName();
+	xmlRootNode->AddAttribute( "class_name", className );
+
+	wxXmlNode* xmlFacePoolNode = new wxXmlNode( xmlRootNode, wxXML_ELEMENT_NODE, "FacePool" );
+	for( FaceList::const_iterator iter = faceList.cbegin(); iter != faceList.cend(); iter++ )
+	{
+		const Face* face = *iter;
+		wxXmlNode* xmlFaceNode = new wxXmlNode( xmlFacePoolNode, wxXML_ELEMENT_NODE, "Face" );
+		if( !face->Save( xmlFaceNode ) )
+			return false;
+	}
+
+	return true;
 }
 
 /*virtual*/ void TwistyPuzzle::IncrementallySolve( RotationList& rotationList ) const
@@ -364,6 +454,52 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	}
 }
 
+/*static*/ bool TwistyPuzzle::SaveVector( const wxString& name, wxXmlNode* xmlNode, const _3DMath::Vector& vector )
+{
+	wxString xStr, yStr, zStr;
+
+	xStr = wxString::Format( "%1.16f", vector.x );
+	yStr = wxString::Format( "%1.16f", vector.y );
+	zStr = wxString::Format( "%1.16f", vector.z );
+
+	xmlNode->AddAttribute( name + "_x", xStr );
+	xmlNode->AddAttribute( name + "_y", yStr );
+	xmlNode->AddAttribute( name + "_z", zStr );
+
+	return true;
+}
+
+/*static*/ bool TwistyPuzzle::LoadVector( const wxString& name, const wxXmlNode* xmlNode, _3DMath::Vector& vector )
+{
+	wxString xStr = xmlNode->GetAttribute( name + "_x" );
+	wxString yStr = xmlNode->GetAttribute( name + "_y" );
+	wxString zStr = xmlNode->GetAttribute( name + "_z" );
+
+	if( !xStr.ToCDouble( &vector.x ) )
+		return false;
+
+	if( !yStr.ToCDouble( &vector.y ) )
+		return false;
+
+	if( !zStr.ToCDouble( &vector.z ) )
+		return false;
+
+	return true;
+}
+
+/*static*/ bool TwistyPuzzle::SaveNumber( const wxString& name, wxXmlNode* xmlNode, double number )
+{
+	wxString numberStr = wxString::Format( "%1.16f", number );
+	xmlNode->AddAttribute( name, numberStr );
+	return true;
+}
+
+/*static*/ bool TwistyPuzzle::LoadNumber( const wxString& name, const wxXmlNode* xmlNode, double& number )
+{
+	wxString numberStr = xmlNode->GetAttribute( name );
+	return numberStr.ToCDouble( &number );
+}
+
 //---------------------------------------------------------------------------------
 //                               TwistyPuzzle::Face
 //---------------------------------------------------------------------------------
@@ -378,6 +514,58 @@ TwistyPuzzle::Face::Face( _3DMath::Polygon* polygon )
 TwistyPuzzle::Face::~Face( void )
 {
 	delete polygon;
+}
+
+bool TwistyPuzzle::Face::Save( wxXmlNode* xmlFaceNode ) const
+{
+	SaveVector( "color", xmlFaceNode, color );
+	
+	wxXmlNode* xmlVertexPoolNode = new wxXmlNode( xmlFaceNode, wxXML_ELEMENT_NODE, "VertexPool" );
+
+	for( int i = 0; i < ( signed )polygon->vertexArray->size(); i++ )
+	{
+		wxXmlNode* xmlVertexNode = new wxXmlNode( xmlVertexPoolNode, wxXML_ELEMENT_NODE, "Vertex" );
+		SaveVector( "", xmlVertexNode, ( *polygon->vertexArray )[i] );
+	}
+
+	return true;
+}
+
+bool TwistyPuzzle::Face::Load( const wxXmlNode* xmlFaceNode )
+{
+	if( !LoadVector( "color", xmlFaceNode, color ) )
+		return false;
+
+	polygon->vertexArray->clear();
+
+	for( wxXmlNode* xmlNode = xmlFaceNode->GetChildren(); xmlNode; xmlNode = xmlNode->GetNext() )
+	{
+		if( xmlNode->GetName() == "VertexPool" )
+		{
+			_3DMath::VectorList vertexList;
+
+			for( wxXmlNode* xmlVertexNode = xmlNode->GetChildren(); xmlVertexNode; xmlVertexNode = xmlVertexNode->GetNext() )
+			{
+				_3DMath::Vector vertex;
+				if( !LoadVector( "", xmlVertexNode, vertex ) )
+					return false;
+
+				vertexList.push_back( vertex );
+			}
+			
+			_3DMath::VectorList::reverse_iterator iter = vertexList.rbegin();
+			while( iter != vertexList.rend() )
+			{
+				polygon->vertexArray->push_back( *iter );
+				iter++;
+			}
+		}
+	}
+
+	if( polygon->vertexArray->size() == 0 )
+		return false;
+
+	return true;
 }
 
 void TwistyPuzzle::Face::UpdateTessellationIfNeeded( void )

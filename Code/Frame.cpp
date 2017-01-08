@@ -141,6 +141,7 @@ bool Frame::Load( void )
 		}
 	}
 
+	wxGetApp().GetFrame()->GetCanvas()->Refresh();
 	return true;
 }
 
@@ -160,8 +161,8 @@ bool Frame::SaveProtect( void )
 	TwistyPuzzle* twistyPuzzle = wxGetApp().GetPuzzle();
 	if( twistyPuzzle->needsSaving )
 	{
-		int response = wxMessageBox( "Would you like to save your current puzzle before continuing?", "Unsaved Puzzle", wxCENTRE | wxICON_QUESTION, this );
-		if( response == wxID_CANCEL || ( response == wxID_YES && !Save() ) )
+		int response = wxMessageBox( "Would you like to save your current puzzle before continuing?", "Unsaved Puzzle", wxCENTRE | wxICON_QUESTION | wxYES_NO | wxCANCEL, this );
+		if( response == wxCANCEL || ( response == wxYES && !Save() ) )
 			return false;
 	}
 
