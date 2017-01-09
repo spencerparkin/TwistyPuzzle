@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "TwistyPuzzle.h"
 #include "GLRenderer.h"
+#include "HtmlFrame.h"
 #include <wx/sizer.h>
 #include <wx/menu.h>
 #include <wx/aboutdlg.h>
@@ -193,8 +194,8 @@ bool Frame::SaveProtect( void )
 
 void Frame::OnDocumentation( wxCommandEvent& event )
 {
-	// TODO: Create frame for documentation window containing a wxHtmlWindow control serving files out of a zip.
-	//       Document some algorithms in the documentation?
+	HtmlFrame* htmlFrame = new HtmlFrame( nullptr, wxEmptyString );
+	htmlFrame->Show( true );
 }
 
 void Frame::OnAbout( wxCommandEvent& event )
