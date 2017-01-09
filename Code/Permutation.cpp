@@ -259,12 +259,12 @@ void DeletePermutationList( PermutationList& permutationList )
 	}
 }
 
-bool ReducePermutation( const PermutationMap& permutationMap, const Permutation& permutationToReduce, std::list< std::string >& keyList )
+bool ReducePermutation( const PermutationMap& permutationMap, const Permutation& permutationToReduce, std::string& sequence )
 {
 	Permutation permutation;
 	permutationToReduce.MakeCopy( permutation );
 
-	keyList.clear();
+	sequence = "";
 
 	while( !permutation.IsIdentity() )
 	{
@@ -297,10 +297,65 @@ bool ReducePermutation( const PermutationMap& permutationMap, const Permutation&
 			return false;
 
 		permutation.Concatinate( *bestPermutation );
-		keyList.push_back( key );
+
+		if( !sequence.empty() )
+			sequence += ",";
+		sequence += iter->first;
 	}
 
 	return true;
+}
+
+void GenerateAllPossibleCommutators( PermutationMap& commutatorMap, const PermutationMap& permutationMap )
+{
+	for( PermutationMap::const_iterator iterA = permutationMap.cbegin(); iterA != permutationMap.end(); iterA++ )
+	{
+		const Permutation* permutationA = iterA->second;
+
+		for( PermutationMap::const_iterator iterB = ++iterA; iterB != permutationMap.end(); iterB++ )
+		{
+			const Permutation* permutationB = iterB->second;
+
+			if( !permutationA->CommutesWith( *permutationB ) )
+			{
+				Permutation permutationAInv, permutationBInv;
+				permutationA->MakeInverse( permutationAInv );
+				permutationB->MakeInverse( permutationBInv );
+
+				std::string key = "(" + iterA->first + "),(" + iterB->first + "),-(" + iterA->first + "),-(" + iterB->first + ")";
+				Permutation* permutation = new Permutation();
+				permutation->Concatinate( *permutationA );
+				permutation->Concatinate( *permutationB );
+				permutation->Concatinate( permutationAInv );
+				permutation->Concatinate( permutationBInv );
+				commutatorMap.insert( std::pair< std::string, Permutation* >( key, permutation ) );
+
+				key = "(" + iterA->first + "),-(" + iterB->first + "),-(" + iterA->first + "),(" + iterB->first + ")";
+				permutation = new Permutation();
+				permutation->Concatinate( *permutationA );
+				permutation->Concatinate( permutationBInv );
+				permutation->Concatinate( permutationAInv );
+				permutation->Concatinate( *permutationB );
+				commutatorMap.insert( std::pair< std::string, Permutation* >( key, permutation ) );
+
+				key = "-(" + iterA->first + "),(" + iterB->first + "),(" + iterA->first + "),-(" + iterB->first + ")";
+				permutation = new Permutation();
+				permutation->Concatinate( permutationAInv );
+				permutation->Concatinate( *permutationB );
+				permutation->Concatinate( *permutationA );
+				permutation->Concatinate( permutationBInv );
+				commutatorMap.insert( std::pair< std::string, Permutation* >( key, permutation ) );
+
+				key = "-(" + iterA->first + "),-(" + iterB->first + "),(" + iterA->first + "),(" + iterB->first + ")";
+				permutation = new Permutation();
+				permutation->Concatinate( permutationAInv );
+				permutation->Concatinate( permutationBInv );
+				permutation->Concatinate( *permutationA );
+				permutation->Concatinate( *permutationB );
+				commutatorMap.insert( std::pair< std::string, Permutation* >( key, permutation ) );
+			}
+		}
+	}
 }
 
 // Permutation.cpp

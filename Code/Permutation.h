@@ -50,8 +50,9 @@ typedef std::list< Permutation* > PermutationList;
 
 void DeletePermutationMap( PermutationMap& permutationMap );
 void DeletePermutationList( PermutationList& permutationList );
-bool ReducePermutation( const PermutationMap& permutationMap, const Permutation& permutationToReduce, std::list< std::string >& keyList );
-//void GenerateAllPossibleCommutators( PermutationMap& permutationMap, const PermutationList& permutationList );
-//void GenerateAllPossibleConjugates( PermutationMap& permutationMap, const Permutation& conjugatedPermutation, const PermutationList& permutationList, int sandwichSize );
+bool ReducePermutation( const PermutationMap& permutationMap, const Permutation& permutationToReduce, std::string& sequence );
+void GenerateAllPossibleCommutators( PermutationMap& commutatorMap, const PermutationMap& permutationMap );
+//void GenerateAllPossibleConjugates( PermutationMap& conjugateMap, const PermutationMap& conjugatedPermutationMap, const PermutationMap& conjugatorPermutationMap, int sandwichSize );
+//void Compress( std::string& sequence, const PermutationMap& permutationMap );
 
 // Permutation.h
