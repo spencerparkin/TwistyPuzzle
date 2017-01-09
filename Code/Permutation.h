@@ -45,4 +45,13 @@ public:
 	Bijection bijection;
 };
 
+typedef std::map< std::string, Permutation* > PermutationMap;
+typedef std::list< Permutation* > PermutationList;
+
+void DeletePermutationMap( PermutationMap& permutationMap );
+void DeletePermutationList( PermutationList& permutationList );
+bool ReducePermutation( const PermutationMap& permutationMap, const Permutation& permutationToReduce, std::list< std::string >& keyList );
+//void GenerateAllPossibleCommutators( PermutationMap& permutationMap, const PermutationList& permutationList );
+//void GenerateAllPossibleConjugates( PermutationMap& permutationMap, const Permutation& conjugatedPermutation, const PermutationList& permutationList, int sandwichSize );
+
 // Permutation.h

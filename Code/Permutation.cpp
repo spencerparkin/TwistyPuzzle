@@ -237,4 +237,70 @@ void Permutation::Concatinate( const Permutation& permutation )
 	product.MakeCopy( *this );
 }
 
+void DeletePermutationMap( PermutationMap& permutationMap )
+{
+	while( permutationMap.size() > 0 )
+	{
+		PermutationMap::iterator iter = permutationMap.begin();
+		Permutation* permutation = iter->second;
+		delete permutation;
+		permutationMap.erase( iter );
+	}
+}
+
+void DeletePermutationList( PermutationList& permutationList )
+{
+	while( permutationList.size() > 0 )
+	{
+		PermutationList::iterator iter = permutationList.begin();
+		Permutation* permutation = *iter;
+		delete permutation;
+		permutationList.erase( iter );
+	}
+}
+
+bool ReducePermutation( const PermutationMap& permutationMap, const Permutation& permutationToReduce, std::list< std::string >& keyList )
+{
+	Permutation permutation;
+	permutationToReduce.MakeCopy( permutation );
+
+	keyList.clear();
+
+	while( !permutation.IsIdentity() )
+	{
+		const Permutation* bestPermutation = nullptr;
+
+		int smallestMapCount = permutation.MapCount();
+		std::string key;
+
+		PermutationMap::const_iterator iter = permutationMap.cbegin();
+		while( iter != permutationMap.end() )
+		{
+			const Permutation* testPermutation = iter->second;
+
+			Permutation trialPermutation;
+			permutation.MakeCopy( trialPermutation );
+
+			trialPermutation.Concatinate( *testPermutation );
+			int trialMapCount = trialPermutation.MapCount();
+			if( trialMapCount < smallestMapCount )
+			{
+				smallestMapCount = trialMapCount;
+				bestPermutation = testPermutation;
+				key = iter->first;
+			}
+
+			iter++;
+		}
+
+		if( !bestPermutation )
+			return false;
+
+		permutation.Concatinate( *bestPermutation );
+		keyList.push_back( key );
+	}
+
+	return true;
+}
+
 // Permutation.cpp
