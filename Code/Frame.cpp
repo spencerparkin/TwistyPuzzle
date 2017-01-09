@@ -240,25 +240,35 @@ wxMenu* Frame::CreatePuzzleMenu( void )
 
 	const wxClassInfo* baseClassInfo = wxClassInfo::FindClass( "TwistyPuzzle" );
 
+	wxArrayString classNameArray;
+	
 	const wxClassInfo* classInfo = wxClassInfo::GetFirst();
 	while( classInfo )
 	{
 		if( classInfo != baseClassInfo && classInfo->IsKindOf( baseClassInfo ) && classInfo->IsDynamic() )
 		{
 			wxString className = classInfo->GetClassName();
-
-			// TODO: Sort this by class name.
-
-			wxMenuItem* puzzleMenuItem = new wxMenuItem( puzzleMenu, itemId, className, "Create a twisty puzzle of type \"" + className + "\".", wxITEM_CHECK );
-			puzzleMenu->Append( puzzleMenuItem );
-
-			Bind( wxEVT_MENU, &Frame::OnPuzzleType, this, itemId, -1, new PuzzleMenuItemUserData( classInfo ) );
-			Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, itemId, -1, new PuzzleMenuItemUserData( classInfo ) );
-
-			itemId++;
+			classNameArray.push_back( className );
 		}
 
 		classInfo = classInfo->GetNext();
+	}
+
+	classNameArray.Sort();
+
+	for( int i = 0; i < ( signed )classNameArray.size(); i++ )
+	{
+		wxString className = classNameArray[i];
+		const wxClassInfo* classInfo = wxClassInfo::FindClass( className );
+		wxASSERT( classInfo != nullptr );
+
+		wxMenuItem* puzzleMenuItem = new wxMenuItem( puzzleMenu, itemId, className, "Create a twisty puzzle of type \"" + className + "\".", wxITEM_CHECK );
+		puzzleMenu->Append( puzzleMenuItem );
+
+		Bind( wxEVT_MENU, &Frame::OnPuzzleType, this, itemId, -1, new PuzzleMenuItemUserData( classInfo ) );
+		Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, itemId, -1, new PuzzleMenuItemUserData( classInfo ) );
+
+		itemId++;
 	}
 
 	return puzzleMenu;
