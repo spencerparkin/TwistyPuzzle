@@ -57,28 +57,32 @@ void TwistyPuzzle::AddHistory( Rotation* newRotation )
 
 void TwistyPuzzle::GoForward( void )
 {
-	if( CanGoForward() )
+	while( CanGoForward() )
 	{
 		Rotation* rotation = *rotationHistoryIter;
 		Rotation* newRotation = new Rotation(0);
 		*newRotation = *rotation;
-		newRotation->isHistory = true;
+		newRotation->flags |= Rotation::FLAG_HISTORY;
 		EnqueueRotation( newRotation );
 		rotationHistoryIter++;
+		if( !( rotation->flags & Rotation::FLAG_FORWARD_AGAIN ) )
+			break;
 	}
 }
 
 void TwistyPuzzle::GoBackward( void )
 {
-	if( CanGoBackward() )
+	while( CanGoBackward() )
 	{
 		rotationHistoryIter--;
 		Rotation* rotation = *rotationHistoryIter;
 		Rotation* newRotation = new Rotation(0);
 		*newRotation = *rotation;
 		newRotation->turnCount = -newRotation->turnCount;
-		newRotation->isHistory = true;
+		newRotation->flags |= Rotation::FLAG_HISTORY;
 		EnqueueRotation( newRotation );
+		if( !( rotation->flags & Rotation::FLAG_BACK_AGAIN ) )
+			break;
 	}
 }
 
@@ -169,7 +173,7 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 		{
 			if( ApplyCutShapeWithRotation( cutShape, rotation ) )
 			{
-				if( !rotation->isHistory )
+				if( !( rotation->flags & Rotation::FLAG_HISTORY ) )
 				{
 					AddHistory( rotation );
 					deleteRotation = false;
@@ -773,12 +777,12 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 //                              TwistyPuzzle::Rotation
 //---------------------------------------------------------------------------------
 
-TwistyPuzzle::Rotation::Rotation( int cutShapeHandle, Direction direction /*= DIR_CCW*/, double turnCount /*= 1.0*/ )
+TwistyPuzzle::Rotation::Rotation( int cutShapeHandle, Direction direction /*= DIR_CCW*/, double turnCount /*= 1.0*/, int flags /*= 0*/ )
 {
 	this->cutShapeHandle = cutShapeHandle;
 	this->direction = direction;
 	this->turnCount = turnCount;
-	isHistory = false;
+	this->flags = flags;
 	newRotationSpeedCoeficient = 0.0;
 }
 

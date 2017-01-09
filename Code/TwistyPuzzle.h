@@ -49,14 +49,20 @@ public:
 	public:
 
 		enum Direction { DIR_CW, DIR_CCW };
+		enum Flags
+		{
+			FLAG_HISTORY			= 0x00000001,
+			FLAG_BACK_AGAIN			= 0x00000002,
+			FLAG_FORWARD_AGAIN		= 0x00000004,
+		};
 
-		Rotation( int cutShapeHandle, Direction direction = DIR_CW, double turnCount = 1.0 );
+		Rotation( int cutShapeHandle, Direction direction = DIR_CW, double turnCount = 1.0, int flags = 0 );
 		~Rotation( void );
 
 		int cutShapeHandle;
 		Direction direction;
 		double turnCount;
-		bool isHistory;
+		int flags;
 		double newRotationSpeedCoeficient;
 	};
 

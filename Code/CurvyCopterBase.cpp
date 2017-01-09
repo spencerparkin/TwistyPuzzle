@@ -258,11 +258,11 @@ void CurvyCopterBase::EnqueueJumble( JumbleMap::iterator iter, bool shiftDown )
 
 	double jumbleTurnAmount = CalcJumbleTurnAmount();
 
-	EnqueueRotation( new Rotation( adjCutShapes[0], rotDir, jumbleTurnAmount ) );
-	EnqueueRotation( new Rotation( adjCutShapes[1], rotDir, jumbleTurnAmount ) );
-	EnqueueRotation( new Rotation( cutShapeHandle, Rotation::DIR_CCW, 1.0 ) );
-	EnqueueRotation( new Rotation( adjCutShapes[0], rotDir, -jumbleTurnAmount ) );
-	EnqueueRotation( new Rotation( adjCutShapes[1], rotDir, -jumbleTurnAmount ) );
+	EnqueueRotation( new Rotation( adjCutShapes[0], rotDir, jumbleTurnAmount, Rotation::FLAG_FORWARD_AGAIN ) );
+	EnqueueRotation( new Rotation( adjCutShapes[1], rotDir, jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
+	EnqueueRotation( new Rotation( cutShapeHandle, Rotation::DIR_CCW, 1.0, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
+	EnqueueRotation( new Rotation( adjCutShapes[0], rotDir, -jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
+	EnqueueRotation( new Rotation( adjCutShapes[1], rotDir, -jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN ) );
 }
 
 /*virtual*/ void CurvyCopterBase::EnqueueRandomRotations( _3DMath::Random& random, int rotationCount )
