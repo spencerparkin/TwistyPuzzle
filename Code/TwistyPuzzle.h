@@ -17,9 +17,6 @@
 // TODO: It would be interesting if we based a puzzle off of, say, cone-shaped cut objects.
 //       This would require that we trace out parts of conic sections.  Calculus methods would be in order?
 
-// TODO: Ideas for puzzles we could implement: Skweb, master skweb, pyraminx, face-turning octahedron,
-//       corner-turning octahedron, 2x2x3, 3x3x2, there are many more.
-
 class TwistyPuzzle : public wxObject
 {
 public:
@@ -131,7 +128,7 @@ public:
 		TETRAHEDRON,
 	};
 
-	void MakePolyhedron( Polyhedron polyhedron, double radius );
+	void MakePolyhedron( Polyhedron polyhedron, double radius, _3DMath::TriangleMesh* triangleMesh = nullptr );
 
 	static bool SaveVector( const wxString& name, wxXmlNode* xmlNode, const _3DMath::Vector& vector );
 	static bool LoadVector( const wxString& name, const wxXmlNode* xmlNode, _3DMath::Vector& vector );

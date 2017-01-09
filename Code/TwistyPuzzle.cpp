@@ -264,49 +264,59 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 	faceList.push_back( face );
 }
 
-void TwistyPuzzle::MakePolyhedron( Polyhedron polyhedron, double radius )
+void TwistyPuzzle::MakePolyhedron( Polyhedron polyhedron, double radius, _3DMath::TriangleMesh* triangleMesh /*= nullptr*/ )
 {
-	_3DMath::TriangleMesh triangleMesh;
+	_3DMath::TriangleMesh triangleMeshStorage;
+	if( !triangleMesh )
+		triangleMesh = &triangleMeshStorage;
 
 	switch( polyhedron )
 	{
 		case DODECAHEDRON:
 		{
-			triangleMesh.AddSymmetricVertices( _3DMath::Vector( 1.0, 1.0, 1.0 ) );
-			triangleMesh.AddSymmetricVertices( _3DMath::Vector( 0.0, 1.0 / PHI, PHI ) );
-			triangleMesh.AddSymmetricVertices( _3DMath::Vector( 1.0 / PHI, PHI, 0.0 ) );
-			triangleMesh.AddSymmetricVertices( _3DMath::Vector( PHI, 0.0, 1.0 / PHI ) );
+			triangleMesh->AddSymmetricVertices( _3DMath::Vector( 1.0, 1.0, 1.0 ) );
+			triangleMesh->AddSymmetricVertices( _3DMath::Vector( 0.0, 1.0 / PHI, PHI ) );
+			triangleMesh->AddSymmetricVertices( _3DMath::Vector( 1.0 / PHI, PHI, 0.0 ) );
+			triangleMesh->AddSymmetricVertices( _3DMath::Vector( PHI, 0.0, 1.0 / PHI ) );
 			break;
 		}
 		case ICOSAHEDRON:
 		{
-			triangleMesh.AddSymmetricVertices( _3DMath::Vector( 0.0, 1.0, PHI ) );
-			triangleMesh.AddSymmetricVertices( _3DMath::Vector( 1.0, PHI, 0.0 ) );
-			triangleMesh.AddSymmetricVertices( _3DMath::Vector( PHI, 0.0, 1.0 ) );
+			triangleMesh->AddSymmetricVertices( _3DMath::Vector( 0.0, 1.0, PHI ) );
+			triangleMesh->AddSymmetricVertices( _3DMath::Vector( 1.0, PHI, 0.0 ) );
+			triangleMesh->AddSymmetricVertices( _3DMath::Vector( PHI, 0.0, 1.0 ) );
 			break;
 		}
 		case HEXADRON:
 		{
+			triangleMesh->AddSymmetricVertices( _3DMath::Vector( 1.0, 1.0, 1.0 ) );
 			break;
 		}
 		case OCTAHEDRON:
 		{
+			triangleMesh->AddSymmetricVertices( _3DMath::Vector( 1.0, 0.0, 0.0 ) );
+			triangleMesh->AddSymmetricVertices( _3DMath::Vector( 0.0, 1.0, 0.0 ) );
+			triangleMesh->AddSymmetricVertices( _3DMath::Vector( 0.0, 0.0, 1.0 ) );
 			break;
 		}
 		case TETRAHEDRON:
 		{
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( 1.0, 0.0, -1.0 / sqrt( 2.0 ) ) ) );
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( -1.0, 0.0, -1.0 / sqrt( 2.0 ) ) ) );
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( 0.0, 1.0, 1.0 / sqrt( 2.0 ) ) ) );
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( 0.0, -1.0, 1.0 / sqrt( 2.0 ) ) ) );
 			break;
 		}
 	}
 
 	_3DMath::AffineTransform transform;
 	transform.linearTransform.SetScale( radius );
-	triangleMesh.Transform( transform );
+	triangleMesh->Transform( transform );
 
-	triangleMesh.FindConvexHull();
+	triangleMesh->FindConvexHull();
 
 	_3DMath::PolygonList polygonFaceList;
-	triangleMesh.GeneratePolygonFaceList( polygonFaceList );
+	triangleMesh->GeneratePolygonFaceList( polygonFaceList );
 
 	int i = 0;
 

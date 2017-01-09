@@ -61,6 +61,45 @@
     <ClInclude Include="Code\HtmlFrame.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Skewb.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\SkewbDiamond.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Pyraminx.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\PyraminxBase.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\MasterPyraminx.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\SkewbUltimate.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Dogic.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Rubiks2x2x3.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Rubiks2x3x3.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\FaceTurningOctahedron.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\CornerTurningOctahedron.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\EitansStar.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\BauhiniaDodecahedron.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -113,6 +152,42 @@
     </ClCompile>
     <ClCompile Include="Code\HtmlFrame.cpp">
       <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Skewb.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\SkewbDiamond.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Pyraminx.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\PyraminxBase.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\MasterPyraminx.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\SkewbUltimate.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Rubiks2x2x3.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Rubiks2x3x3.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\FaceTurningOctahedron.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\CornerTurningOctahedron.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\EitansStar.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\BauhiniaDodecahedron.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

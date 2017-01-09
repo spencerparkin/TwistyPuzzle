@@ -6,6 +6,11 @@
 #include <list>
 #include <vector>
 
+// TODO: Can we use Schreier's lemma to do computational group theory?
+//       Can we implement the stabalizer chain?
+//       Resource: http://www.jaapsch.net/puzzles/schreier.htm
+//       Thistlethewait's algorithm?
+
 class Permutation
 {
 public:
