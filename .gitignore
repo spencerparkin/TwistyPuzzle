@@ -34,3 +34,6 @@ Debug/
 *.VC.opendb
 *.VC.db
 .vs/
+*.opensdf
+*.sdf
+*.suo
