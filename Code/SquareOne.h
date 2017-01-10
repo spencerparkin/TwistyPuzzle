@@ -25,7 +25,19 @@ public:
 
 	double wedgeAngleDelta;
 
-	// TODO: Add data-structure for managing wedge-unit state on top and bottom.
+	typedef std::vector< int > WedgeSizeArray;
+	WedgeSizeArray* topWedgeSizeArray;
+	WedgeSizeArray* bottomWedgeSizeArray;
+
+	int topRight, topLeft;
+	int bottomRight, bottomLeft;
+
+	enum Side { SIDE_LEFT, SIDE_RIGHT };
+
+	int RotateIndices( int& topRight, int& topLeft, const WedgeSizeArray& wedgeSizeArray, int delta, int rotationCount );
+	void MoveIndex( int& index, int& balance, const WedgeSizeArray& wedgeSizeArray, int delta, Side side );
+
+	static int Wrap( int i, int modulus );
 };
 
 // SquareOne.h
