@@ -31,7 +31,7 @@ SquareOne::SquareOne( void )
 
 	CutShape* cutShape = new CutShape();
 	cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 1.5, 0.0 ), _3DMath::Vector( 0.0, 1.0, 0.0 ) ) );
-	cutShape->rotationAngleForSingleTurn = wedgeAngleDelta;
+	cutShape->rotationAngleForSingleTurn = 0.0;
 	cutShape->axisOfRotation.normal.Set( 0.0, 1.0, 0.0 );
 	cutShape->captureSide = _3DMath::Surface::OUTSIDE;
 	cutShapeList.push_back( cutShape );
@@ -39,13 +39,13 @@ SquareOne::SquareOne( void )
 
 	cutShape = new CutShape();
 	cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, -1.5, 0.0 ), _3DMath::Vector( 0.0, -1.0, 0.0 ) ) );
-	cutShape->rotationAngleForSingleTurn = wedgeAngleDelta;
+	cutShape->rotationAngleForSingleTurn = 0.0;
 	cutShape->axisOfRotation.normal.Set( 0.0, -1.0, 0.0 );
 	cutShape->captureSide = _3DMath::Surface::OUTSIDE;
 	cutShapeList.push_back( cutShape );
 	bottomCutShapeHandle = cutShape->GetHandle();
 
-	_3DMath::Vector normal( sin( wedgeAngleDelta / 2.0 ), 0.0, cos( wedgeAngleDelta / 2.0 ) );
+	_3DMath::Vector normal( cos( wedgeAngleDelta / 2.0 ), 0.0, -sin( wedgeAngleDelta / 2.0 ) );
 
 	cutShape = new CutShape();
 	cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, 0.0 ), normal ) );
@@ -105,7 +105,7 @@ SquareOne::SquareOne( void )
 		int totalSize = RotateIndices( topRight, topLeft, *topWedgeSizeArray, delta, rotationCount );
 		cutShape->rotationAngleForSingleTurn = wedgeAngleDelta * double( totalSize );
 	}
-	else if( bottomCutShapeHandle = cutShape->GetHandle() )
+	else if( bottomCutShapeHandle == cutShape->GetHandle() )
 	{
 		int totalSize = RotateIndices( bottomRight, bottomLeft, *bottomWedgeSizeArray, delta, rotationCount );
 		cutShape->rotationAngleForSingleTurn = wedgeAngleDelta * double( totalSize );

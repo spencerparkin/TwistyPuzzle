@@ -220,7 +220,7 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, depth / 2.0 ) );
 	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, depth / 2.0 ) );
 	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, depth / 2.0 ) );
-	face->color.Set( 1.0, 1.0, 1.0 );
+	face->color = orange;
 	faceList.push_back( face );
 
 	face = new Face( new _3DMath::Polygon() );
@@ -228,7 +228,7 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, -depth / 2.0 ) );
 	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, -depth / 2.0 ) );
 	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, -depth / 2.0 ) );
-	face->color.Set( 1.0, 1.0, 0.0 );
+	face->color = red;
 	faceList.push_back( face );
 
 	face = new Face( new _3DMath::Polygon() );
@@ -236,7 +236,7 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, -depth / 2.0 ) );
 	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, -depth / 2.0 ) );
 	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, depth / 2.0 ) );
-	face->color.Set( 1.0, 0.0, 0.0 );
+	face->color = green;
 	faceList.push_back( face );
 
 	face = new Face( new _3DMath::Polygon() );
@@ -244,7 +244,7 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, depth / 2.0 ) );
 	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, -depth / 2.0 ) );
 	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, -depth / 2.0 ) );
-	face->color.Set( 1.0, 0.5, 0.0 );
+	face->color = blue;
 	faceList.push_back( face );
 
 	face = new Face( new _3DMath::Polygon() );
@@ -252,7 +252,7 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, depth / 2.0 ) );
 	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, height / 2.0, -depth / 2.0 ) );
 	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, height / 2.0, -depth / 2.0 ) );
-	face->color.Set( 0.0, 0.0, 1.0 );
+	face->color = white;
 	faceList.push_back( face );
 
 	face = new Face( new _3DMath::Polygon() );
@@ -260,7 +260,7 @@ void TwistyPuzzle::MakeBox( double width, double height, double depth )
 	face->polygon->vertexArray->push_back( _3DMath::Vector( -width / 2.0, -height / 2.0, -depth / 2.0 ) );
 	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, -depth / 2.0 ) );
 	face->polygon->vertexArray->push_back( _3DMath::Vector( width / 2.0, -height / 2.0, depth / 2.0 ) );
-	face->color.Set( 0.0, 1.0, 0.0 );
+	face->color = yellow;
 	faceList.push_back( face );
 }
 
