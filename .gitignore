@@ -37,3 +37,4 @@ Debug/
 *.opensdf
 *.sdf
 *.suo
+ipch/
