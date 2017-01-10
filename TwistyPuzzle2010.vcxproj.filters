@@ -52,9 +52,6 @@
     <ClCompile Include="Code\CurvyCopterBase.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
-    <ClCompile Include="Code\EitansStar.cpp">
-      <Filter>Code\PuzzleDerivatives</Filter>
-    </ClCompile>
     <ClCompile Include="Code\FaceTurningOctahedron.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
@@ -95,6 +92,9 @@
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
     <ClCompile Include="Code\SquareOne.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\IcosahedronSkewb.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
   </ItemGroup>
@@ -144,9 +144,6 @@
     <ClInclude Include="Code\Dogic.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
-    <ClInclude Include="Code\EitansStar.h">
-      <Filter>Code\PuzzleDerivatives</Filter>
-    </ClInclude>
     <ClInclude Include="Code\FaceTurningOctahedron.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
@@ -187,6 +184,9 @@
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
     <ClInclude Include="Code\SquareOne.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\IcosahedronSkewb.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
   </ItemGroup>

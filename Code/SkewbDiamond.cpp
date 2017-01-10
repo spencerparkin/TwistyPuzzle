@@ -18,7 +18,7 @@ SkewbDiamond::SkewbDiamond( void )
 {
 	Clear();
 
-	MakePolyhedron( OCTAHEDRON, 4.0 );
+	MakePolyhedron( OCTAHEDRON, 8.0 );
 
 	_3DMath::Vector normal[8];
 

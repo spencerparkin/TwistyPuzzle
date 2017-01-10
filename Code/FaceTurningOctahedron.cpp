@@ -18,7 +18,7 @@ FaceTurningOctahedron::FaceTurningOctahedron( void )
 {
 	Clear();
 
-	double radius = 4.0;
+	double radius = 8.0;
 
 	MakePolyhedron( OCTAHEDRON, radius );
 
@@ -52,7 +52,7 @@ FaceTurningOctahedron::FaceTurningOctahedron( void )
 
 		_3DMath::Vector center;
 		triangle.GetCenter( center );
-		center.Scale( 1.0 / 6.0 );
+		center.Scale( 1.0 / 3.0 );
 
 		CutShape* cutShape = new CutShape();
 		cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( center, normal[i] ) );

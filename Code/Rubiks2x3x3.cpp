@@ -22,25 +22,25 @@ Rubiks2x3x3::Rubiks2x3x3( void )
 
 	CutShape* cutShape = new CutShape();
 	cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 5.0 - 10.0 / 3.0, 0.0, 0.0 ), _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
-	cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
+	cutShape->rotationAngleForSingleTurn = M_PI;
 	cutShape->axisOfRotation.normal.Set( 1.0, 0.0, 0.0 );
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
 	cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( -5.0 + 10.0 / 3.0, 0.0, 0.0 ), _3DMath::Vector( -1.0, 0.0, 0.0 ) ) );
-	cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
+	cutShape->rotationAngleForSingleTurn = M_PI;
 	cutShape->axisOfRotation.normal.Set( -1.0, 0.0, 0.0 );
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
 	cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, 5.0 - 10.0 / 3.0 ), _3DMath::Vector( 0.0, 0.0, 1.0 ) ) );
-	cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
+	cutShape->rotationAngleForSingleTurn = M_PI;
 	cutShape->axisOfRotation.normal.Set( 0.0, 0.0, 1.0 );
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
 	cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, -5.0 + 10.0 / 3.0 ), _3DMath::Vector( 0.0, 0.0, -1.0 ) ) );
-	cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
+	cutShape->rotationAngleForSingleTurn = M_PI;
 	cutShape->axisOfRotation.normal.Set( 0.0, 0.0, -1.0 );
 	cutShapeList.push_back( cutShape );
 

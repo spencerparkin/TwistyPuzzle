@@ -19,7 +19,7 @@ CornerTurningOctahedron::CornerTurningOctahedron( void )
 {
 	Clear();
 
-	double radius = 4.0;
+	double radius = 8.0;
 
 	MakePolyhedron( OCTAHEDRON, radius );
 
@@ -41,6 +41,7 @@ void CornerTurningOctahedron::MakeCutPlanes( const _3DMath::LineSegment& lineSeg
 	cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( center, normal ) );
 	cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	cutShape->axisOfRotation.normal = normal;
+	cutShape->axisOfRotation.center = center;
 	cutShapeList.push_back( cutShape );
 
 	lineSegment.Lerp( 5.0 / 6.0, center );
@@ -49,6 +50,7 @@ void CornerTurningOctahedron::MakeCutPlanes( const _3DMath::LineSegment& lineSeg
 	cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( center, normal ) );
 	cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	cutShape->axisOfRotation.normal = normal;
+	cutShape->axisOfRotation.center = center;
 	cutShapeList.push_back( cutShape );
 
 	normal.Negate();
@@ -59,6 +61,7 @@ void CornerTurningOctahedron::MakeCutPlanes( const _3DMath::LineSegment& lineSeg
 	cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( center, normal ) );
 	cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	cutShape->axisOfRotation.normal = normal;
+	cutShape->axisOfRotation.center = center;
 	cutShapeList.push_back( cutShape );
 
 	lineSegment.Lerp( 1.0 / 6.0, center );
@@ -67,6 +70,7 @@ void CornerTurningOctahedron::MakeCutPlanes( const _3DMath::LineSegment& lineSeg
 	cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( center, normal ) );
 	cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	cutShape->axisOfRotation.normal = normal;
+	cutShape->axisOfRotation.center = center;
 	cutShapeList.push_back( cutShape );
 }
 

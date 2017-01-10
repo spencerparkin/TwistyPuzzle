@@ -1,20 +1,20 @@
-// EitansStar.cpp
+// IcosahedronSkewb.cpp
 
-#include "EitansStar.h"
+#include "IcosahedronSkewb.h"
 #include <Surface.h>
 #include <Plane.h>
 
-wxIMPLEMENT_DYNAMIC_CLASS( EitansStar, TwistyPuzzle );
+wxIMPLEMENT_DYNAMIC_CLASS( IcosahedronSkewb, TwistyPuzzle );
 
-EitansStar::EitansStar( void )
+IcosahedronSkewb::IcosahedronSkewb( void )
 {
 }
 
-/*virtual*/ EitansStar::~EitansStar( void )
+/*virtual*/ IcosahedronSkewb::~IcosahedronSkewb( void )
 {
 }
 
-/*virtual*/ void EitansStar::Reset( void )
+/*virtual*/ void IcosahedronSkewb::Reset( void )
 {
 	Clear();
 
@@ -35,4 +35,4 @@ EitansStar::EitansStar( void )
 	}
 }
 
-// EitansStar.cpp
+// IcosahedronSkewb.cpp
