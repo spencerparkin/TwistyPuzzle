@@ -181,6 +181,8 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 {
 	BindContext();
 
+	// TODO: If set to do so, render axis labels.  Put font system in a library and then link with that.
+
 	if( objectHandle )
 		*objectHandle = 0;
 
