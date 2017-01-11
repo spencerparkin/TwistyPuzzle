@@ -4,6 +4,7 @@
 #include "TwistyPuzzle.h"
 #include "Application.h"
 #include "GLRenderer.h"
+#include "Frame.h"
 #include <gl/GLU.h>
 #include <HandleObject.h>
 
@@ -15,6 +16,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	eyeDistance = 20.0;
 	mouseDragMode = DRAG_MODE_NONE;
 	grip = nullptr;
+	axisSelectMode = AXIS_SELECT_MANUAL;
 
 	context = nullptr;
 	renderer = new GLRenderer();
@@ -25,6 +27,8 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	Bind( wxEVT_RIGHT_UP, &Canvas::OnMouseRightUp, this );
 	Bind( wxEVT_LEFT_DOWN, &Canvas::OnMouseLeftDown, this );
 	Bind( wxEVT_LEFT_UP, &Canvas::OnMouseLeftUp, this );
+	Bind( wxEVT_MIDDLE_DOWN, &Canvas::OnMouseMiddleDown, this );
+	Bind( wxEVT_MIDDLE_UP, &Canvas::OnMouseMiddleUp, this );
 	Bind( wxEVT_MOTION, &Canvas::OnMouseMotion, this );
 	Bind( wxEVT_MOUSE_CAPTURE_LOST, &Canvas::OnMouseCaptureLost, this );
 	Bind( wxEVT_MOUSEWHEEL, &Canvas::OnMouseWheel, this );
@@ -47,6 +51,15 @@ void Canvas::OnMouseRightDown( wxMouseEvent& event )
 	mouseDragLastPos = mousePos;
 	mouseDragClickPos = mousePos;
 	CaptureMouse();
+
+	TwistyPuzzle::CutShape* cutShape = dynamic_cast< TwistyPuzzle::CutShape* >( _3DMath::HandleObject::Dereference( selectedObjectHandle ) );
+	if( cutShape )
+	{
+		wxString text;
+		if( !cutShape->label.empty() )
+			text = "Selected rotation axis labeled: " + cutShape->label;
+		wxGetApp().GetFrame()->GetStatusBar()->SetStatusText( text );
+	}
 
 	if( grip )
 	{
@@ -81,6 +94,19 @@ void Canvas::OnMouseLeftUp( wxMouseEvent& event )
 	ReleaseCapture();
 }
 
+void Canvas::OnMouseMiddleDown( wxMouseEvent& event )
+{
+	mouseDragMode = DRAG_MODE_ORIENT_PUZZLE;
+	mouseDragLastPos = event.GetPosition();
+	CaptureMouse();
+}
+
+void Canvas::OnMouseMiddleUp( wxMouseEvent& event )
+{
+	mouseDragMode = DRAG_MODE_NONE;
+	ReleaseCapture();
+}
+
 void Canvas::OnMouseMotion( wxMouseEvent& event )
 {
 	mouseDragCurrentPos = event.GetPosition();
@@ -106,6 +132,18 @@ void Canvas::OnMouseMotion( wxMouseEvent& event )
 			rotation.linearTransform.SetRotation( yAxis, yAngle );
 			transform.Concatinate( rotation );
 
+			TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
+
+			if( axisSelectMode == AXIS_SELECT_AUTO )
+			{
+				_3DMath::Vector zAxis( 0.0, 0.0, 1.0 );
+				TwistyPuzzle::CutShape* cutShape = puzzle->FindCutShapeNearestDirection( zAxis, transform );
+				if( cutShape )
+					selectedObjectHandle = cutShape->GetHandle();
+			}
+
+			puzzle->UpdateCutShapeLabels( transform );
+
 			Refresh();
 			break;
 		}
@@ -119,6 +157,10 @@ void Canvas::OnMouseMotion( wxMouseEvent& event )
 				// TODO: Re-render in select mode?
 			}
 
+			break;
+		}
+		case DRAG_MODE_NONE:
+		{
 			break;
 		}
 	}

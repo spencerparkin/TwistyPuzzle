@@ -88,7 +88,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;__WXMSW__;_UNICODE_;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\wxWidgets-3.0.2\include;C:\wxWidgets-3.0.2\include\msvc;../3DMath\Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\wxWidgets-3.0.2\include;C:\wxWidgets-3.0.2\include\msvc;../3DMath\Code;../boost_1_59_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,12 +155,12 @@
     <ClInclude Include="Code\CurvyCopter3.h" />
     <ClInclude Include="Code\CurvyCopterBase.h" />
     <ClInclude Include="Code\Dogic.h" />
-    <ClInclude Include="Code\EitansStar.h" />
     <ClInclude Include="Code\FaceTurningOctahedron.h" />
     <ClInclude Include="Code\FlowerBox.h" />
     <ClInclude Include="Code\Frame.h" />
     <ClInclude Include="Code\GLRenderer.h" />
     <ClInclude Include="Code\HtmlFrame.h" />
+    <ClInclude Include="Code\IcosahedronSkewb.h" />
     <ClInclude Include="Code\MasterPyraminx.h" />
     <ClInclude Include="Code\Megaminx.h" />
     <ClInclude Include="Code\Permutation.h" />
@@ -186,12 +186,12 @@
     <ClCompile Include="Code\CurvyCopter.cpp" />
     <ClCompile Include="Code\CurvyCopter3.cpp" />
     <ClCompile Include="Code\CurvyCopterBase.cpp" />
-    <ClCompile Include="Code\EitansStar.cpp" />
     <ClCompile Include="Code\FaceTurningOctahedron.cpp" />
     <ClCompile Include="Code\FlowerBox.cpp" />
     <ClCompile Include="Code\Frame.cpp" />
     <ClCompile Include="Code\GLRenderer.cpp" />
     <ClCompile Include="Code\HtmlFrame.cpp" />
+    <ClCompile Include="Code\IcosahedronSkewb.cpp" />
     <ClCompile Include="Code\MasterPyraminx.cpp" />
     <ClCompile Include="Code\Megaminx.cpp" />
     <ClCompile Include="Code\Permutation.cpp" />

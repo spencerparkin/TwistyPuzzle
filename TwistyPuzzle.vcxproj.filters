@@ -94,10 +94,10 @@
     <ClInclude Include="Code\CornerTurningOctahedron.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
-    <ClInclude Include="Code\EitansStar.h">
+    <ClInclude Include="Code\BauhiniaDodecahedron.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
-    <ClInclude Include="Code\BauhiniaDodecahedron.h">
+    <ClInclude Include="Code\IcosahedronSkewb.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
   </ItemGroup>
@@ -183,10 +183,10 @@
     <ClCompile Include="Code\CornerTurningOctahedron.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
-    <ClCompile Include="Code\EitansStar.cpp">
+    <ClCompile Include="Code\BauhiniaDodecahedron.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
-    <ClCompile Include="Code\BauhiniaDodecahedron.cpp">
+    <ClCompile Include="Code\IcosahedronSkewb.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
   </ItemGroup>

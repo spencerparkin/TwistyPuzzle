@@ -22,6 +22,14 @@ public:
 
 	GLRenderer* GetRenderer( void ) { return renderer; }
 
+	enum AxisSelectMode
+	{
+		AXIS_SELECT_MANUAL,
+		AXIS_SELECT_AUTO,
+	};
+
+	AxisSelectMode axisSelectMode;
+
 private:
 
 	void OnPaint( wxPaintEvent& event );
@@ -29,6 +37,8 @@ private:
 	void OnMouseWheel( wxMouseEvent& event );
 	void OnMouseLeftDown( wxMouseEvent& event );
 	void OnMouseLeftUp( wxMouseEvent& event );
+	void OnMouseMiddleDown( wxMouseEvent& event );
+	void OnMouseMiddleUp( wxMouseEvent& event );
 	void OnMouseRightDown( wxMouseEvent& event );
 	void OnMouseRightUp( wxMouseEvent& event );
 	void OnMouseMotion( wxMouseEvent& event );

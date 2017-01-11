@@ -5,6 +5,7 @@
 #include <wx/frame.h>
 #include <wx/timer.h>
 #include <wx/menu.h>
+#include <wx/textctrl.h>
 
 class Canvas;
 
@@ -33,6 +34,8 @@ private:
 		ID_Load,
 		ID_GoForward,
 		ID_GoBackward,
+		ID_ManualSelectAxis,
+		ID_AutoSelectAxis,
 		ID_Puzzle,		// This needs to be the last ID.
 	};
 
@@ -50,6 +53,9 @@ private:
 	void OnDocumentation( wxCommandEvent& event );
 	void OnGoForward( wxCommandEvent& event );
 	void OnGoBackward( wxCommandEvent& event );
+	void OnManualSelectAxis( wxCommandEvent& event );
+	void OnAutoSelectAxis( wxCommandEvent& event );
+	void OnTextCtrlEnter( wxCommandEvent& event );
 
 	class PuzzleMenuItemUserData : public wxObject
 	{
@@ -65,7 +71,7 @@ private:
 	bool Load( void );
 
 	Canvas* canvas;
-
+	wxTextCtrl* textCtrl;
 	wxTimer timer;
 };
 

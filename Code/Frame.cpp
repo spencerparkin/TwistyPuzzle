@@ -12,6 +12,9 @@
 #include <wx/numdlg.h>
 #include <wx/msgdlg.h>
 #include <wx/filedlg.h>
+#include <wx/textctrl.h>
+#include <boost/tokenizer.hpp>
+#include <boost/algorithm/string.hpp>
 
 // TODO: Add rotatoin axis labeling and text sequence interface.
 
@@ -35,6 +38,12 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 
 	wxMenu* puzzleMenu = CreatePuzzleMenu();
 
+	wxMenu* interfaceMenu = new wxMenu();
+	wxMenuItem* selectAxisMenuItem = new wxMenuItem( interfaceMenu, ID_ManualSelectAxis, "Manual Select Axis", "Manually select the axis to rotate about with the mouse wheel.", wxITEM_CHECK );
+	wxMenuItem* nearestAxisMenuItem = new wxMenuItem( interfaceMenu, ID_AutoSelectAxis, "Auto Select Axis", "Auto-select the axis to rotate about with the mouse wheel.", wxITEM_CHECK );
+	interfaceMenu->Append( selectAxisMenuItem );
+	interfaceMenu->Append( nearestAxisMenuItem );
+
 	wxMenu* renderMenu = new wxMenu();
 	wxMenuItem* drawWireFrameMenuItem = new wxMenuItem( renderMenu, ID_DrawWireFrame, "Draw Wire-Frame", "Draw the twisty frame as a bunch of line segments.", wxITEM_CHECK );
 	wxMenuItem* drawSolidMenuItem = new wxMenuItem( renderMenu, ID_DrawSolid, "Draw Solid", "Draw the twisty puzzle as a bunch of solid triangles.", wxITEM_CHECK );
@@ -42,13 +51,13 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	renderMenu->Append( drawSolidMenuItem );
 
 	wxMenu* historyMenu = new wxMenu();
-	wxMenuItem* goForwardMenuItem = new wxMenuItem( historyMenu, ID_GoForward, "Go Forward", "Go forward in your rotation history." );
-	wxMenuItem* goBackwardMenuItem = new wxMenuItem( historyMenu, ID_GoBackward, "Go Backward", "Go backward in your rotation history." );
+	wxMenuItem* goForwardMenuItem = new wxMenuItem( historyMenu, ID_GoForward, "Go Forward\tF6", "Go forward in your rotation history." );
+	wxMenuItem* goBackwardMenuItem = new wxMenuItem( historyMenu, ID_GoBackward, "Go Backward\tF5", "Go backward in your rotation history." );
 	historyMenu->Append( goForwardMenuItem );
 	historyMenu->Append( goBackwardMenuItem );
 
 	wxMenu* helpMenu = new wxMenu();
-	wxMenuItem* documentationMenuItem = new wxMenuItem( helpMenu, ID_Documentation, "Documentation", "Bring up a window with documentation for this program." );
+	wxMenuItem* documentationMenuItem = new wxMenuItem( helpMenu, ID_Documentation, "Documentation\tF1", "Bring up a window with documentation for this program." );
 	wxMenuItem* aboutMenuItem = new wxMenuItem( helpMenu, ID_About, "About", "Show the about box." );
 	helpMenu->Append( documentationMenuItem );
 	helpMenu->AppendSeparator();
@@ -57,6 +66,7 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	wxMenuBar* menuBar = new wxMenuBar();
 	menuBar->Append( programMenu, "Program" );
 	menuBar->Append( puzzleMenu, "Puzzle" );
+	menuBar->Append( interfaceMenu, "Interface" );
 	menuBar->Append( renderMenu, "Render" );
 	menuBar->Append( historyMenu, "History" );
 	menuBar->Append( helpMenu, "Help" );
@@ -67,9 +77,20 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 
 	canvas = new Canvas( this );
 
+	textCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER | wxTE_LEFT );
+
 	wxBoxSizer* boxSizer = new wxBoxSizer( wxVERTICAL );
 	boxSizer->Add( canvas, 1, wxGROW );
+	boxSizer->Add( textCtrl, 0, wxALL | wxGROW, 0 );
 	SetSizer( boxSizer );
+
+	wxAcceleratorEntry acceleratorEntries[3];
+	acceleratorEntries[0].Set( wxACCEL_NORMAL, WXK_F5, ID_GoBackward );
+	acceleratorEntries[1].Set( wxACCEL_NORMAL, WXK_F6, ID_GoForward );
+	acceleratorEntries[2].Set( wxACCEL_NORMAL, WXK_F1, ID_Documentation );
+
+	wxAcceleratorTable acceleratorTable( sizeof( acceleratorEntries ) / sizeof( wxAcceleratorEntry ), acceleratorEntries );
+	SetAcceleratorTable( acceleratorTable );
 
 	Bind( wxEVT_MENU, &Frame::OnExit, this, ID_Exit );
 	Bind( wxEVT_TIMER, &Frame::OnTimer, this, ID_Timer );
@@ -83,17 +104,84 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_MENU, &Frame::OnLoad, this, ID_Load );
 	Bind( wxEVT_MENU, &Frame::OnGoForward, this, ID_GoForward );
 	Bind( wxEVT_MENU, &Frame::OnGoBackward, this, ID_GoBackward );
+	Bind( wxEVT_MENU, &Frame::OnManualSelectAxis, this, ID_ManualSelectAxis );
+	Bind( wxEVT_MENU, &Frame::OnAutoSelectAxis, this, ID_AutoSelectAxis );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawWireFrame );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawSolid );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_Solve );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_GoForward );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_GoBackward );
+	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_ManualSelectAxis );
+	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_AutoSelectAxis );
+	Bind( wxEVT_COMMAND_TEXT_ENTER, &Frame::OnTextCtrlEnter, this );
 
 	timer.Start(0);
 }
 
 /*virtual*/ Frame::~Frame( void )
 {
+}
+
+void Frame::OnTextCtrlEnter( wxCommandEvent& event )
+{
+	std::string rotationSequence = ( const char* )textCtrl->GetValue().c_str();
+
+	boost::char_separator< char > separator( " ", "," );
+	typedef boost::tokenizer< boost::char_separator< char > > Tokenizer;
+	Tokenizer tokenizer( rotationSequence, separator );
+
+	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
+
+	struct Element
+	{
+		TwistyPuzzle::CutShape* cutShape;
+		bool inverse;
+	};
+
+	std::list< Element > elementList;
+
+	for( Tokenizer::iterator iter = tokenizer.begin(); iter != tokenizer.end(); iter++ )
+	{
+		std::string token = *iter;
+		if( token == "," )
+			continue;
+
+		wxString label( token.c_str() );
+
+		Element element;
+		element.inverse = false;
+		
+		char lastChar = label.GetChar( label.Length() - 1 );
+		if( lastChar == 'i' )
+		{
+			label.Truncate( label.Length() - 1 );
+			element.inverse = true;
+		}
+
+		element.cutShape = puzzle->FindCutShapeWithLabel( label );
+		if( element.cutShape )
+			elementList.push_back( element );
+		else
+		{
+			wxMessageBox( "Failed to find cut-shape with label: " + label, "Error", wxICON_ERROR | wxCENTRE, this );
+			return;
+		}
+	}
+
+	std::list< Element >::iterator iter = elementList.begin();
+	while( iter != elementList.end() )
+	{
+		Element& element = *iter;
+
+		TwistyPuzzle::Rotation::Direction rotDir = TwistyPuzzle::Rotation::DIR_CW;
+		if( element.inverse )
+			rotDir = TwistyPuzzle::Rotation::DIR_CCW;
+
+		TwistyPuzzle::Rotation* rotation = new TwistyPuzzle::Rotation( element.cutShape->GetHandle(), rotDir );
+		puzzle->EnqueueRotation( rotation );
+
+		iter++;
+	}
 }
 
 void Frame::OnGoForward( wxCommandEvent& event )
@@ -104,6 +192,16 @@ void Frame::OnGoForward( wxCommandEvent& event )
 void Frame::OnGoBackward( wxCommandEvent& event )
 {
 	wxGetApp().GetPuzzle()->GoBackward();
+}
+
+void Frame::OnManualSelectAxis( wxCommandEvent& event )
+{
+	canvas->axisSelectMode = Canvas::AXIS_SELECT_MANUAL;
+}
+
+void Frame::OnAutoSelectAxis( wxCommandEvent& event )
+{
+	canvas->axisSelectMode = Canvas::AXIS_SELECT_AUTO;
 }
 
 void Frame::OnScramble( wxCommandEvent& event )
@@ -325,6 +423,16 @@ void Frame::OnUpdateUI( wxUpdateUIEvent& event )
 			case ID_GoBackward:
 			{
 				event.Enable( wxGetApp().GetPuzzle()->CanGoBackward() ? true : false );
+				break;
+			}
+			case ID_ManualSelectAxis:
+			{
+				event.Check( canvas->axisSelectMode == Canvas::AXIS_SELECT_MANUAL );
+				break;
+			}
+			case ID_AutoSelectAxis:
+			{
+				event.Check( canvas->axisSelectMode == Canvas::AXIS_SELECT_AUTO );
 				break;
 			}
 		}

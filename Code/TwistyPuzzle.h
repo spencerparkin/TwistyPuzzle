@@ -13,6 +13,7 @@
 #include <TimeKeeper.h>
 #include <Surface.h>
 #include <Random.h>
+#include <map>
 
 // TODO: It would be interesting if we based a puzzle off of, say, cone-shaped cut objects.
 //       This would require that we trace out parts of conic sections.  Calculus methods would be in order?
@@ -40,6 +41,7 @@ public:
 	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle );
 	virtual void Reset( void ) = 0;
 	virtual bool SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown );
+	virtual void UpdateCutShapeLabels( const _3DMath::AffineTransform& transform );
 
 	class Rotation
 	{
@@ -113,9 +115,14 @@ public:
 		_3DMath::Line axisOfRotation;
 		_3DMath::Surface::Side captureSide;
 		double rotationAngleForSingleTurn;
+		wxString label;		// These may be static or dynamically assigned.
 	};
 
 	typedef std::list< CutShape* > CutShapeList;
+
+	CutShape* FindCutShapeWithLabel( const wxString& label );
+	CutShape* FindCutShapeNearestDirection( const _3DMath::Vector& direction, const _3DMath::AffineTransform& transform, TwistyPuzzle::CutShapeList::iterator* foundIter = nullptr );
+	wxString FindLabelForRotationAxis( const _3DMath::Vector& axis );
 
 	void MakeBox( double width, double height, double depth );
 
@@ -148,6 +155,8 @@ public:
 	bool CanGoForward( void );
 	bool CanGoBackward( void );
 
+	typedef std::map< std::string, _3DMath::Vector > LabelAxisMap;
+
 	FaceList faceList;
 	CutShapeList cutShapeList;
 	RotationList rotationQueue;
@@ -155,6 +164,7 @@ public:
 	mutable bool needsSaving;
 	RotationList rotationHistory;
 	RotationList::iterator rotationHistoryIter;
+	LabelAxisMap labelAxisMap;
 };
 
 // TwistyPuzzle.h

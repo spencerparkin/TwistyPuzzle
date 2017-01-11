@@ -18,6 +18,13 @@ TwistyPuzzle::TwistyPuzzle( void )
 	rotationSpeedCoeficient = 10.0;
 	needsSaving = false;
 	rotationHistoryIter = rotationHistory.end();
+
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "R", _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "L", _3DMath::Vector( -1.0, 0.0, 0.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "U", _3DMath::Vector( 0.0, 1.0, 0.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "D", _3DMath::Vector( 0.0, -1.0, 0.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "F", _3DMath::Vector( 0.0, 0.0, 1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "B", _3DMath::Vector( 0.0, 0.0, -1.0 ) ) );
 }
 
 /*virtual*/ TwistyPuzzle::~TwistyPuzzle( void )
@@ -100,6 +107,18 @@ bool TwistyPuzzle::CanGoBackward( void )
 	return true;
 }
 
+TwistyPuzzle::CutShape* TwistyPuzzle::FindCutShapeWithLabel( const wxString& label )
+{
+	for( CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
+	{
+		CutShape* cutShape = *iter;
+		if( cutShape->label == label )
+			return cutShape;
+	}
+
+	return nullptr;
+}
+
 /*static*/ TwistyPuzzle* TwistyPuzzle::AllocateUsingFile( const wxString& file )
 {
 	TwistyPuzzle* puzzle = nullptr;
@@ -152,15 +171,16 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 
 	if( !motion )
 	{
-		wxString text = wxString::Format( "%d rotations queued.", rotationQueue.size() );
-		wxGetApp().GetFrame()->GetStatusBar()->SetStatusText( text );
-
 		if( rotationQueue.size() == 0 )
 			return false;
 
 		RotationList::iterator iter = rotationQueue.begin();
 		Rotation* rotation = *iter;
 		rotationQueue.erase( iter );
+
+		wxStatusBar* statusBar = wxGetApp().GetFrame()->GetStatusBar();
+		wxString text = wxString::Format( "%d rotations queued.", rotationQueue.size() );
+		statusBar->SetStatusText( text );
 
 		if( rotation->newRotationSpeedCoeficient != 0.0 )
 			rotationSpeedCoeficient = rotation->newRotationSpeedCoeficient;
@@ -211,6 +231,71 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 
 	needsSaving = true;
 	return true;
+}
+
+/*virtual*/ void TwistyPuzzle::UpdateCutShapeLabels( const _3DMath::AffineTransform& transform )
+{
+	_3DMath::LinearTransform normalTransform;
+	transform.linearTransform.GetNormalTransform( normalTransform );
+
+	for( TwistyPuzzle::CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
+	{
+		TwistyPuzzle::CutShape* cutShape = *iter;
+
+		_3DMath::Vector axis = cutShape->axisOfRotation.normal;
+		normalTransform.Transform( axis );
+
+		cutShape->label = FindLabelForRotationAxis( axis );
+	}
+}
+
+wxString TwistyPuzzle::FindLabelForRotationAxis( const _3DMath::Vector& axis )
+{
+	double smallestAngle = 2.0 * M_PI;
+	wxString label;
+
+	for( LabelAxisMap::iterator iter = labelAxisMap.begin(); iter != labelAxisMap.end(); iter++ )
+	{
+		double angle = iter->second.AngleBetween( axis );
+		if( angle < smallestAngle )
+		{
+			smallestAngle = angle;
+			label = iter->first.c_str();
+		}
+	}
+
+	return label;
+}
+
+TwistyPuzzle::CutShape* TwistyPuzzle::FindCutShapeNearestDirection( const _3DMath::Vector& direction, const _3DMath::AffineTransform& transform, TwistyPuzzle::CutShapeList::iterator* foundIter /*= nullptr*/ )
+{
+	_3DMath::LinearTransform normalTransform;
+	transform.linearTransform.GetNormalTransform( normalTransform );
+
+	double smallestAngle = 2.0 * M_PI;
+	CutShape* nearestCutShape = nullptr;
+
+	if( foundIter )
+		*foundIter = cutShapeList.end();
+
+	for( TwistyPuzzle::CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
+	{
+		TwistyPuzzle::CutShape* cutShape = *iter;
+
+		_3DMath::Vector normal;
+		normalTransform.Transform( cutShape->axisOfRotation.normal, normal );
+
+		double angle = normal.AngleBetween( direction );
+		if( angle < smallestAngle )
+		{
+			smallestAngle = angle;
+			nearestCutShape = cutShape;
+			if( foundIter )
+				*foundIter = iter;
+		}
+	}
+
+	return nearestCutShape;
 }
 
 void TwistyPuzzle::MakeBox( double width, double height, double depth )
