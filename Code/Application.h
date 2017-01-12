@@ -3,6 +3,7 @@
 #pragma once
 
 #include <wx/app.h>
+#include <FontSystem.h>
 
 class Frame;
 class TwistyPuzzle;
@@ -19,11 +20,13 @@ public:
 	Frame* GetFrame( void ) { return frame; }
 	TwistyPuzzle* GetPuzzle( void ) { return puzzle; }
 	void SetPuzzle( TwistyPuzzle* puzzle );
+	FontSys::System* GetFontSystem( void ) { return fontSystem; }
 
 private:
 
 	Frame* frame;
 	TwistyPuzzle* puzzle;
+	FontSys::System* fontSystem;
 };
 
 wxDECLARE_APP( Application );

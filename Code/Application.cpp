@@ -11,16 +11,22 @@ Application::Application( void )
 {
 	frame = nullptr;
 	puzzle = nullptr;
+	fontSystem = nullptr;
 }
 
 /*virtual*/ Application::~Application( void )
 {
 	delete puzzle;
+	delete fontSystem;
 }
 
 /*virtual*/ bool Application::OnInit( void )
 {
 	wxImage::AddHandler( new wxPNGHandler() );
+
+	fontSystem = new FontSys::System();
+	fontSystem->Initialize();
+	fontSystem->SetFontBaseDir( "Data/Fonts" );
 
 	puzzle = new Rubiks3x3x3();
 	puzzle->Reset();

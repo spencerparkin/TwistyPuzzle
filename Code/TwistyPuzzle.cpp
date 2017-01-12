@@ -18,13 +18,6 @@ TwistyPuzzle::TwistyPuzzle( void )
 	rotationSpeedCoeficient = 10.0;
 	needsSaving = false;
 	rotationHistoryIter = rotationHistory.end();
-
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "R", _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "L", _3DMath::Vector( -1.0, 0.0, 0.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "U", _3DMath::Vector( 0.0, 1.0, 0.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "D", _3DMath::Vector( 0.0, -1.0, 0.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "F", _3DMath::Vector( 0.0, 0.0, 1.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "B", _3DMath::Vector( 0.0, 0.0, -1.0 ) ) );
 }
 
 /*virtual*/ TwistyPuzzle::~TwistyPuzzle( void )
@@ -233,8 +226,35 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 	return true;
 }
 
+void TwistyPuzzle::SetupStandardDynamicFaceTurningBoxLabels( void )
+{
+	labelAxisMap.clear();
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "R", _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "L", _3DMath::Vector( -1.0, 0.0, 0.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "U", _3DMath::Vector( 0.0, 1.0, 0.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "D", _3DMath::Vector( 0.0, -1.0, 0.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "F", _3DMath::Vector( 0.0, 0.0, 1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "B", _3DMath::Vector( 0.0, 0.0, -1.0 ) ) );
+}
+
+void TwistyPuzzle::SetupStandardDynamicCornerTurningBoxLabels( void )
+{
+	labelAxisMap.clear();
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "X", _3DMath::Vector( -1.0, 1.0, 1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "Y", _3DMath::Vector( 1.0, 1.0, 1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "Z", _3DMath::Vector( 1.0, 1.0, -1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "W", _3DMath::Vector( -1.0, 1.0, -1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "B", _3DMath::Vector( 1.0, -1.0, -1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "A", _3DMath::Vector( -1.0, -1.0, -1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "C", _3DMath::Vector( 1.0, -1.0, 1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "D", _3DMath::Vector( -1.0, -1.0, 1.0 ) ) );
+}
+
 /*virtual*/ void TwistyPuzzle::UpdateCutShapeLabels( const _3DMath::AffineTransform& transform )
 {
+	if( labelAxisMap.size() == 0 )
+		return;
+
 	_3DMath::LinearTransform normalTransform;
 	transform.linearTransform.GetNormalTransform( normalTransform );
 
@@ -569,7 +589,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	}
 }
 
-/*virtual*/ void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle )
+/*virtual*/ void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxisLabels )
 {
 	_3DMath::LinearTransform normalTransform;
 	transform.linearTransform.GetNormalTransform( normalTransform );
@@ -616,6 +636,31 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 			glLoadName( cutShape->GetHandle() );
 
 		renderer.DrawVector( vector, position, color, 0.5, 0.5 );
+
+		if( renderAxisLabels && renderMode == GL_RENDER && !cutShape->label.empty() )
+		{
+			FontSys::System* fontSystem = wxGetApp().GetFontSystem();
+			glColor4d( 0.9, 0.9, 0.9, 0.5 );
+			fontSystem->SetFont( "ChanticleerRomanNF.ttf" );
+			fontSystem->SetJustification( FontSys::System::JUSTIFY_LEFT );
+			fontSystem->SetWordWrap( false );
+			fontSystem->SetLineHeight( 1.0 );
+
+			glPushAttrib( GL_LIGHTING_BIT | GL_ENABLE_BIT );
+			glDisable( GL_LIGHTING );
+			glDisable( GL_DEPTH_TEST );
+
+			_3DMath::Vector arrowPosition = position + vector;
+
+			glMatrixMode( GL_MODELVIEW_MATRIX );
+			glPushMatrix();
+			glTranslatef( arrowPosition.x, arrowPosition.y, arrowPosition.z );
+
+			fontSystem->DrawTextCPtr( cutShape->label.c_str(), true );
+
+			glPopMatrix();
+			glPopAttrib();
+		}
 	}
 }
 

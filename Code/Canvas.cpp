@@ -17,6 +17,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	mouseDragMode = DRAG_MODE_NONE;
 	grip = nullptr;
 	axisSelectMode = AXIS_SELECT_MANUAL;
+	renderAxisLabels = true;
 
 	context = nullptr;
 	renderer = new GLRenderer();
@@ -181,8 +182,6 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 {
 	BindContext();
 
-	// TODO: If set to do so, render axis labels.  Put font system in a library and then link with that.
-
 	if( objectHandle )
 		*objectHandle = 0;
 
@@ -235,7 +234,7 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 	glLoadIdentity();
 	gluLookAt( 0.0, 0.0, eyeDistance, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
 
-	wxGetApp().GetPuzzle()->Render( *renderer, transform, renderMode, selectedObjectHandle );
+	wxGetApp().GetPuzzle()->Render( *renderer, transform, renderMode, selectedObjectHandle, renderAxisLabels );
 
 	glFlush();
 
@@ -306,6 +305,13 @@ void Canvas::OnMouseWheel( wxMouseEvent& event )
 			wxGetApp().GetPuzzle()->EnqueueRotation( rotation );
 		}
 	}
+}
+
+void Canvas::SetRenderAxisLabels( bool renderAxisLabels )
+{
+	this->renderAxisLabels = renderAxisLabels;
+	wxGetApp().GetPuzzle()->UpdateCutShapeLabels( transform );
+	Refresh();
 }
 
 void Canvas::Animate( void )

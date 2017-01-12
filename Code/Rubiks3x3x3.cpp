@@ -18,6 +18,8 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 {
 	Clear();
 
+	SetupStandardDynamicFaceTurningBoxLabels();
+
 	MakeBox( 10.0, 10.0, 10.0 );
 
 	CutShape* cutShape = new CutShape();

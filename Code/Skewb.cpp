@@ -18,6 +18,8 @@ Skewb::Skewb( void )
 {
 	Clear();
 
+	SetupStandardDynamicCornerTurningBoxLabels();
+
 	MakeBox( 10.0, 10.0, 10.0 );
 
 	_3DMath::Vector normal[8];

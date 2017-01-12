@@ -30,6 +30,9 @@ public:
 
 	AxisSelectMode axisSelectMode;
 
+	void SetRenderAxisLabels( bool renderAxisLabels );
+	bool GetRenderAxisLabels( void ) { return renderAxisLabels; }
+
 private:
 
 	void OnPaint( wxPaintEvent& event );
@@ -70,6 +73,7 @@ private:
 	int selectedObjectHandle;
 	_3DMath::TimeKeeper timeKeeper;
 	Grip* grip;
+	bool renderAxisLabels;
 };
 
 // Canvas.h

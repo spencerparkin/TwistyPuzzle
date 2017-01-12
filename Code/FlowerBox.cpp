@@ -18,6 +18,8 @@ FlowerBox::FlowerBox( void )
 {
 	Clear();
 
+	SetupStandardDynamicCornerTurningBoxLabels();
+
 	MakeBox( 10.0, 10.0, 10.0 );
 
 	double radius = 10.0;

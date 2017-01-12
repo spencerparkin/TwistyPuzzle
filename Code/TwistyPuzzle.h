@@ -38,10 +38,13 @@ public:
 	static TwistyPuzzle* AllocateUsingFile( const wxString& file );
 
 	virtual void Clear( void );
-	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle );
+	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxisLabels );
 	virtual void Reset( void ) = 0;
 	virtual bool SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown );
 	virtual void UpdateCutShapeLabels( const _3DMath::AffineTransform& transform );
+
+	void SetupStandardDynamicFaceTurningBoxLabels( void );
+	void SetupStandardDynamicCornerTurningBoxLabels( void );
 
 	class Rotation
 	{
