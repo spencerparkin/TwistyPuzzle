@@ -100,14 +100,28 @@ Gem6::Gem6( void )
 		}
 	}
 
-	_3DMath::Vector vector( 1.0, 1.0, 1.0 );
-	vector.Scale( majorRadius / vector.Length() );
-	mesh.AddSymmetricVertices( vector );
+	_3DMath::Triangle triangle;
+	triangle.vertex[0].Set( lengthToCircleCenter, 0.0, minorRadius );
+	triangle.vertex[1].Set( minorRadius, 0.0, lengthToCircleCenter );
+	triangle.vertex[2].Set( minorRadius * cos( M_PI / 4.0 ), minorRadius * sin( M_PI / 4.0 ), lengthToCircleCenter );
+
+	_3DMath::Plane plane;
+	triangle.GetPlane( plane );
+
+	_3DMath::Line line( _3DMath::Vector( 0.0, 0.0, 0.0 ), _3DMath::Vector( 1.0, 1.0, 1.0 ) );
+	_3DMath::Vector intersectionPoint;
+	plane.Intersect( line, intersectionPoint );
+
+	double length = intersectionPoint.Length();
+
+	_3DMath::Vector vertex( 1.0, 1.0, 1.0 );
+	vertex.Scale( length / vertex.Length() );
+	mesh.AddSymmetricVertices( vertex );
 
 	mesh.FindConvexHull();
 
 	_3DMath::PolygonList polygonFaceList;
-	mesh.GeneratePolygonFaceList( polygonFaceList, 0.01 );
+	mesh.GeneratePolygonFaceList( polygonFaceList );
 
 	int i = 0;
 
