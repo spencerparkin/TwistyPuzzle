@@ -229,7 +229,8 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 	// Hmmm...but this will only work if we also update the cache when new cuts are formed.
 	// This could all be a mechanism handled at this base-class level, unbeknownst to the puzzle
 	// derivative, even if it shape-shifts.  I'm not sure if it will solve the problem currently
-	// had by the Gem6, but it may be worth a try.
+	// had by the Gem6, but it may be worth a try.  The problem with the Gem6, I believe, may
+	// have more to do with inaccuracy in the original vertex calculations.
 
 	needsSaving = true;
 	return true;
