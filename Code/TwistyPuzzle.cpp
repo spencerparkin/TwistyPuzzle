@@ -608,16 +608,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	{
 		Face* face = *iter;
 		face->UpdateTessellationIfNeeded();
-		face->Render( renderer, renderMode, transform, normalTransform, false );
-	}
-
-	if( renderMode == GL_RENDER )
-	{
-		for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
-		{
-			Face* face = *iter;
-			face->Render( renderer, renderMode, transform, normalTransform, true );
-		}
+		face->Render( renderer, renderMode, transform, normalTransform );
 	}
 
 	if( renderMode == GL_RENDER )
@@ -807,7 +798,7 @@ void TwistyPuzzle::Face::UpdateTessellationIfNeeded( void )
 }
 
 // TODO: Add lighting as optionally enabled from the render menu.
-void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, bool silhouette ) const
+void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform ) const
 {
 	_3DMath::AffineTransform renderTransform;
 
@@ -815,19 +806,18 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 	animationTransform.SetRotation( axisOfRotation, rotationAngleForAnimation );
 	renderTransform.Concatinate( animationTransform, transform );
 
-	if( !silhouette )
-	{
-		if( renderMode == GL_SELECT )
-			glLoadName( GetHandle() );
+	if( renderMode == GL_SELECT )
+		glLoadName( GetHandle() );
 
-		renderer.Color( color );
-		renderer.DrawPolygon( *polygon, &renderTransform );
-	}
+	renderer.Color( color );
+	renderer.DrawPolygon( *polygon, &renderTransform );
 
-	if( renderer.drawStyle == _3DMath::Renderer::DRAW_STYLE_SOLID && renderMode == GL_RENDER && silhouette )
+	// One solution to the problem of outlining may be to simply write our own shader that can
+	// shade black around the edges of the polygon, but fill the middle as normal.
+	if( renderer.drawStyle == _3DMath::Renderer::DRAW_STYLE_SOLID && renderMode == GL_RENDER )
 	{
 		glLineWidth( 2.5f );
-		//glDisable( GL_DEPTH_TEST );
+		//glDisable( GL_DEPTH_TEST );	This causes artifacting when commented out, but then things draw correctly when it is commented out.
 		glPolygonMode( GL_FRONT, GL_LINE );
 
 		renderer.Color( _3DMath::Vector( 0.0, 0.0, 0.0 ), 1.0 );
