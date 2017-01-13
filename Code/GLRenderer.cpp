@@ -26,6 +26,7 @@ GLRenderer::GLRenderer( void )
 		case DRAW_MODE_TRIANGLE_STRIP:	mode = GL_TRIANGLE_STRIP;	break;
 		case DRAW_MODE_TRIANGLE_FAN:	mode = GL_TRIANGLE_FAN;		break;
 		case DRAW_MODE_QUAD_STRIP:		mode = GL_QUAD_STRIP;		break;
+		case DRAW_MODE_POLYGON:			mode = GL_POLYGON;			break;
 	}
 
 	glBegin( mode );

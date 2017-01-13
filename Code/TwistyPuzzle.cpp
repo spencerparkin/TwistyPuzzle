@@ -445,7 +445,7 @@ void TwistyPuzzle::MakePolyhedron( Polyhedron polyhedron, double radius, _3DMath
 }
 
 _3DMath::Vector TwistyPuzzle::red( 1.0, 0.0, 0.0 );
-_3DMath::Vector TwistyPuzzle::green( 0.0, 1.0, 0.0 );
+_3DMath::Vector TwistyPuzzle::green( 0.0, 0.8, 0.0 );
 _3DMath::Vector TwistyPuzzle::blue( 0.0, 0.0, 1.0 );
 _3DMath::Vector TwistyPuzzle::magenta( 1.0, 0.0, 1.0 );
 _3DMath::Vector TwistyPuzzle::cyan( 0.0, 1.0, 1.0 );
@@ -616,7 +616,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 		for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
 		{
 			Face* face = *iter;
-			//face->Render( renderer, renderMode, transform, normalTransform, true );
+			face->Render( renderer, renderMode, transform, normalTransform, true );
 		}
 	}
 
@@ -826,29 +826,15 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 
 	if( renderer.drawStyle == _3DMath::Renderer::DRAW_STYLE_SOLID && renderMode == GL_RENDER && silhouette )
 	{
-		_3DMath::Vector lookVector( 0.0, 0.0, -1.0 );
-		_3DMath::Plane plane;
-		polygon->GetPlane( plane );
+		glLineWidth( 2.5f );
+		//glDisable( GL_DEPTH_TEST );
+		glPolygonMode( GL_FRONT, GL_LINE );
 
-		normalTransform.Transform( plane.normal );
+		renderer.Color( _3DMath::Vector( 0.0, 0.0, 0.0 ), 1.0 );
+		renderer.DrawPolygon( *polygon, &renderTransform, false );
 
-		// TODO: I think this would work if we sent both normals through the projection matrix first.
-
-		if( lookVector.Dot( plane.normal ) < 0.0 )
-		{
-			glLineWidth( 2.5f );
-
-			renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
-
-			glDisable( GL_DEPTH_TEST );
-
-			renderer.Color( _3DMath::Vector( 0.0, 0.0, 0.0 ), 1.0 );
-			renderer.DrawPolygon( *polygon, &renderTransform );
-
-			renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_SOLID;
-
-			glEnable( GL_DEPTH_TEST );
-		}
+		glEnable( GL_DEPTH_TEST );
+		glPolygonMode( GL_FRONT, GL_FILL );
 	}
 }
 
