@@ -42,7 +42,7 @@ Gem6::Gem6( void )
 	double majorRadius = 10.0;
 	double minorRadius = _3DMath::Vector( majorRadius * cos( angle ), majorRadius * sin( angle ), 0.0 ).Distance( _3DMath::Vector( 0.0, majorRadius, 0.0 ) ) / 2.0;
 
-	//_3DMath::TriangleMesh mesh;
+	_3DMath::TriangleMesh mesh;
 
 	double e1 = minorRadius * sqrt( 2.0 * ( 1.0 - sqrt( 2.0 ) / 2.0 ) );
 	double e2 = majorRadius * sqrt( 2.0 * ( 1.0 - cos( angle ) ) );
@@ -92,8 +92,10 @@ Gem6::Gem6( void )
 
 				double length = point.Length();
 
-				mesh.vertexArray->push_back( point );
-				vectorArray.push_back( point );
+				_3DMath::Vertex vertex;
+				vertex.position = point;
+				vertex.color.Set( 1.0, 0.0, 0.0 );
+				mesh.vertexArray->push_back( vertex );
 			}
 		}
 	}
@@ -105,9 +107,11 @@ Gem6::Gem6( void )
 	mesh.FindConvexHull();
 
 	_3DMath::PolygonList polygonFaceList;
-	mesh.GeneratePolygonFaceList( polygonFaceList );
+	mesh.GeneratePolygonFaceList( polygonFaceList, 0.01 );
 
 	int i = 0;
+
+	_3DMath::PlaneList planeList;
 
 	for( _3DMath::PolygonList::iterator iter = polygonFaceList.begin(); iter != polygonFaceList.end(); iter++ )
 	{
@@ -115,25 +119,70 @@ Gem6::Gem6( void )
 		Face* face = new Face( polygon );
 		face->color = ColorTable( i++ );
 		faceList.push_back( face );
+
+		if( polygon->vertexArray->size() == 5 )
+		{
+			_3DMath::Vector center;
+			polygon->GetCenter( center );
+
+			_3DMath::Plane plane;
+			_3DMath::Vector normal;
+
+			normal.x = ( center.x > 0.0 ) ? 1.0 : -1.0;
+			normal.y = 0.0;
+			normal.z = 0.0;
+
+			plane.SetCenterAndNormal( center, normal );
+			AddPlaneIfNotFound( planeList, plane );
+
+			normal.x = 0.0;
+			normal.y = ( center.y > 0.0 ) ? 1.0 : -1.0;
+			normal.z = 0.0;
+
+			plane.SetCenterAndNormal( center, normal );
+			AddPlaneIfNotFound( planeList, plane );
+
+			normal.x = 0.0;
+			normal.y = 0.0;
+			normal.z = ( center.z > 0.0 ) ? 1.0 : -1.0;
+
+			plane.SetCenterAndNormal( center, normal );
+			AddPlaneIfNotFound( planeList, plane );
+		}
+	}
+
+	for( _3DMath::PlaneList::iterator iter = planeList.begin(); iter != planeList.end(); iter++ )
+	{
+		const _3DMath::Plane& plane = *iter;
+
+		_3DMath::Vector center;
+		plane.GetCenter( center );
+
+		CutShape* cutShape = new CutShape();
+		cutShape->surface = new _3DMath::PlaneSurface( plane );
+
+		double length = center.Length();
+		if( length < 4.0 )
+			cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
+		else
+			cutShape->rotationAngleForSingleTurn = M_PI / 4.0;
+
+		cutShape->axisOfRotation.normal = plane.normal;
+		cutShape->axisOfRotation.center = center;
+		cutShapeList.push_back( cutShape );
 	}
 }
 
-/*virtual*/ void Gem6::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxisLabels )
+/*static*/ void Gem6::AddPlaneIfNotFound( _3DMath::PlaneList& planeList, const _3DMath::Plane& newPlane )
 {
-	/*glColor3f( 1.f, 1.f, 1.f );
-	glPointSize( 5.f );
-	glBegin( GL_POINTS );
-	for( int i = 0; i < vectorArray.size(); i++ )
+	for( _3DMath::PlaneList::iterator iter = planeList.begin(); iter != planeList.end(); iter++ )
 	{
-		_3DMath::Vector point = vectorArray[i];
-		transform.Transform( point );
-		glVertex3f( point.x, point.y, point.z );
+		const _3DMath::Plane& plane = *iter;
+		if( plane.IsEqualTo( newPlane, 0.01 ) )
+			return;
 	}
-	glEnd();
 
-	TwistyPuzzle::Render( renderer, transform, renderMode, selectedObjectHandle, renderAxisLabels );*/
-
-	renderer.DrawTriangleMesh( mesh, _3DMath::Renderer::DRAW_TRIANGLES, &transform );
+	planeList.push_back( newPlane );
 }
 
 // Gem6.cpp

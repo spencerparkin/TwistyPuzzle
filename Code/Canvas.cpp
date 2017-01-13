@@ -284,12 +284,29 @@ void Canvas::OnSize( wxSizeEvent& event )
 
 void Canvas::OnMouseWheel( wxMouseEvent& event )
 {
-	if( selectedObjectHandle )
-	{
-		double wheelDelta = event.GetWheelDelta();
-		double wheelRotation = event.GetWheelRotation();
-		int wheelClicks = int( wheelRotation / wheelDelta );
+	double wheelDelta = event.GetWheelDelta();
+	double wheelRotation = event.GetWheelRotation();
+	int wheelClicks = int( wheelRotation / wheelDelta );
 
+	if( event.ShiftDown() )
+	{
+		double scale = 1.1;
+		if( wheelClicks < 0 )
+		{
+			scale = 0.9;
+			wheelClicks *= -1;
+		}
+
+		while( wheelClicks > 0 )
+		{
+			eyeDistance *= scale;
+			wheelClicks--;
+		}
+
+		Refresh();
+	}
+	else if( selectedObjectHandle )
+	{
 		TwistyPuzzle::Rotation::Direction direction = TwistyPuzzle::Rotation::DIR_CW;
 		if( wheelClicks < 0 )
 		{

@@ -222,6 +222,15 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 		face->rotationAngleForAnimation -= rotationAngle;
 	}
 
+	// One major draw-back to how we're manipulating the puzzle is that it is subject
+	// to accumulated round-off error.  This, however, can be overcome for puzzles that
+	// don't shape-shift.  The idea is simply to cache the original vertices of the puzzle,
+	// and then after each rotation, snap all transformed vertices to their closest cached point.
+	// Hmmm...but this will only work if we also update the cache when new cuts are formed.
+	// This could all be a mechanism handled at this base-class level, unbeknownst to the puzzle
+	// derivative, even if it shape-shifts.  I'm not sure if it will solve the problem currently
+	// had by the Gem6, but it may be worth a try.
+
 	needsSaving = true;
 	return true;
 }
@@ -598,7 +607,16 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	{
 		Face* face = *iter;
 		face->UpdateTessellationIfNeeded();
-		face->Render( renderer, renderMode, transform, normalTransform );
+		face->Render( renderer, renderMode, transform, normalTransform, false );
+	}
+
+	if( renderMode == GL_RENDER )
+	{
+		for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
+		{
+			Face* face = *iter;
+			//face->Render( renderer, renderMode, transform, normalTransform, true );
+		}
 	}
 
 	if( renderMode == GL_RENDER )
@@ -787,36 +805,49 @@ void TwistyPuzzle::Face::UpdateTessellationIfNeeded( void )
 	}
 }
 
-void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform ) const
+// TODO: Add lighting as optionally enabled from the render menu.
+void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, bool silhouette ) const
 {
-	glLineWidth( 2.5f );
-
 	_3DMath::AffineTransform renderTransform;
 
 	_3DMath::AffineTransform animationTransform;
 	animationTransform.SetRotation( axisOfRotation, rotationAngleForAnimation );
 	renderTransform.Concatinate( animationTransform, transform );
 
-	if( renderMode == GL_SELECT )
-		glLoadName( GetHandle() );
-
-	renderer.Color( color );
-	renderer.DrawPolygon( *polygon, &renderTransform );
-
-	if( renderer.drawStyle == _3DMath::Renderer::DRAW_STYLE_SOLID && renderMode == GL_RENDER )
+	if( !silhouette )
 	{
-		renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
+		if( renderMode == GL_SELECT )
+			glLoadName( GetHandle() );
 
-		_3DMath::AffineTransform scaleTransform;
-		scaleTransform.linearTransform.SetScale( 1.01 );
+		renderer.Color( color );
+		renderer.DrawPolygon( *polygon, &renderTransform );
+	}
 
-		_3DMath::AffineTransform silhouetteTransform;
-		silhouetteTransform.Concatinate( scaleTransform, renderTransform );
+	if( renderer.drawStyle == _3DMath::Renderer::DRAW_STYLE_SOLID && renderMode == GL_RENDER && silhouette )
+	{
+		_3DMath::Vector lookVector( 0.0, 0.0, -1.0 );
+		_3DMath::Plane plane;
+		polygon->GetPlane( plane );
 
-		renderer.Color( _3DMath::Vector( 0.0, 0.0, 0.0 ), 1.0 );
-		renderer.DrawPolygon( *polygon, &silhouetteTransform );
+		normalTransform.Transform( plane.normal );
 
-		renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_SOLID;
+		// TODO: I think this would work if we sent both normals through the projection matrix first.
+
+		if( lookVector.Dot( plane.normal ) < 0.0 )
+		{
+			glLineWidth( 2.5f );
+
+			renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
+
+			glDisable( GL_DEPTH_TEST );
+
+			renderer.Color( _3DMath::Vector( 0.0, 0.0, 0.0 ), 1.0 );
+			renderer.DrawPolygon( *polygon, &renderTransform );
+
+			renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_SOLID;
+
+			glEnable( GL_DEPTH_TEST );
+		}
 	}
 }
 

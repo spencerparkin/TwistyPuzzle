@@ -91,7 +91,7 @@ public:
 		~Face( void );
 
 		void UpdateTessellationIfNeeded( void );
-		void Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform ) const;
+		void Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, bool silhouette ) const;
 		bool IsCapturedByCutShape( CutShape* cutShape ) const;
 		bool Save( wxXmlNode* xmlFaceNode ) const;
 		bool Load( const wxXmlNode* xmlFaceNode );
