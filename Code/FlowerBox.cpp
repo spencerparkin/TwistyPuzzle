@@ -24,6 +24,8 @@ FlowerBox::FlowerBox( void )
 
 	double radius = 10.0;
 
+	// TODO: The cut is too deep.  Move the center of the sphere out, then increase the radius.
+
 	CutShape* cutShape = new CutShape();
 	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, 5.0, -5.0 ), radius ) );
 	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;

@@ -97,6 +97,9 @@
     <ClCompile Include="Code\IcosahedronSkewb.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Gem6.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Application.h">
@@ -187,6 +190,9 @@
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
     <ClInclude Include="Code\IcosahedronSkewb.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gem6.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
   </ItemGroup>
