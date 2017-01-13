@@ -187,6 +187,33 @@ Gem6::Gem6( void )
 	}
 }
 
+/*virtual*/ bool Gem6::ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation )
+{
+	if( !TwistyPuzzle::ApplyCutShapeWithRotation( cutShape, rotation ) )
+		return false;
+
+	// An improvement in accuracy would unnecessitate this bit of code.
+	FaceList::iterator iter = faceList.begin();
+	while( iter != faceList.end() )
+	{
+		FaceList::iterator nextIter = iter;
+		nextIter++;
+
+		Face* face = *iter;
+		face->UpdateTessellationIfNeeded();
+		double area = face->polygon->GetArea();
+		if( area < 0.3 )
+		{
+			delete face;
+			faceList.erase( iter );
+		}
+
+		iter = nextIter;
+	}
+
+	return true;
+}
+
 /*static*/ void Gem6::AddPlaneIfNotFound( _3DMath::PlaneList& planeList, const _3DMath::Plane& newPlane )
 {
 	for( _3DMath::PlaneList::iterator iter = planeList.begin(); iter != planeList.end(); iter++ )

@@ -15,6 +15,7 @@ public:
 	virtual ~Gem6( void );
 
 	virtual void Reset( void ) override;
+	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation ) override;
 
 	static void AddPlaneIfNotFound( _3DMath::PlaneList& planeList, const _3DMath::Plane& newPlane );
 };
