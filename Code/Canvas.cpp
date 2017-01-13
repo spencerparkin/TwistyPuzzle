@@ -288,7 +288,7 @@ void Canvas::OnMouseWheel( wxMouseEvent& event )
 	double wheelRotation = event.GetWheelRotation();
 	int wheelClicks = int( wheelRotation / wheelDelta );
 
-	if( event.ShiftDown() )
+	if( event.ShiftDown() && !event.AltDown() )
 	{
 		double scale = 1.1;
 		if( wheelClicks < 0 )

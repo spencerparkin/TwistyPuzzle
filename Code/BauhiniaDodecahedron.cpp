@@ -22,13 +22,9 @@ BauhiniaDodecahedron::BauhiniaDodecahedron( void )
 	_3DMath::TriangleMesh triangleMesh;
 	MakePolyhedron( DODECAHEDRON, radius, &triangleMesh );
 
-	_3DMath::IndexTriangleList::iterator iter = triangleMesh.triangleList->begin();
-	_3DMath::IndexTriangle& indexTriangle = *iter;
-
-	_3DMath::Triangle triangle;
-	indexTriangle.GetTriangle( triangle, triangleMesh.vertexArray );
-
-	double edgeLength = ( triangle.vertex[1] - triangle.vertex[0] ).Length();
+	FaceList::iterator iter = faceList.begin();
+	Face* face = *iter;
+	double edgeLength = ( *face->polygon->vertexArray )[0].Distance( ( *face->polygon->vertexArray )[1] );
 
 	for( int i = 0; i < ( signed )triangleMesh.vertexArray->size(); i++ )
 	{

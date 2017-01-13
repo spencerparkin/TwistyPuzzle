@@ -20,75 +20,35 @@ FlowerBox::FlowerBox( void )
 
 	SetupStandardDynamicCornerTurningBoxLabels();
 
-	MakeBox( 10.0, 10.0, 10.0 );
+	double length = 10.0;
 
-	double radius = 10.0;
+	MakeBox( length, length, length );
 
-	// TODO: The cut is too deep.  Move the center of the sphere out, then increase the radius.
+	double lengthToSphereCenter = 16.0;
 
-	CutShape* cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, 5.0, -5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
-	cutShape->axisOfRotation.normal.Set( -1.0, 1.0, -1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
+	_3DMath::Vector vector( 1.0, 1.0, 1.0 );
+	vector.Scale( lengthToSphereCenter / vector.Length() );
+	double sphereRadius = _3DMath::Vector( -length / 2.0, length / 2.0, length / 2.0 ).Distance( vector );
 
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, 5.0, -5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
-	cutShape->axisOfRotation.normal.Set( 1.0, 1.0, -1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
+	for( int i = 0; i < 8; i++ )
+	{
+		_3DMath::Vector normal;
 
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, 5.0, 5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
-	cutShape->axisOfRotation.normal.Set( -1.0, 1.0, 1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
+		normal.x = ( i & 1 ) ? -1.0 : 1.0;
+		normal.y = ( i & 2 ) ? -1.0 : 1.0;
+		normal.z = ( i & 4 ) ? -1.0 : 1.0;
 
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, 5.0, 5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
-	cutShape->axisOfRotation.normal.Set( 1.0, 1.0, 1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
+		normal.Normalize();
 
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, -5.0, -5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
-	cutShape->axisOfRotation.normal.Set( -1.0, -1.0, -1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
+		_3DMath::Vector sphereCenter = normal * lengthToSphereCenter;
 
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, -5.0, -5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
-	cutShape->axisOfRotation.normal.Set( 1.0, -1.0, -1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
-
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, -5.0, 5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
-	cutShape->axisOfRotation.normal.Set( -1.0, -1.0, 1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
-
-	cutShape = new CutShape();
-	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, -5.0, 5.0 ), radius ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
-	cutShape->axisOfRotation.normal.Set( 1.0, -1.0, 1.0 );
-	cutShape->axisOfRotation.normal.Normalize();
-	cutShape->captureSide = _3DMath::Surface::INSIDE;
-	cutShapeList.push_back( cutShape );
+		CutShape* cutShape = new CutShape();
+		cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( sphereCenter, sphereRadius ) );
+		cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
+		cutShape->axisOfRotation.normal = normal;
+		cutShape->captureSide = _3DMath::Surface::INSIDE;
+		cutShapeList.push_back( cutShape );
+	}
 }
 
 // FlowerBox.cpp
