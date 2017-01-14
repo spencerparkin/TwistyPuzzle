@@ -18,6 +18,8 @@ SkewbDiamond::SkewbDiamond( void )
 {
 	Clear();
 
+	SetupStandardDynamicCornerTurningBoxLabels();
+
 	MakePolyhedron( OCTAHEDRON, 8.0 );
 
 	_3DMath::Vector normal[8];

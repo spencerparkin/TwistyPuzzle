@@ -18,6 +18,8 @@ FaceTurningOctahedron::FaceTurningOctahedron( void )
 {
 	Clear();
 
+	SetupStandardDynamicCornerTurningBoxLabels();
+
 	double radius = 8.0;
 
 	MakePolyhedron( OCTAHEDRON, radius );

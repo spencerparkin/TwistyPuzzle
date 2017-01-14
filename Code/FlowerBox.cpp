@@ -24,7 +24,7 @@ FlowerBox::FlowerBox( void )
 
 	MakeBox( length, length, length );
 
-	double lengthToSphereCenter = 16.0;
+	double lengthToSphereCenter = 25.0;
 
 	_3DMath::Vector vector( 1.0, 1.0, 1.0 );
 	vector.Scale( lengthToSphereCenter / vector.Length() );

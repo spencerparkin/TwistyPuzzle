@@ -42,6 +42,7 @@ public:
 	virtual void Reset( void ) = 0;
 	virtual bool SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown );
 	virtual void UpdateCutShapeLabels( const _3DMath::AffineTransform& transform );
+	virtual double PolygonOutlineScaleFactor( void ) const { return 1.01; }
 
 	void SetupStandardDynamicFaceTurningBoxLabels( void );
 	void SetupStandardDynamicCornerTurningBoxLabels( void );
@@ -91,7 +92,7 @@ public:
 		~Face( void );
 
 		void UpdateTessellationIfNeeded( void );
-		void Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform ) const;
+		void Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, double outlineScaleFactor ) const;
 		bool IsCapturedByCutShape( CutShape* cutShape ) const;
 		bool Save( wxXmlNode* xmlFaceNode ) const;
 		bool Load( const wxXmlNode* xmlFaceNode );

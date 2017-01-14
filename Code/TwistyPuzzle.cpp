@@ -444,6 +444,7 @@ void TwistyPuzzle::MakePolyhedron( Polyhedron polyhedron, double radius, _3DMath
 	}
 }
 
+// TODO: We need more colors so that we don't run out of them for larger puzzles.
 _3DMath::Vector TwistyPuzzle::red( 1.0, 0.0, 0.0 );
 _3DMath::Vector TwistyPuzzle::green( 0.0, 0.8, 0.0 );
 _3DMath::Vector TwistyPuzzle::blue( 0.0, 0.0, 1.0 );
@@ -608,7 +609,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	{
 		Face* face = *iter;
 		face->UpdateTessellationIfNeeded();
-		face->Render( renderer, renderMode, transform, normalTransform );
+		face->Render( renderer, renderMode, transform, normalTransform, PolygonOutlineScaleFactor() );
 	}
 
 	if( renderMode == GL_RENDER )
@@ -652,7 +653,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 			FontSys::System* fontSystem = wxGetApp().GetFontSystem();
 			glColor4d( 0.9, 0.9, 0.9, 0.5 );
 			fontSystem->SetFont( "ChanticleerRomanNF.ttf" );
-			fontSystem->SetJustification( FontSys::System::JUSTIFY_LEFT );
+			fontSystem->SetJustification( FontSys::System::JUSTIFY_CENTER );
 			fontSystem->SetWordWrap( false );
 			fontSystem->SetLineHeight( 1.0 );
 
@@ -798,7 +799,7 @@ void TwistyPuzzle::Face::UpdateTessellationIfNeeded( void )
 }
 
 // TODO: Add lighting as optionally enabled from the render menu.
-void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform ) const
+void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, double outlineScaleFactor ) const
 {
 	_3DMath::AffineTransform renderTransform;
 
@@ -817,14 +818,19 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 	if( renderer.drawStyle == _3DMath::Renderer::DRAW_STYLE_SOLID && renderMode == GL_RENDER )
 	{
 		glLineWidth( 2.5f );
-		//glDisable( GL_DEPTH_TEST );	This causes artifacting when commented out, but then things draw correctly when it is commented out.
-		glPolygonMode( GL_FRONT, GL_LINE );
+		
+		renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
+
+		_3DMath::AffineTransform scaleTransform;
+		scaleTransform.linearTransform.SetScale( outlineScaleFactor );
+
+		_3DMath::AffineTransform silhouetteTransform;
+		silhouetteTransform.Concatinate( scaleTransform, renderTransform );
 
 		renderer.Color( _3DMath::Vector( 0.0, 0.0, 0.0 ), 1.0 );
-		renderer.DrawPolygon( *polygon, &renderTransform, false );
+		renderer.DrawPolygon( *polygon, &silhouetteTransform );
 
-		glEnable( GL_DEPTH_TEST );
-		glPolygonMode( GL_FRONT, GL_FILL );
+		renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_SOLID;
 	}
 }
 
