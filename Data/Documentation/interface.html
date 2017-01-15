@@ -34,14 +34,15 @@
 		By now you've probably noticed a few semi-transparent arrows poking out of the puzzle.
 		These represent axes of rotation about which a cut-shape cuts-out and rotates a portion
 		of the puzzle.  After right-clicking on the arrow-tip of one of these axes, you'll see
-		the cut-shape appear and arrow draw a bit brighter.
+		the cut-shape appear and the arrow draw a bit brighter.
 		You can then use the mouse wheel to rotate the portion of the puzzle
-		intersected by the cut-shape.
+		intersected by the selected cut-shape.
 		</p>
 		<p>
 		Manually selecting the cut-shape axis like this can be annoying; so in that case, you may
 		find it more convenient to turn on auto-selection of these axes.  To do that, use the
-		"Auto Select Axes" menu item under the "Interface" menu.
+		"Auto Select Axes" menu item under the "Interface" menu.  Note that auto-selection does
+		not prevent you from doing manual selection too.
 		</p>
 		<h3>2.2.2. Rotate by Grip</h3>
 		<p>
@@ -50,34 +51,38 @@
 		is best to generate all cuts of the puzzle before using this method, which is often the case after
 		a good scrambling.  Go to the "Program" menu and select "Scramble".  After dismissing the subsequent
 		dialog, wait for the puzzle to scramble, then move your mouse cursor over a face of the puzzle.
-		Now, while holding down the right-mouse button, drag the mouse to see how the puzzle is manipulated.
+		Now, while holding down the right mouse button, drag the mouse to see how the puzzle is manipulated.
 		With practice, you can get a feel for how this works.  Be sure to drag the mouse cursor
 		in a straight line for best results.
 		</p>
 		<h3>2.2.3. Rotate by Sequence</h3>
 		<p>
-		Go to the "Render" menu and select "Draw Axis Labels."  Axis labels should then appear
+		Go to the "Render" menu and select "Draw Axis Labels" if it is not already checked.
+		Axis labels should then appear
 		next to each of the arrows poking out of the puzzle.  There are two types of such labels:
 		those that are assigned dynamically, and those that are statically assigned.  If in the
 		former case, the labels will changes as you orient the cube; otherwise, they always stay
-		the same.  For some puzzle, this dynamic labeling is convenient, for others, it's not.
+		the same.  For some puzzle, this dynamic labeling is convenient, for others, it is not.
 		</p>
 		<p>
 		Now click in the text-control at the bottom of the window, above the status bar.
-		Here you can enter a command delimited sequence of rotation commands, each of which
+		Here you can enter a comma-delimited sequence of rotation commands, each of which
 		being simply the name of an axis of the puzzle with an "i" optionally appended.
+		For example, on the Rubik's Cube, you might enter "U,R,Ui,Li,U,Ri,Ui,L" without the quotes.
 		</p>
 		<h3>2.2.4. Special Cases</h3>
 		<p>
 		Some puzzles have special moves that other puzzles do not.  As of this writing, the Curvy Copter
-		is the only example.  To jumble an edge of the Curvy Copter, select its rotation axis, then rotate
-		with the mouse wheel as usual, but while holding the ALT or ALT+SHIFT keys down.
+		and Curvy Copter 3 are
+		the only examples.  To jumble an edge of the Curvy Copter, select its rotation axis, then rotate
+		with the mouse wheel as usual, but while holding the ALT or ALT+SHIFT keys down.  The goes for the
+		Curvy Copter 3.
 		</p>
 		<h2>2.3. Undo/Redo</h2>
 		<p>
 		If you make a mistake, you can always use the "Go Backward" menu option under the
-		"History" menu.  Note that as of this writing, it does not presist with the saving
-		of your puzzle to disk.
+		"History" menu.  Note that as of this writing, you entire rotation history does not presist
+		with the saving of your puzzle to disk.
 		</p>
 	</head>
 </html>

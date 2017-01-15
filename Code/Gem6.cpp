@@ -134,6 +134,7 @@ Gem6::Gem6( void )
 		face->color = ColorTable( i++ );
 		faceList.push_back( face );
 
+		// TODO: I don't think the cut-planes are being positioned exactly right.
 		if( polygon->vertexArray->size() == 5 )
 		{
 			_3DMath::Vector center;
