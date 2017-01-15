@@ -21,8 +21,18 @@ CurvyCopter3::CurvyCopter3( void )
 
 /*virtual*/ double CurvyCopter3::CalcJumbleTurnAmount( void )
 {
-	// TODO: Figure this out.
-	return 0.0;
+	// The calculation we're making here is exactly the same as that made for the CurvyCopter 1.
+	double ppr_radius = 2.8867513459481282;
+	_3DMath::Vector ppr_center( 1.6666666666666667, 1.6666666666666667, -1.6666666666666667 );
+	_3DMath::Vector ppr_normal( 0.57735026918962573, 0.57735026918962573, -0.57735026918962573 );
+
+	_3DMath::Vector vertex = ppr_center + ppr_normal * ppr_radius;
+	_3DMath::Vector origin( 0.0, 0.0, 0.0 );
+	_3DMath::Vector pivot( 5.0, 0.0, 0.0 );
+
+	double angle = ( vertex - pivot ).AngleBetween( origin - pivot );
+	double amount = angle / M_PI;
+	return amount;
 }
 
 // CurvyCopter3.cpp
