@@ -5,7 +5,7 @@
 #include "Application.h"
 #include "GLRenderer.h"
 #include "Frame.h"
-#include <gl/GLU.h>
+//#include <gl/GLU.h>
 #include <HandleObject.h>
 
 int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
@@ -79,7 +79,7 @@ void Canvas::OnMouseRightUp( wxMouseEvent& event )
 	}
 
 	mouseDragMode = DRAG_MODE_NONE;
-	ReleaseCapture();
+	ReleaseMouse();
 }
 
 void Canvas::OnMouseLeftDown( wxMouseEvent& event )
@@ -92,7 +92,7 @@ void Canvas::OnMouseLeftDown( wxMouseEvent& event )
 void Canvas::OnMouseLeftUp( wxMouseEvent& event )
 {
 	mouseDragMode = DRAG_MODE_NONE;
-	ReleaseCapture();
+	ReleaseMouse();
 }
 
 void Canvas::OnMouseMiddleDown( wxMouseEvent& event )
@@ -105,7 +105,7 @@ void Canvas::OnMouseMiddleDown( wxMouseEvent& event )
 void Canvas::OnMouseMiddleUp( wxMouseEvent& event )
 {
 	mouseDragMode = DRAG_MODE_NONE;
-	ReleaseCapture();
+	ReleaseMouse();
 }
 
 void Canvas::OnMouseMotion( wxMouseEvent& event )

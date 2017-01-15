@@ -38,3 +38,15 @@ Debug/
 *.sdf
 *.suo
 ipch/
+
+# Linux stuff...
+*.o
+*.snap
+Snap/stage/
+Snap/parts/
+Snap/prime/
+.*.swap
+.*.dblite
+config.log
+.sconf_temp/
+TwistyPuzzle
