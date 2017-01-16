@@ -270,6 +270,11 @@ bool ReducePermutation( const PermutationMap& permutationMap, const Permutation&
 	{
 		const Permutation* bestPermutation = nullptr;
 
+		// TODO: Map-count is not the only metric we should be using, I think.
+		//       Another, more general metric, is simply proximity.  We may not
+		//       reduce the permutation down in map-count, but we can still do
+		//       reduce in terms of proximity.  And a reduction in map-count is
+		//       an obvious reduction in proximity.
 		int smallestMapCount = permutation.MapCount();
 		std::string key;
 
