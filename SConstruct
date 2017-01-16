@@ -1,11 +1,20 @@
 # SConstruct for FontSystem library
 
+import os
+
+# How do we do this correctly?
+font_sys_code = '../FontSystem/Code'
+_3dmath_sys_code = '../3DMath/Code'
+if 'DESTDIR' in os.environ:
+  font_sys_code = '../../fontsystem/install/include'
+  _3dmath_sys_code = '../../3dmath/install/include'
+
 obj_env = Environment( parse_flags = '!wx-config --cxxflags' )
 obj_env.Append( CCFLAGS = '--std=c++11' )
 obj_env.Append( CCFLAGS = '-DLINUX' )
 obj_env.Append( CCFLAGS = '-I/usr/include/freetype2' )
-obj_env.Append( CCFLAGS = '-I../FontSystem/Code' )
-obj_env.Append( CCFLAGS = '-I../3DMath/Code' )
+obj_env.Append( CCFLAGS = '-I' + font_sys_code )
+obj_env.Append( CCFLAGS = '-I' + _3dmath_sys_code )
 obj_env.Append( CCFLAGS = '-ggdb' )
 
 cpp_source_list = Glob( 'Code/*.cpp' )
@@ -23,4 +32,23 @@ prog_env.Append( LIBS = '-lGLU' )
 prog_env.Append( LIBS = '-l3DMath' )
 prog_env.Append( LIBS = '-lFontSystem' )
 prog_env.Append( LIBS = '-lfreetype' )
-prog_env.Program( '$PROGNAME', source = object_list )
+prog = prog_env.Program( '$PROGNAME', source = object_list )
+
+dest_dir = '/usr'
+if 'DESTDIR' in os.environ:
+  dest_dir = os.environ[ 'DESTDIR' ]
+
+install_env = Environment(
+  BIN = dest_dir + '/bin',
+  SHARE = dest_dir + '/share' )
+
+doc_list = Glob( 'Data/Documentation/*' )
+font_list = Glob( 'Data/Fonts/*' )
+
+install_env.Install( '$SHARE/TwistyPuzzle/Data/Documentation', doc_list )
+install_env.Install( '$SHARE/TwistyPuzzle/Data/Fonts', font_list )
+install_env.Install( '$BIN', prog )
+install_env.Alias( 'install', [
+  '$BIN',
+  '$SHARE/TwistyPuzzle/Data/Documentation',
+  '$SHARE/TwistyPuzzle/Data/Fonts' ] )
