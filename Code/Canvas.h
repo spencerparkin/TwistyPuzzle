@@ -5,7 +5,7 @@
 #include <wx/glcanvas.h>
 #include <Vector.h>
 #include <AffineTransform.h>
-#include <TimeKeeper.h>
+#include "wxTimeKeeper.h"
 
 class GLRenderer;
 
@@ -71,9 +71,12 @@ private:
 	enum MouseDragMode { DRAG_MODE_NONE, DRAG_MODE_ORIENT_PUZZLE, DRAG_MODE_ROTATE_FACES };
 	MouseDragMode mouseDragMode;
 	int selectedObjectHandle;
-	_3DMath::TimeKeeper timeKeeper;
+	wxTimeKeeper timeKeeper;
 	Grip* grip;
 	bool renderAxisLabels;
+#if defined LINUX
+	double timeOfLastWheelClickSeconds;
+#endif
 };
 
 // Canvas.h

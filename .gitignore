@@ -45,8 +45,10 @@ ipch/
 Snap/stage/
 Snap/parts/
 Snap/prime/
-.*.swap
+.*.swp
 .*.dblite
 config.log
 .sconf_temp/
 TwistyPuzzle
+*.swp
+.vscode/

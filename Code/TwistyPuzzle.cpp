@@ -172,7 +172,7 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 		rotationQueue.erase( iter );
 
 		wxStatusBar* statusBar = wxGetApp().GetFrame()->GetStatusBar();
-		wxString text = wxString::Format( "%d rotations queued.", rotationQueue.size() );
+		wxString text = wxString::Format( "%d rotations queued.", int( rotationQueue.size() ) );
 		statusBar->SetStatusText( text );
 
 		if( rotation->newRotationSpeedCoeficient != 0.0 )

@@ -120,7 +120,12 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawAxisLabels );
 	Bind( wxEVT_COMMAND_TEXT_ENTER, &Frame::OnTextCtrlEnter, this );
 
+#if defined LINUX
+	// Oddly, this will break us on Linux if we pass in 0.
+	timer.Start(1);
+#else
 	timer.Start(0);
+#endif
 }
 
 /*virtual*/ Frame::~Frame( void )
@@ -245,6 +250,10 @@ bool Frame::Save( void )
 	if( fileDialog.ShowModal() == wxID_OK )
 	{
 		wxString file = fileDialog.GetPath();
+		wxFileName fileName( file );
+		fileName.SetExt( "xml" );	// This must be done on Linux and won't hurt other platforms.
+		file = fileName.GetFullPath();
+
 		if( !puzzle->Save( file ) )
 		{
 			wxMessageBox( "Failed to save.", "Error", wxCENTRE | wxICON_ERROR, this );

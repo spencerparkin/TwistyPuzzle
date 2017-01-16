@@ -18,6 +18,9 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	grip = nullptr;
 	axisSelectMode = AXIS_SELECT_MANUAL;
 	renderAxisLabels = true;
+#if defined LINUX
+	timeOfLastWheelClickSeconds = 0.0;
+#endif
 
 	context = nullptr;
 	renderer = new GLRenderer();
@@ -276,10 +279,13 @@ void Canvas::OnPaint( wxPaintEvent& event )
 
 void Canvas::OnSize( wxSizeEvent& event )
 {
-	wxSize size = event.GetSize();
-	glViewport( 0, 0, size.GetWidth(), size.GetHeight() );
+	if( context )
+	{
+		wxSize size = event.GetSize();
+		glViewport( 0, 0, size.GetWidth(), size.GetHeight() );
 
-	Refresh();
+		Refresh();
+	}
 }
 
 void Canvas::OnMouseWheel( wxMouseEvent& event )
@@ -307,6 +313,23 @@ void Canvas::OnMouseWheel( wxMouseEvent& event )
 	}
 	else if( selectedObjectHandle )
 	{
+#if defined LINUX
+		// GTK is sending an extraneous wheel event.  One is for "smooth" wheel clicks,
+		// the other is for normal wheel clicks.  From the wxWidgets perspective, I can't
+		// differentiate between the two types of events.  Sigh...  So, as a bit of a hack
+		// to prevent the unwanted event, I'm going to bail here unless the rotation queue
+		// is empty.  Ugh...and unless enough time has gone by.
+		if( wxGetApp().GetPuzzle()->rotationQueue.size() > 0 )
+			return;
+
+		double currentTimeSeconds = timeKeeper.GetCurrentTimeSeconds();
+		double timeSinceLastWheelClickSeconds = currentTimeSeconds - timeOfLastWheelClickSeconds;
+		if( timeSinceLastWheelClickSeconds < 0.5 )
+			return;
+
+		timeOfLastWheelClickSeconds = currentTimeSeconds;
+#endif
+
 		TwistyPuzzle::Rotation::Direction direction = TwistyPuzzle::Rotation::DIR_CW;
 		if( wheelClicks < 0 )
 		{
