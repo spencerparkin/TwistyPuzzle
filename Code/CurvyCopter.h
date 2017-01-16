@@ -16,7 +16,7 @@ public:
 	virtual ~CurvyCopter( void );
 
 	virtual double CalcJumbleTurnAmount( void ) override;
-	virtual double CutSphereRadius( void ) override;
+	virtual _3DMath::Surface* MakeCutSphereSurfaceForEdge( const _3DMath::Vector& edgeCenter ) override;
 };
 
 // CurvyCopter.h

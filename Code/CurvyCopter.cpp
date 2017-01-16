@@ -3,6 +3,7 @@
 #include "CurvyCopter.h"
 #include <Surface.h>
 #include <Sphere.h>
+#include <Line.h>
 
 wxIMPLEMENT_DYNAMIC_CLASS( CurvyCopter, CurvyCopterBase );
 
@@ -14,9 +15,30 @@ CurvyCopter::CurvyCopter( void )
 {
 }
 
-/*virtual*/ double CurvyCopter::CutSphereRadius( void )
+/*virtual*/ _3DMath::Surface* CurvyCopter::MakeCutSphereSurfaceForEdge( const _3DMath::Vector& edgeCenter )
 {
-	return 5.0;
+	_3DMath::Line line;
+	line.center.Set( 0.0, 0.0, 0.0 );
+	line.normal.Set( 1.0, 1.0, 0.0 );
+	line.normal.Normalize();
+
+	_3DMath::Sphere sphere;
+	sphere.center.Set( 0.0, 5.0, 0.0 );
+	sphere.radius = 7.0;
+
+	_3DMath::VectorArray intersectionPoints;
+	sphere.RayCast( line, intersectionPoints );
+
+	int i = 0;
+	if( intersectionPoints[0].x < intersectionPoints[1].x )
+		i = 1;
+
+	double length = intersectionPoints[i].Length();
+
+	sphere.center = edgeCenter;
+	sphere.center.Scale( length / sphere.center.Length() );
+
+	return new _3DMath::SphereSurface( sphere );
 }
 
 /*virtual*/ double CurvyCopter::CalcJumbleTurnAmount( void )

@@ -14,9 +14,10 @@ CurvyCopter3::CurvyCopter3( void )
 {
 }
 
-/*virtual*/ double CurvyCopter3::CutSphereRadius( void )
+/*virtual*/ _3DMath::Surface* CurvyCopter3::MakeCutSphereSurfaceForEdge( const _3DMath::Vector& edgeCenter )
 {
-	return 5.0 * sqrt( 4.0 / 9.0 + 1.0 );
+	double radius = 5.0 * sqrt( 4.0 / 9.0 + 1.0 );
+	return new _3DMath::SphereSurface( _3DMath::Sphere( edgeCenter, radius ) );
 }
 
 /*virtual*/ double CurvyCopter3::CalcJumbleTurnAmount( void )

@@ -107,6 +107,7 @@
     <ClCompile Include="Code\SkewbUltimate.cpp" />
     <ClCompile Include="Code\SquareOne.cpp" />
     <ClCompile Include="Code\TwistyPuzzle.cpp" />
+    <ClCompile Include="Code\wxTimeKeeper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Application.h" />
@@ -140,6 +141,7 @@
     <ClInclude Include="Code\SkewbUltimate.h" />
     <ClInclude Include="Code\SquareOne.h" />
     <ClInclude Include="Code\TwistyPuzzle.h" />
+    <ClInclude Include="Code\wxTimeKeeper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

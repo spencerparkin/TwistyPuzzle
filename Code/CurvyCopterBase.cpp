@@ -32,12 +32,12 @@ CurvyCopterBase::CurvyCopterBase( void )
 {
 	Clear();
 
+	SetupStandardDynamicEdgeTurningBoxLabels();
+
 	MakeBox( 10.0, 10.0, 10.0 );
 
-	double radius = CutSphereRadius();
-
 	CutShape* cutShapeA = new CutShape();
-	cutShapeA->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, 5.0, 0.0 ), radius ) );
+	cutShapeA->surface = MakeCutSphereSurfaceForEdge( _3DMath::Vector( 5.0, 5.0, 0.0 ) );
 	cutShapeA->rotationAngleForSingleTurn = M_PI;
 	cutShapeA->axisOfRotation.normal.Set( 1.0, 1.0, 0.0 );
 	cutShapeA->axisOfRotation.normal.Normalize();
@@ -45,7 +45,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	cutShapeList.push_back( cutShapeA );
 
 	CutShape* cutShapeB = new CutShape();
-	cutShapeB->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, 5.0, 0.0 ), radius ) );
+	cutShapeB->surface = MakeCutSphereSurfaceForEdge( _3DMath::Vector( -5.0, 5.0, 0.0 ) );
 	cutShapeB->rotationAngleForSingleTurn = M_PI;
 	cutShapeB->axisOfRotation.normal.Set( -1.0, 1.0, 0.0 );
 	cutShapeB->axisOfRotation.normal.Normalize();
@@ -53,7 +53,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	cutShapeList.push_back( cutShapeB );
 
 	CutShape* cutShapeC = new CutShape();
-	cutShapeC->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, 5.0, 5.0 ), radius ) );
+	cutShapeC->surface = MakeCutSphereSurfaceForEdge( _3DMath::Vector( 0.0, 5.0, 5.0 ) );
 	cutShapeC->rotationAngleForSingleTurn = M_PI;
 	cutShapeC->axisOfRotation.normal.Set( 0.0, 1.0, 1.0 );
 	cutShapeC->axisOfRotation.normal.Normalize();
@@ -61,7 +61,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	cutShapeList.push_back( cutShapeC );
 
 	CutShape* cutShapeD = new CutShape();
-	cutShapeD->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, 5.0, -5.0 ), radius ) );
+	cutShapeD->surface = MakeCutSphereSurfaceForEdge( _3DMath::Vector( 0.0, 5.0, -5.0 ) );
 	cutShapeD->rotationAngleForSingleTurn = M_PI;
 	cutShapeD->axisOfRotation.normal.Set( 0.0, 1.0, -1.0 );
 	cutShapeD->axisOfRotation.normal.Normalize();
@@ -69,7 +69,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	cutShapeList.push_back( cutShapeD );
 
 	CutShape* cutShapeE = new CutShape();
-	cutShapeE->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, -5.0, 0.0 ), radius ) );
+	cutShapeE->surface = MakeCutSphereSurfaceForEdge( _3DMath::Vector( 5.0, -5.0, 0.0 ) );
 	cutShapeE->rotationAngleForSingleTurn = M_PI;
 	cutShapeE->axisOfRotation.normal.Set( 1.0, -1.0, 0.0 );
 	cutShapeE->axisOfRotation.normal.Normalize();
@@ -77,7 +77,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	cutShapeList.push_back( cutShapeE );
 
 	CutShape* cutShapeF = new CutShape();
-	cutShapeF->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, -5.0, 0.0 ), radius ) );
+	cutShapeF->surface = MakeCutSphereSurfaceForEdge( _3DMath::Vector( -5.0, -5.0, 0.0 ) );
 	cutShapeF->rotationAngleForSingleTurn = M_PI;
 	cutShapeF->axisOfRotation.normal.Set( -1.0, -1.0, 0.0 );
 	cutShapeF->axisOfRotation.normal.Normalize();
@@ -85,7 +85,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	cutShapeList.push_back( cutShapeF );
 
 	CutShape* cutShapeG = new CutShape();
-	cutShapeG->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, -5.0, 5.0 ), radius ) );
+	cutShapeG->surface = MakeCutSphereSurfaceForEdge( _3DMath::Vector( 0.0, -5.0, 5.0 ) );
 	cutShapeG->rotationAngleForSingleTurn = M_PI;
 	cutShapeG->axisOfRotation.normal.Set( 0.0, -1.0, 1.0 );
 	cutShapeG->axisOfRotation.normal.Normalize();
@@ -93,7 +93,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	cutShapeList.push_back( cutShapeG );
 
 	CutShape* cutShapeH = new CutShape();
-	cutShapeH->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, -5.0, -5.0 ), radius ) );
+	cutShapeH->surface = MakeCutSphereSurfaceForEdge( _3DMath::Vector( 0.0, -5.0, -5.0 ) );
 	cutShapeH->rotationAngleForSingleTurn = M_PI;
 	cutShapeH->axisOfRotation.normal.Set( 0.0, -1.0, -1.0 );
 	cutShapeH->axisOfRotation.normal.Normalize();
@@ -101,7 +101,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	cutShapeList.push_back( cutShapeH );
 
 	CutShape* cutShapeI = new CutShape();
-	cutShapeI->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, 0.0, -5.0 ), radius ) );
+	cutShapeI->surface = MakeCutSphereSurfaceForEdge( _3DMath::Vector( -5.0, 0.0, -5.0 ) );
 	cutShapeI->rotationAngleForSingleTurn = M_PI;
 	cutShapeI->axisOfRotation.normal.Set( -1.0, 0.0, -1.0 );
 	cutShapeI->axisOfRotation.normal.Normalize();
@@ -109,7 +109,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	cutShapeList.push_back( cutShapeI );
 
 	CutShape* cutShapeJ = new CutShape();
-	cutShapeJ->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, 0.0, -5.0 ), radius ) );
+	cutShapeJ->surface = MakeCutSphereSurfaceForEdge( _3DMath::Vector( 5.0, 0.0, -5.0 ) );
 	cutShapeJ->rotationAngleForSingleTurn = M_PI;
 	cutShapeJ->axisOfRotation.normal.Set( 1.0, 0.0, -1.0 );
 	cutShapeJ->axisOfRotation.normal.Normalize();
@@ -117,7 +117,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	cutShapeList.push_back( cutShapeJ );
 
 	CutShape* cutShapeK = new CutShape();
-	cutShapeK->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, 0.0, 5.0 ), radius ) );
+	cutShapeK->surface = MakeCutSphereSurfaceForEdge( _3DMath::Vector( -5.0, 0.0, 5.0 ) );
 	cutShapeK->rotationAngleForSingleTurn = M_PI;
 	cutShapeK->axisOfRotation.normal.Set( -1.0, 0.0, 1.0 );
 	cutShapeK->axisOfRotation.normal.Normalize();
@@ -125,7 +125,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	cutShapeList.push_back( cutShapeK );
 
 	CutShape* cutShapeL = new CutShape();
-	cutShapeL->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, 0.0, 5.0 ), radius ) );
+	cutShapeL->surface = MakeCutSphereSurfaceForEdge( _3DMath::Vector( 5.0, 0.0, 5.0 ) );
 	cutShapeL->rotationAngleForSingleTurn = M_PI;
 	cutShapeL->axisOfRotation.normal.Set( 1.0, 0.0, 1.0 );
 	cutShapeL->axisOfRotation.normal.Normalize();

@@ -26,6 +26,8 @@ BauhiniaDodecahedron::BauhiniaDodecahedron( void )
 	Face* face = *iter;
 	double edgeLength = ( *face->polygon->vertexArray )[0].Distance( ( *face->polygon->vertexArray )[1] );
 
+	char label = 'A';
+
 	for( int i = 0; i < ( signed )triangleMesh.vertexArray->size(); i++ )
 	{
 		_3DMath::Vector center = ( *triangleMesh.vertexArray )[i].position;
@@ -38,6 +40,7 @@ BauhiniaDodecahedron::BauhiniaDodecahedron( void )
 		cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
 		cutShape->axisOfRotation.normal = normal;
 		cutShape->captureSide = _3DMath::Surface::INSIDE;
+		cutShape->label = label++;
 		cutShapeList.push_back( cutShape );
 	}
 }

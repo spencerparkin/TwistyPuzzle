@@ -3,6 +3,7 @@
 #pragma once
 
 #include "TwistyPuzzle.h"
+#include <Surface.h>
 
 class CurvyCopterBase : public TwistyPuzzle
 {
@@ -18,7 +19,7 @@ public:
 	virtual bool SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown ) override;
 	virtual void EnqueueRandomRotations( _3DMath::Random& random, int rotationCount ) override;
 	virtual double CalcJumbleTurnAmount( void ) = 0;
-	virtual double CutSphereRadius( void ) = 0;
+	virtual _3DMath::Surface* MakeCutSphereSurfaceForEdge( const _3DMath::Vector& edgeCenter ) = 0;
 
 	struct Jumble
 	{
