@@ -60,7 +60,13 @@ void HtmlFrame::OnLinkClicked( wxHtmlLinkEvent& event )
 	wxString reference = linkInfo.GetHref();
 
 	if( reference.Find( "https://" ) >= 0 || reference.Find( "http://" ) >= 0 || reference.Find( "mailto:" ) >= 0 )
+	{
+#if defined LINUX
+		system( "/usr/local/bin/xdg-open " + reference );
+#else
 		wxLaunchDefaultBrowser( reference );
+#endif
+	}
 	else
 	{
 		htmlWindow->LoadPage( reference );
