@@ -59,7 +59,7 @@ void HtmlFrame::OnLinkClicked( wxHtmlLinkEvent& event )
 	const wxHtmlLinkInfo& linkInfo = event.GetLinkInfo();
 	wxString reference = linkInfo.GetHref();
 
-	if( reference.Find( "https://" ) >= 0 || reference.Find( "http://" ) >= 0 )
+	if( reference.Find( "https://" ) >= 0 || reference.Find( "http://" ) >= 0 || reference.Find( "mailto:" ) >= 0 )
 		wxLaunchDefaultBrowser( reference );
 	else
 	{
