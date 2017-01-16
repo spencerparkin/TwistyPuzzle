@@ -166,6 +166,8 @@ Gem6::Gem6( void )
 		}
 	}
 
+	char label = 'A';
+
 	for( _3DMath::PlaneList::iterator iter = planeList.begin(); iter != planeList.end(); iter++ )
 	{
 		const _3DMath::Plane& plane = *iter;
@@ -184,6 +186,7 @@ Gem6::Gem6( void )
 
 		cutShape->axisOfRotation.normal = plane.normal;
 		cutShape->axisOfRotation.center = center;
+		cutShape->label = label++;
 		cutShapeList.push_back( cutShape );
 	}
 }

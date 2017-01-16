@@ -18,6 +18,8 @@ SkewbUltimate::SkewbUltimate( void )
 {
 	Clear();
 
+	SetupStandardDynamicCornerTurningBoxLabels();
+
 	MakePolyhedron( DODECAHEDRON, 4.0 );
 
 	_3DMath::Vector normal[8];
