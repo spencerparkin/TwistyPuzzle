@@ -274,7 +274,9 @@ bool ReducePermutation( const PermutationMap& permutationMap, const Permutation&
 		//       Another, more general metric, is simply proximity.  We may not
 		//       reduce the permutation down in map-count, but we can still do
 		//       reduce in terms of proximity.  And a reduction in map-count is
-		//       an obvious reduction in proximity.
+		//       an obvious reduction in proximity.  I think that proximity would
+		//       have to be defined in terms of the generators... Hmmm...  Not sure
+		//       how that would work at all.
 		int smallestMapCount = permutation.MapCount();
 		std::string key;
 
