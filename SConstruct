@@ -2,19 +2,14 @@
 
 import os
 
-# How do we do this correctly?
-font_sys_code = '../FontSystem/Code'
-_3dmath_sys_code = '../3DMath/Code'
-if 'DESTDIR' in os.environ:
-  font_sys_code = '../../fontsystem/install/include'
-  _3dmath_sys_code = '../../3dmath/install/include'
-
 obj_env = Environment( parse_flags = '!wx-config --cxxflags' )
 obj_env.Append( CCFLAGS = '--std=c++11' )
 obj_env.Append( CCFLAGS = '-DLINUX' )
 obj_env.Append( CCFLAGS = '-I/usr/include/freetype2' )
-obj_env.Append( CCFLAGS = '-I' + font_sys_code )
-obj_env.Append( CCFLAGS = '-I' + _3dmath_sys_code )
+obj_env.Append( CCFLAGS = '-I../FontSystem/Code' )
+obj_env.Append( CCFLAGS = '-I../../FontSystem/install/include' )
+obj_env.Append( CCFLAGS = '-I../3DMath/Code' )
+obj_env.Append( CCFLAGS = '-I../../3DMath/install/include' )
 obj_env.Append( CCFLAGS = '-ggdb' )
 
 cpp_source_list = Glob( 'Code/*.cpp' )
@@ -26,7 +21,15 @@ for source_file in cpp_source_list:
   object_file = obj_env.StaticObject( source_file )
   object_list.append( object_file )
 
-prog_env = Environment( PROGNAME = 'TwistyPuzzle', LIBPATH = [ '../3DMath', '../FontSystem' ], parse_flags = '!wx-config --libs core base adv html xml gl' )
+prog_env = Environment(
+  PROGNAME = 'TwistyPuzzle',
+  LIBPATH = [
+    '../3DMath',
+    '../FontSystem',
+    '../../3DMath/install/lib',
+    '../../FontSystem/install/lib'
+  ],
+  parse_flags = '!wx-config --libs core base adv html xml gl' )
 prog_env.Append( LIBS = '-lGL' )
 prog_env.Append( LIBS = '-lGLU' )
 prog_env.Append( LIBS = '-l3DMath' )
