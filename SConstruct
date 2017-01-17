@@ -26,8 +26,8 @@ prog_env = Environment(
   LIBPATH = [
     '../3DMath',
     '../FontSystem',
-    '../../3DMath/install/lib',
-    '../../FontSystem/install/lib'
+    '../../3dmath/install/lib',
+    '../../fontsystem/install/lib'
   ],
   parse_flags = '!wx-config --libs core base adv html xml gl' )
 prog_env.Append( LIBS = '-lGL' )
