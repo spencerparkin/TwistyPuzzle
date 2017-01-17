@@ -32,6 +32,8 @@ PyraminxBase::PyraminxBase( void )
 	for( int i = 0; i < 4; i++ )
 		vertex[i].Scale( radius );
 
+	char label = 'A';
+
 	for( int i = 0; i < 4; i++ )
 	{
 		_3DMath::Vector center( 0.0, 0.0, 0.0 );
@@ -55,6 +57,7 @@ PyraminxBase::PyraminxBase( void )
 			cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
 			cutShape->axisOfRotation.normal = normal;
 			cutShape->axisOfRotation.center = center;
+			cutShape->label = label++;
 			cutShapeList.push_back( cutShape );
 		}
 	}

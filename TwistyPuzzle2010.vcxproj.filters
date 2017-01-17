@@ -100,6 +100,9 @@
     <ClCompile Include="Code\Gem6.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
+    <ClCompile Include="Code\wxTimeKeeper.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Application.h">
@@ -194,6 +197,9 @@
     </ClInclude>
     <ClInclude Include="Code\Gem6.h">
       <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\wxTimeKeeper.h">
+      <Filter>Code</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

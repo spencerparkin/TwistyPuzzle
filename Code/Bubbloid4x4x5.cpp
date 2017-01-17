@@ -18,6 +18,8 @@ Bubbloid4x4x5::Bubbloid4x4x5( void )
 {
 	Clear();
 
+	SetupStandardDynamicCornerTurningBoxLabels();
+
 	double radius = 5.0 * sqrt( 2.0 );
 	double delta = radius - 5.0;
 

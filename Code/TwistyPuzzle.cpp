@@ -250,14 +250,36 @@ void TwistyPuzzle::SetupStandardDynamicFaceTurningBoxLabels( void )
 void TwistyPuzzle::SetupStandardDynamicCornerTurningBoxLabels( void )
 {
 	labelAxisMap.clear();
+
 	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "X", _3DMath::Vector( -1.0, 1.0, 1.0 ) ) );
 	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "Y", _3DMath::Vector( 1.0, 1.0, 1.0 ) ) );
 	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "Z", _3DMath::Vector( 1.0, 1.0, -1.0 ) ) );
 	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "W", _3DMath::Vector( -1.0, 1.0, -1.0 ) ) );
+
 	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "B", _3DMath::Vector( 1.0, -1.0, -1.0 ) ) );
 	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "A", _3DMath::Vector( -1.0, -1.0, -1.0 ) ) );
 	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "C", _3DMath::Vector( 1.0, -1.0, 1.0 ) ) );
 	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "D", _3DMath::Vector( -1.0, -1.0, 1.0 ) ) );
+}
+
+void TwistyPuzzle::SetupStandardDynamicEdgeTurningBoxLabels( void )
+{
+	labelAxisMap.clear();
+	
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "X", _3DMath::Vector( -1.0, 1.0, 0.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "Y", _3DMath::Vector( 0.0, 1.0, 1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "Z", _3DMath::Vector( 1.0, 1.0, 0.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "W", _3DMath::Vector( 0.0, 1.0, -1.0 ) ) );
+
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "A", _3DMath::Vector( -1.0, 0.0, 1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "B", _3DMath::Vector( 1.0, 0.0, 1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "C", _3DMath::Vector( 1.0, 0.0, -1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "D", _3DMath::Vector( -1.0, 0.0, -1.0 ) ) );
+
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "S", _3DMath::Vector( -1.0, -1.0, 0.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "T", _3DMath::Vector( 0.0, -1.0, 1.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "U", _3DMath::Vector( 1.0, -1.0, 0.0 ) ) );
+	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "V", _3DMath::Vector( 0.0, -1.0, -1.0 ) ) );
 }
 
 /*virtual*/ void TwistyPuzzle::UpdateCutShapeLabels( const _3DMath::AffineTransform& transform )
@@ -444,7 +466,6 @@ void TwistyPuzzle::MakePolyhedron( Polyhedron polyhedron, double radius, _3DMath
 	}
 }
 
-// TODO: We need more colors so that we don't run out of them for larger puzzles.
 _3DMath::Vector TwistyPuzzle::red( 1.0, 0.0, 0.0 );
 _3DMath::Vector TwistyPuzzle::green( 0.0, 0.8, 0.0 );
 _3DMath::Vector TwistyPuzzle::blue( 0.0, 0.0, 1.0 );
@@ -454,9 +475,17 @@ _3DMath::Vector TwistyPuzzle::yellow( 1.0, 1.0, 0.0 );
 _3DMath::Vector TwistyPuzzle::orange( 1.0, 0.5, 0.0 );
 _3DMath::Vector TwistyPuzzle::maroon( 153.0 / 255.0, 0.0, 56.0 / 255.0 );
 _3DMath::Vector TwistyPuzzle::white( 1.0, 1.0, 1.0 );
-_3DMath::Vector TwistyPuzzle::pink( 249.0 / 255.0, 0.0, 162.0 );
+_3DMath::Vector TwistyPuzzle::pink( 255.0 / 255.0, 105.0 / 255.0, 180.0 / 255.0 );
 _3DMath::Vector TwistyPuzzle::lime( 174.0 / 255.0, 249.0 / 255.0, 44.0 / 255.0 );
 _3DMath::Vector TwistyPuzzle::indigo( 94.0 / 255.0, 120.0 / 255.0, 249.0 / 255.0 );
+_3DMath::Vector TwistyPuzzle::lightseagrean( 32.0 / 255.0, 178.0 / 255.0, 170.0 / 255.0 );
+_3DMath::Vector TwistyPuzzle::turquoiseblue( 0.0 / 255.0, 199.0 / 255.0, 140.0 / 255.0 );
+_3DMath::Vector TwistyPuzzle::eggshell( 252.0 / 255.0, 230.0 / 255.0, 201.0 / 255.0 );
+_3DMath::Vector TwistyPuzzle::firebrick( 178.0 / 255.0, 34.0 / 255.0, 34.0 / 255.0 );
+_3DMath::Vector TwistyPuzzle::olivedrab( 142.0 / 255.0, 142.0 / 255.0, 56.0 / 255.0 );
+_3DMath::Vector TwistyPuzzle::salmon( 198.0 / 255.0, 113.0 / 255.0, 113.0 / 255.0 );
+_3DMath::Vector TwistyPuzzle::brown( 165.0 / 255.0, 42.0 / 255.0, 42.0 / 255.0 );
+_3DMath::Vector TwistyPuzzle::aquamarine( 127.0 / 255.0, 255.0 / 255.0, 212.0 / 255.0 );
 
 /*static*/ _3DMath::Vector TwistyPuzzle::ColorTable( int index )
 {
@@ -471,14 +500,23 @@ _3DMath::Vector TwistyPuzzle::indigo( 94.0 / 255.0, 120.0 / 255.0, 249.0 / 255.0
 		&orange,
 		&maroon,
 		&white,
-		&pink,
 		&lime,
 		&indigo,
+		&lightseagrean,
+		&turquoiseblue,
+		&eggshell,
+		&firebrick,
+		&olivedrab,
+		&salmon,
+		&brown,
+		&aquamarine,
+		&pink,
 	};
 
 	int tableSize = sizeof( table ) / sizeof( _3DMath::Vector* );
 
-	return *table[ index % tableSize ];
+	_3DMath::Vector color = *table[ index % tableSize ];
+	return color;
 }
 
 bool TwistyPuzzle::Load( const wxString& file )

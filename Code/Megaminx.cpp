@@ -20,6 +20,8 @@ Megaminx::Megaminx( void )
 
 	MakePolyhedron( DODECAHEDRON, 5.0 );
 
+	char label = 'A';
+
 	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
 	{
 		Face* face = *iter;
@@ -37,6 +39,7 @@ Megaminx::Megaminx( void )
 		cutShape->axisOfRotation.normal = normal;
 		cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 5.0;
 		cutShape->captureSide = _3DMath::Surface::OUTSIDE;
+		cutShape->label = label++;
 		cutShapeList.push_back( cutShape );
 	}
 }

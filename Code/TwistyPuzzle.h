@@ -46,6 +46,7 @@ public:
 
 	void SetupStandardDynamicFaceTurningBoxLabels( void );
 	void SetupStandardDynamicCornerTurningBoxLabels( void );
+	void SetupStandardDynamicEdgeTurningBoxLabels( void );
 
 	class Rotation
 	{
@@ -150,6 +151,8 @@ public:
 
 	static _3DMath::Vector red, green, blue, magenta, cyan, yellow;
 	static _3DMath::Vector orange, maroon, white, pink, lime, indigo;
+	static _3DMath::Vector lightseagrean, turquoiseblue, eggshell, firebrick;
+	static _3DMath::Vector olivedrab, salmon, brown, aquamarine;
 
 	void GoForward( void );
 	void GoBackward( void );

@@ -22,6 +22,8 @@ IcosahedronSkewb::IcosahedronSkewb( void )
 	double radius = 4.0;
 	MakePolyhedron( ICOSAHEDRON, radius, &triangleMesh );
 
+	char label = 'A';
+
 	for( int i = 0; i < ( signed )triangleMesh.vertexArray->size(); i++ )
 	{
 		_3DMath::Vector normal;
@@ -31,6 +33,7 @@ IcosahedronSkewb::IcosahedronSkewb( void )
 		cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, 0.0 ), normal ) );
 		cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 5.0;
 		cutShape->axisOfRotation.normal = normal;
+		cutShape->label = label++;
 		cutShapeList.push_back( cutShape );
 	}
 }

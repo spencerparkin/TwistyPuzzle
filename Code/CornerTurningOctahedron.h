@@ -15,7 +15,7 @@ public:
 
 	virtual void Reset( void ) override;
 
-	void MakeCutPlanes( const _3DMath::LineSegment& lineSegment );
+	void MakeCutPlanes( const _3DMath::LineSegment& lineSegment, char& label );
 };
 
 // CornerTurningOctahedron.h

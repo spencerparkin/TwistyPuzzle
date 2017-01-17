@@ -38,6 +38,8 @@ FaceTurningOctahedron::FaceTurningOctahedron( void )
 		normal[i].Normalize();
 	}
 
+	char label = 'A';
+
 	for( int i = 0; i < 8; i++ )
 	{
 		_3DMath::Triangle triangle;
@@ -60,6 +62,7 @@ FaceTurningOctahedron::FaceTurningOctahedron( void )
 		cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( center, normal[i] ) );
 		cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
 		cutShape->axisOfRotation.normal = normal[i];
+		cutShape->label = label++;
 		cutShapeList.push_back( cutShape );
 	}
 }

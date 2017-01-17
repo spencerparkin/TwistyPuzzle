@@ -18,6 +18,8 @@ Bubbloid3x3x3::Bubbloid3x3x3( void )
 {
 	Clear();
 
+	SetupStandardDynamicCornerTurningBoxLabels();
+
 	MakeBox( 10.0, 10.0, 10.0 );
 
 	double radius = 10.0 / sqrt( 2.0 );
