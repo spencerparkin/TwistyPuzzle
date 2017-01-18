@@ -1,0 +1,32 @@
+name: twistypuzzle
+version: "1.0"
+summary: A 3D simulator for a variety of twisty puzzles.
+description: Simulate and manipulate a variety of 3D twisty puzzles
+  such as the Rubik's Cube, Square-One, Pryaminx, Megaminx, Gem 6,
+  Curvy Copter, and many more.  Experiment with your own
+  algorithms, move forward and backward through your own rotation
+  history, save your progress to disk for later restoration,
+  have a chance to play with a virtual puzzle before owning the real thing. 
+confinement: strict
+
+apps:
+  twistypuzzle:
+    command: env UBUNTU_MENUPROXY=0 desktop-launch $SNAP/bin/TwistyPuzzle
+    plugs: [home, x11, unity7]
+
+parts:
+  twistypuzzle:
+    plugin: scons
+    source: https://github.com/spencerparkin/TwistyPuzzle.git
+    source-branch: stable-release
+    after: [desktop-gtk3, fontsystem, 3dmath]
+
+  fontsystem:
+    plugin: scons
+    source: https://github.com/spencerparkin/FontSystem.git
+    source-branch: master
+
+  3dmath:
+    plugin: scons
+    source: https://github.com/spencerparkin/3DMath.git
+    source-branch: master

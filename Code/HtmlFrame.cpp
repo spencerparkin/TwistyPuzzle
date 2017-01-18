@@ -1,6 +1,7 @@
 // HtmlFrame.cpp
 
 #include "HtmlFrame.h"
+#include "Application.h"
 #include <wx/sizer.h>
 
 HtmlFrame::HtmlFrame( wxWindow* parent, const wxString& initialPage /*= wxEmptyString*/ ) : wxFrame( parent, wxID_ANY, "Twisty Puzzle Documentation", wxDefaultPosition, wxSize( 600, 400 ) )
@@ -69,6 +70,7 @@ void HtmlFrame::OnLinkClicked( wxHtmlLinkEvent& event )
 	}
 	else
 	{
+		reference = wxGetApp().ResolveRelativeResourcePath( "Data/Documentation/" + reference );
 		htmlWindow->LoadPage( reference );
 		UpdateUI();
 	}
@@ -82,7 +84,9 @@ void HtmlFrame::OnHome( wxCommandEvent& event )
 
 void HtmlFrame::GoHome( void )
 {
-	GoToPage( "Data/Documentation/index.html" );
+	wxString indexPath = "Data/Documentation/index.html";
+	indexPath = wxGetApp().ResolveRelativeResourcePath( indexPath );
+	GoToPage( indexPath );
 }
 
 void HtmlFrame::GoToPage( const wxString& page )

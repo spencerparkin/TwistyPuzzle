@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=Twisty Puzzle
+Exec=twistypuzzle
+Type=Application
+Icon=${SNAP}/meta/gui/icon.png
