@@ -21,6 +21,7 @@ public:
 	TwistyPuzzle* GetPuzzle( void ) { return puzzle; }
 	void SetPuzzle( TwistyPuzzle* puzzle );
 	FontSys::System* GetFontSystem( void ) { return fontSystem; }
+	wxString ResolveRelativeResourcePath( const wxString& relPath );
 
 private:
 

@@ -26,7 +26,7 @@ Application::Application( void )
 
 	fontSystem = new FontSys::System();
 	fontSystem->Initialize();
-	fontSystem->SetFontBaseDir( "Data/Fonts" );
+	fontSystem->SetFontBaseDir( ( const char* )ResolveRelativeResourcePath( "Data/Fonts" ).c_str() );
 
 	puzzle = new Rubiks3x3x3();
 	puzzle->Reset();
@@ -41,6 +41,19 @@ void Application::SetPuzzle( TwistyPuzzle* puzzle )
 {
 	delete this->puzzle;
 	this->puzzle = puzzle;
+}
+
+wxString Application::ResolveRelativeResourcePath( const wxString& relPath )
+{
+	wxString fullPath = relPath;
+
+#if defined LINUX
+	wxString snapDir;
+	if( wxGetEnv( "SNAP", &snapDir ) )
+		fullPath = snapDir + "/" + fullPath;
+#endif
+
+	return fullPath;
 }
 
 // Application.cpp
