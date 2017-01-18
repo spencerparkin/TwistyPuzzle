@@ -37,7 +37,7 @@ prog_env.Append( LIBS = '-lFontSystem' )
 prog_env.Append( LIBS = '-lfreetype' )
 prog = prog_env.Program( '$PROGNAME', source = object_list )
 
-dest_dir = '/usr'
+dest_dir = '/usr/local'
 if 'DESTDIR' in os.environ:
   dest_dir = os.environ[ 'DESTDIR' ]
 

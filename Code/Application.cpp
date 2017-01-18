@@ -50,7 +50,7 @@ wxString Application::ResolveRelativeResourcePath( const wxString& relPath )
 #if defined LINUX
 	wxString snapDir;
 	if( wxGetEnv( "SNAP", &snapDir ) )
-		fullPath = snapDir + "/" + fullPath;
+		fullPath = snapDir + "/share/TwistyPuzzle/" + fullPath;
 #endif
 
 	return fullPath;
