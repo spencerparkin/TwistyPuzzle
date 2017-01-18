@@ -70,7 +70,7 @@ void HtmlFrame::OnLinkClicked( wxHtmlLinkEvent& event )
 	}
 	else
 	{
-		reference = wxGetApp().ResolveRelativeResourcePath( reference );
+		reference = wxGetApp().ResolveRelativeResourcePath( "Data/Documentation/" + reference );
 		htmlWindow->LoadPage( reference );
 		UpdateUI();
 	}
