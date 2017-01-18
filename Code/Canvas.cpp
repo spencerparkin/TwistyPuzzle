@@ -95,7 +95,8 @@ void Canvas::OnMouseLeftDown( wxMouseEvent& event )
 void Canvas::OnMouseLeftUp( wxMouseEvent& event )
 {
 	mouseDragMode = DRAG_MODE_NONE;
-	ReleaseMouse();
+	if( HasCapture() )
+		ReleaseMouse();
 }
 
 void Canvas::OnMouseMiddleDown( wxMouseEvent& event )
@@ -108,7 +109,8 @@ void Canvas::OnMouseMiddleDown( wxMouseEvent& event )
 void Canvas::OnMouseMiddleUp( wxMouseEvent& event )
 {
 	mouseDragMode = DRAG_MODE_NONE;
-	ReleaseMouse();
+	if( HasCapture() )
+		ReleaseMouse();
 }
 
 void Canvas::OnMouseMotion( wxMouseEvent& event )
