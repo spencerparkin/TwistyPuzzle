@@ -444,6 +444,24 @@ void TwistyPuzzle::MakePolyhedron( Polyhedron polyhedron, double radius, _3DMath
 			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( 0.0, -1.0, 1.0 / sqrt( 2.0 ) ) ) );
 			break;
 		}
+		case TRUNCATED_TETRAHEDRON:
+		{
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( 3.0, 1.0, 1.0 ) ) );
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( -3.0, -1.0, 1.0 ) ) );
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( -3.0, 1.0, -1.0 ) ) );
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( 3.0, -1.0, -1.0 ) ) );
+
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( 1.0, 3.0, 1.0 ) ) );
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( -1.0, -3.0, 1.0 ) ) );
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( -1.0, 3.0, -1.0 ) ) );
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( 1.0, -3.0, -1.0 ) ) );
+
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( 1.0, 1.0, 3.0 ) ) );
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( -1.0, -1.0, 3.0 ) ) );
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( -1.0, 1.0, -3.0 ) ) );
+			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( 1.0, -1.0, -3.0 ) ) );
+			break;
+		}
 	}
 
 	_3DMath::AffineTransform transform;
@@ -757,6 +775,41 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 {
 	wxString numberStr = xmlNode->GetAttribute( name );
 	return numberStr.ToCDouble( &number );
+}
+
+void TwistyPuzzle::CollectAdjacentEdges( const Face* face, _3DMath::LineSegmentList& lineSegmentList ) const
+{
+	lineSegmentList.clear();
+
+	_3DMath::Plane plane;
+	face->polygon->GetPlane( plane );
+
+	// Note that we're not compressing the list, so there may be duplicates.
+	for( FaceList::const_iterator iter = faceList.cbegin(); iter != faceList.cend(); iter++ )
+	{
+		const Face* otherFace = *iter;
+		if( otherFace == face )
+			continue;
+
+		for( int i = 0; i < ( signed )otherFace->polygon->vertexArray->size(); i++ )
+		{
+			int j = ( i + 1 ) % otherFace->polygon->vertexArray->size();
+
+			_3DMath::LineSegment lineSegment;
+			lineSegment.vertex[0] = ( *otherFace->polygon->vertexArray )[i];
+			lineSegment.vertex[1] = ( *otherFace->polygon->vertexArray )[j];
+
+			_3DMath::Plane::Side side[2];
+			side[0] = plane.GetSide( lineSegment.vertex[0] );
+			side[1] = plane.GetSide( lineSegment.vertex[1] );
+
+			if( ( side[0] == _3DMath::Plane::SIDE_NEITHER && side[1] != _3DMath::Plane::SIDE_NEITHER ) ||
+				( side[1] == _3DMath::Plane::SIDE_NEITHER && side[0] != _3DMath::Plane::SIDE_NEITHER ) )
+			{
+				lineSegmentList.push_back( lineSegment );
+			}
+		}
+	}
 }
 
 //---------------------------------------------------------------------------------

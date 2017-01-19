@@ -103,6 +103,12 @@
     <ClCompile Include="Code\wxTimeKeeper.cpp">
       <Filter>Code</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Dogic.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Gem8.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Application.h">
@@ -200,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="Code\wxTimeKeeper.h">
       <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gem8.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

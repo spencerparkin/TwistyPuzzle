@@ -10,6 +10,7 @@
 #include <Renderer.h>
 #include <HandleObject.h>
 #include <Line.h>
+#include <LineSegment.h>
 #include <TimeKeeper.h>
 #include <Surface.h>
 #include <Random.h>
@@ -138,6 +139,7 @@ public:
 		ICOSAHEDRON,
 		DODECAHEDRON,
 		TETRAHEDRON,
+		TRUNCATED_TETRAHEDRON,
 	};
 
 	void MakePolyhedron( Polyhedron polyhedron, double radius, _3DMath::TriangleMesh* triangleMesh = nullptr );
@@ -161,6 +163,8 @@ public:
 
 	bool CanGoForward( void );
 	bool CanGoBackward( void );
+
+	void CollectAdjacentEdges( const Face* face, _3DMath::LineSegmentList& lineSegmentList ) const;
 
 	typedef std::map< std::string, _3DMath::Vector > LabelAxisMap;
 
