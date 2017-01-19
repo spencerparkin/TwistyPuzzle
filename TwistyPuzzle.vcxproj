@@ -176,6 +176,7 @@
     <ClInclude Include="Code\SkewbUltimate.h" />
     <ClInclude Include="Code\SquareOne.h" />
     <ClInclude Include="Code\TwistyPuzzle.h" />
+    <ClInclude Include="Code\wxTimeKeeper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="Code\CurvyCopter.cpp" />
     <ClCompile Include="Code\CurvyCopter3.cpp" />
     <ClCompile Include="Code\CurvyCopterBase.cpp" />
+    <ClCompile Include="Code\Dogic.cpp" />
     <ClCompile Include="Code\FaceTurningOctahedron.cpp" />
     <ClCompile Include="Code\FlowerBox.cpp" />
     <ClCompile Include="Code\Frame.cpp" />
@@ -208,6 +210,7 @@
     <ClCompile Include="Code\SkewbUltimate.cpp" />
     <ClCompile Include="Code\SquareOne.cpp" />
     <ClCompile Include="Code\TwistyPuzzle.cpp" />
+    <ClCompile Include="Code\wxTimeKeeper.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
