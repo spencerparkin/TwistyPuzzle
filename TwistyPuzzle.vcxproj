@@ -164,6 +164,7 @@
     <ClInclude Include="Code\IcosahedronSkewb.h" />
     <ClInclude Include="Code\MasterPyraminx.h" />
     <ClInclude Include="Code\Megaminx.h" />
+    <ClInclude Include="Code\MixupCube.h" />
     <ClInclude Include="Code\Permutation.h" />
     <ClInclude Include="Code\Pyraminx.h" />
     <ClInclude Include="Code\PyraminxBase.h" />

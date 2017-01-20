@@ -106,6 +106,9 @@
     <ClInclude Include="Code\wxTimeKeeper.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="Code\MixupCube.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
