@@ -148,8 +148,6 @@ void Canvas::OnMouseMotion( wxMouseEvent& event )
 					selectedObjectHandle = cutShape->GetHandle();
 			}
 
-			puzzle->UpdateCutShapeLabels( transform );
-
 			Refresh();
 			break;
 		}
@@ -186,6 +184,9 @@ void Canvas::OnMouseCaptureLost( wxMouseCaptureLostEvent& event )
 void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* objectHandle /*= nullptr*/ )
 {
 	BindContext();
+
+	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
+	puzzle->UpdateCutShapeLabels( transform );
 
 	if( objectHandle )
 		*objectHandle = 0;
@@ -239,7 +240,7 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 	glLoadIdentity();
 	gluLookAt( 0.0, 0.0, eyeDistance, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
 
-	wxGetApp().GetPuzzle()->Render( *renderer, transform, renderMode, selectedObjectHandle, renderAxisLabels );
+	puzzle->Render( *renderer, transform, renderMode, selectedObjectHandle, renderAxisLabels );
 
 	glFlush();
 
