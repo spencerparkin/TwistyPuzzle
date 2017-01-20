@@ -140,6 +140,7 @@ public:
 		DODECAHEDRON,
 		TETRAHEDRON,
 		TRUNCATED_TETRAHEDRON,
+		TRUNCATED_OCTAHEDRON,
 	};
 
 	void MakePolyhedron( Polyhedron polyhedron, double radius, _3DMath::TriangleMesh* triangleMesh = nullptr );

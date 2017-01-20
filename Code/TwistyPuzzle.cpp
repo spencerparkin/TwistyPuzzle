@@ -462,6 +462,11 @@ void TwistyPuzzle::MakePolyhedron( Polyhedron polyhedron, double radius, _3DMath
 			triangleMesh->vertexArray->push_back( _3DMath::Vertex( _3DMath::Vector( 1.0, -1.0, -3.0 ) ) );
 			break;
 		}
+		case TRUNCATED_OCTAHEDRON:
+		{
+			triangleMesh->AddSymmetricVertices( _3DMath::Vector( 0.0, 1.0, 2.0 ) );
+			break;
+		}
 	}
 
 	_3DMath::AffineTransform transform;
