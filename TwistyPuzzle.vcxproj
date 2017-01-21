@@ -159,6 +159,7 @@
     <ClInclude Include="Code\FlowerBox.h" />
     <ClInclude Include="Code\Frame.h" />
     <ClInclude Include="Code\Gem6.h" />
+    <ClInclude Include="Code\Gem8.h" />
     <ClInclude Include="Code\GLRenderer.h" />
     <ClInclude Include="Code\HtmlFrame.h" />
     <ClInclude Include="Code\IcosahedronSkewb.h" />
@@ -194,6 +195,7 @@
     <ClCompile Include="Code\FlowerBox.cpp" />
     <ClCompile Include="Code\Frame.cpp" />
     <ClCompile Include="Code\Gem6.cpp" />
+    <ClCompile Include="Code\Gem8.cpp" />
     <ClCompile Include="Code\GLRenderer.cpp" />
     <ClCompile Include="Code\HtmlFrame.cpp" />
     <ClCompile Include="Code\IcosahedronSkewb.cpp" />

@@ -996,20 +996,29 @@ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& captur
 		Face* face = *iter;
 
 		_3DMath::PolygonList polygonList;
-		if( face->polygon->SplitAgainstSurface( surface, polygonList, 1.0 ) )
+		bool success = face->polygon->SplitAgainstSurface( surface, polygonList, polygonList, 1.0 );
+		wxASSERT( success );
+		if( success )
 		{
-			while( polygonList.size() > 0 )
+			if( polygonList.size() > 1 )
 			{
-				_3DMath::PolygonList::iterator polyIter = polygonList.begin();
-				_3DMath::Polygon* polygon = *polyIter;
-				polygonList.erase( polyIter );
-				Face* newFace = new Face( polygon );
-				newFace->color = face->color;
-				faceList.push_front( newFace );
-			}
+				while( polygonList.size() > 0 )
+				{
+					_3DMath::PolygonList::iterator polyIter = polygonList.begin();
+					_3DMath::Polygon* polygon = *polyIter;
+					polygonList.erase( polyIter );
+					Face* newFace = new Face( polygon );
+					newFace->color = face->color;
+					faceList.push_front( newFace );
+				}
 
-			delete face;
-			faceList.erase( iter );
+				delete face;
+				faceList.erase( iter );
+			}
+			else
+			{
+				_3DMath::FreeList< _3DMath::Polygon >( polygonList );
+			}
 		}
 
 		iter = nextIter;
