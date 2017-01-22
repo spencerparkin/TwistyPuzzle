@@ -1,0 +1,40 @@
+<html>
+	<head>
+		<title>Twisty Puzzle Documentation</title>
+	</head>
+	<body>
+		<h1>7. Cubist Parlance</h1>
+		<p>
+		I wanted to briefly go over here some common terms and definitions
+		use by twisty puzzle enthusiests.  After a while of being involved with
+		twisty puzzles, and after talking with other enthusiests, you start to
+		pick up the lingo.  The following list is by no mean comprehensive,
+		and I do not consider myself a professional cubist by any stretch of the
+		imagination.
+		</p>
+		<p>
+		<ul>
+			<li><b>Cuboid</b> -- This is any twisty puzzle in the shape of a block, not all sides necessarily being of equal length.  The dimension of such a twusty puzzle is given as AxBxC where A, B and C are positive integers.  All such I know of where A, B and C are not all the same have at their core a 3x3x3 mechanism.
+			Non-cube cuboids will shape-shift.  Maintaining shape, a cuboid of dimension AxBxC will have A+B+C-3 planar cuts.</li>
+			<li><b>Cubie</b> -- One the Rubik's Cube and various cuboids, this refers to each little cube that make up the entire puzzle.</li>
+			<li><b>Face Cubie</b> -- On a cuboid puzzle, this is a cube exposing exactly one side.  For non-cuboid puzzles, these are face pieces, and not necessarily square.</li>
+			<li><b>Edge Cubie</b> -- On a cuboid puzzle, this is a cube exposing exactly two sides.  For non-cuboid puzzles, these are edge pieces, and each side is not necessarily square.</li>
+			<li><b>Corner Cubie</b> -- On a cuboid puzzle, this is a cube exposing exactly three sides.  For non-cuboid puzzles, these are corner pieces, each each side is not necessarily square.</li>
+			<li><b>Permute</b> -- This is to move cubies to different locations in the overall cube.  The orientations of the cubies may or may not change.  Cases where position seems optional, but isn't, can lead to parity.</li>
+			<li><b>Orient</b> -- This is to change the rotational orientation of one or more cubies in the overall cube while their positions remain invariant.  Of course, pieces from other types of puzzle may under-go re-orientation as well.  In some cases, orientation can be ambiguous and lead to parity.</li>
+			<li><b>Parity</b> -- This is a common empass encountered during a solve-attempt that usually manifests itself in the form of two different cubies (or generally, pieces) that need to be swapped, or one cubie that needs to be re-oriented.  Since permutations usually happen as 3-cycles, and orientations usually happen in pairs,
+			swapping two pieces, or re-orienting just one piece, is not always clear.  Parity problems can manifest themselves in other ways.  Whether or not a given situation may be technically termed a true parity state is up to those well-enough versed in group theory.</li>
+			<li><b>Algorithm</b> -- I take issue with this term, personally, but it is the word used by cubists to mean any useful rotation sequence; and by useful, it means that the net effect of the rotation sequence mutates the puzzle in a desirable way, changing part of the puzzle while leaving the rest invariant.  In computer science, an algorithm may be characterized by the idea of repedative logic.  While logic may have play a role in devigning a given cubist algorithm, or in know when to use it, it plays no role in its execution.</li>
+			<li><b>God's Algorithm</b> -- With no intention of offending the All Mighty Himself, but just the opposite in fact, this an instantly-realized algorithm of shortest possible length that, supposedly, an omnisiant being would use to solve, in one step, any twisty puzzle in any given scramble.  Upper-bounds for the number of quarter rotations needed to solve any configuration of the Rubik's cube have been found (it is <a href="http://cube20.org/">26</a>, I believe), but a typical solve will go far above this.</li>
+			<li><b>Setup Move</b> -- This is a sequence of rotations performed in preparation for performing one or more other algorithms before unwinding the setup move by simply performing the initial sequence in reverse order.  A clever cubist can generalize this idea in their mind by implementing the computer-science equivilant of a stack in their head.  Setup rotations are pushed and popped as needed inbetween the execution of various useful algorithms.  Some algorithms make good setup moves.  Some setup moves are a useful way to invent new algorithms from old ones.</li>
+			<!--
+			jumble
+			shape-shift
+			pillowed
+			corner-cut
+			tensioning
+			-->
+		</ul>
+		</p>
+	</body>
+</html>

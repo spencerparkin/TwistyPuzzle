@@ -10,12 +10,13 @@
 		it seems to work reasonably well for the most part.  If you find a problem, please let me know.
 		My thanks in advance to anyone who takes the time to file a bug report.  I can't promise I'll
 		be able to address every issue, but I do promise to give it some serious thought.
-		In reality, I barrowed time I didn't have to write this stupid program.
+		In reality, I barrowed time I didn't have to write this infernal program.
 		</p>
 		<h2>4.1. Known Issues</h2>
 		<p>
-		Here is a brief list of known issues with the software as of this writing.
+		Here is a not-so-brief list of known issues with the software as of this writing.
 		</p>
+		<p>
 		<ul>
 			<li>Polygon tessellation doesn't always find a reasonable result.  Consequently, we get some artifacting.</li>
 			<li>In general the rendering is pretty crappy.  I can think of some ways to improve it, but I don't really have the time.</li>
@@ -23,11 +24,13 @@
 			<li>The cut-shape capture logic does not always capture all necessary polygons.  This manifests itself as a face that doesn't, though should, turn with the rest of those that do during a rotation operation.</li>
 			<li>The computer can't yet solve any puzzle.  This is a feature planned for the future, if I ever get around to it.</li>
 			<li>Though the user wouldn't notice, there are some memory leaks that need to be addressed.  Some are out of my control as they are happening in 3rd-party library code.</li>
-			<li>Certainly not all possible twisty puzzles can be simulated by the software.  This is a limitation of the algorithms and data-structures used to implement it.  Still, it is a generalization I'm quite happy with as it can simulate quite a few puzzles.</li>
+			<li>Certainly not all possible twisty puzzles can be simulated by the software.  This is a limitation of the algorithms and data-structures used to implement it.  Still, it is a generalization I'm quite happy with as it can simulate quite a large class of puzzles, and a few outside that class with some special-case code.</li>
 			<li>One possible flaw in the design of this software is its being susceptable to accumulated round-off error.  In all cases of which I'm currently aware, this doesn't seem to be a problem.</li>
 			<li>Dynamic axis-label assignment can sometimes give the same label to multiple axes.  For the most part, however, if you orient the puzzle reasonably, you get unique labeling.</li>
 			<li>I'm not sure if the click-on-face-and-drag mode of manipulating the puzzle will ever work as nicely as I would like in all puzzle cases.</li>
+			<li>Command-sequence interface-mode can't yet do the jumbling moves or other special moves supported by a puzzle.</li>
 		</ul>
+		</p>
 		<p>
 		And I'm sure there are yet more issues, but other than all that, I feel I can put the program to rest for the time
 		being until I become obsessed with it again.
