@@ -36,7 +36,6 @@ SkewbUltimate::SkewbUltimate( void )
 		normal[i].Normalize();
 	}
 
-	// TODO: I'm not sure if this is at all correct.
 	for( int i = 0; i < 8; i++ )
 	{
 		CutShape* cutShape = new CutShape();

@@ -45,6 +45,8 @@ public:
 	virtual void UpdateCutShapeLabels( const _3DMath::AffineTransform& transform );
 	virtual double PolygonOutlineScaleFactor( void ) const { return 1.01; }
 
+	// TODO: Revisit the dynamic labeling system.  The problem is that we can't dynamically
+	//       assign labels to two different parallel axes.
 	void SetupStandardDynamicFaceTurningBoxLabels( void );
 	void SetupStandardDynamicCornerTurningBoxLabels( void );
 	void SetupStandardDynamicEdgeTurningBoxLabels( void );
@@ -96,6 +98,7 @@ public:
 		void UpdateTessellationIfNeeded( void );
 		void Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, double outlineScaleFactor ) const;
 		bool IsCapturedByCutShape( CutShape* cutShape ) const;
+		bool IsCapturedBySurface( _3DMath::Surface* surface, _3DMath::Surface::Side captureSide ) const;
 		bool Save( wxXmlNode* xmlFaceNode ) const;
 		bool Load( const wxXmlNode* xmlFaceNode );
 
@@ -113,9 +116,9 @@ public:
 	public:
 
 		CutShape( void );
-		~CutShape( void );
+		virtual ~CutShape( void );
 
-		void CutAndCapture( FaceList& faceList, FaceList& capturedFaceList );
+		virtual void CutAndCapture( FaceList& faceList, FaceList& capturedFaceList );
 
 		_3DMath::Surface* surface;
 		_3DMath::Line axisOfRotation;

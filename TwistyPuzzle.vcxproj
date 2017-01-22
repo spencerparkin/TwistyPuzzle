@@ -151,6 +151,7 @@
     <ClInclude Include="Code\Bubbloid4x4x5.h" />
     <ClInclude Include="Code\Canvas.h" />
     <ClInclude Include="Code\CornerTurningOctahedron.h" />
+    <ClInclude Include="Code\Cuboid3x3x5.h" />
     <ClInclude Include="Code\CurvyCopter.h" />
     <ClInclude Include="Code\CurvyCopter3.h" />
     <ClInclude Include="Code\CurvyCopterBase.h" />
@@ -201,6 +202,7 @@
     <ClCompile Include="Code\IcosahedronSkewb.cpp" />
     <ClCompile Include="Code\MasterPyraminx.cpp" />
     <ClCompile Include="Code\Megaminx.cpp" />
+    <ClCompile Include="Code\MixupCube.cpp" />
     <ClCompile Include="Code\Permutation.cpp" />
     <ClCompile Include="Code\Pyraminx.cpp" />
     <ClCompile Include="Code\PyraminxBase.cpp" />

@@ -112,6 +112,9 @@
     <ClInclude Include="Code\Gem8.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Cuboid3x3x5.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -211,6 +214,9 @@
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gem8.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\MixupCube.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
   </ItemGroup>

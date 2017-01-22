@@ -217,6 +217,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeL->GetHandle(), jumble ) );
 }
 
+// TODO: How do you jumble if you're using the command-line interface?
 /*virtual*/ bool CurvyCopterBase::SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown )
 {
 	_3DMath::HandleObject* object = _3DMath::HandleObject::Dereference( selectedObjectHandle );

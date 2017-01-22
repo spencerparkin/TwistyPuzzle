@@ -930,11 +930,16 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 	}
 }
 
-// TODO: There is a bug here; this logic does not always give us what we want.
 bool TwistyPuzzle::Face::IsCapturedByCutShape( CutShape* cutShape ) const
 {
 	const_cast< Face* >( this )->UpdateTessellationIfNeeded();
 
+	return IsCapturedBySurface( cutShape->surface, cutShape->captureSide );
+}
+
+// TODO: There is a bug here; this logic does not always give us what we want.
+bool TwistyPuzzle::Face::IsCapturedBySurface( _3DMath::Surface* surface, _3DMath::Surface::Side captureSide ) const
+{
 	int insideCount = 0;
 	int outsideCount = 0;
 
@@ -949,7 +954,7 @@ bool TwistyPuzzle::Face::IsCapturedByCutShape( CutShape* cutShape ) const
 		_3DMath::Vector triangleCenter;
 		triangle.GetCenter( triangleCenter );
 
-		_3DMath::Surface::Side side = cutShape->surface->GetSide( triangleCenter );
+		_3DMath::Surface::Side side = surface->GetSide( triangleCenter );
 		if( side == _3DMath::Surface::INSIDE )
 			insideCount++;
 		else if( side == _3DMath::Surface::OUTSIDE )
@@ -962,7 +967,7 @@ bool TwistyPuzzle::Face::IsCapturedByCutShape( CutShape* cutShape ) const
 	if( insideCount > outsideCount )
 		dominantSide = _3DMath::Surface::INSIDE;
 
-	return( dominantSide == cutShape->captureSide ) ? true : false;
+	return( dominantSide == captureSide ) ? true : false;
 }
 
 //---------------------------------------------------------------------------------
@@ -978,12 +983,12 @@ TwistyPuzzle::CutShape::CutShape( void )
 	surface = nullptr;
 }
 
-TwistyPuzzle::CutShape::~CutShape( void )
+/*virtual*/ TwistyPuzzle::CutShape::~CutShape( void )
 {
 	delete surface;
 }
 
-void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& capturedFaceList )
+/*virtual*/ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& capturedFaceList )
 {
 	capturedFaceList.clear();
 
