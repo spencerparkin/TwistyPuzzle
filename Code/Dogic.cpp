@@ -59,6 +59,7 @@ Dogic::Dogic( void )
 		cutShape->axisOfRotation.normal = normal;
 		cutShape->axisOfRotation.center = center;
 		cutShape->label = label++;
+		cutShape->vectorLength = 7.0;
 		cutShapeList.push_back( cutShape );
 
 		center.Lerp( center, ( *triangleMesh.vertexArray )[i].position, 0.5 );
@@ -69,6 +70,7 @@ Dogic::Dogic( void )
 		cutShape->axisOfRotation.normal = normal;
 		cutShape->axisOfRotation.center = center;
 		cutShape->label = label++;
+		cutShape->vectorLength = 7.0;
 		cutShapeList.push_back( cutShape );
 	}
 }

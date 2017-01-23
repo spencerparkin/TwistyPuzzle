@@ -18,6 +18,8 @@ Gem8::Gem8( void )
 {
 	Clear();
 
+	SetupStandardDynamicCornerTurningBoxLabels();
+
 	double radius = 1.5;
 	_3DMath::TriangleMesh triangleMesh;
 	MakePolyhedron( TRUNCATED_TETRAHEDRON, radius, &triangleMesh );
