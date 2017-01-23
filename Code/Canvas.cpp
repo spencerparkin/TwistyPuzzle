@@ -471,17 +471,18 @@ bool Canvas::Grip::PartiallyRotate( Canvas* canvas )
 		TwistyPuzzle::FaceList capturedFaceList;
 		cutShape->CutAndCapture( puzzle->faceList, capturedFaceList );
 
+		cutShape->rotationAngleForAnimation = rotationAngle;
+
 		for( TwistyPuzzle::FaceList::iterator iter = puzzle->faceList.begin(); iter != puzzle->faceList.end(); iter++ )
 		{
 			TwistyPuzzle::Face* face = *iter;
-			face->rotationAngleForAnimation = 0.0;
+			face->boundCutShapeHandle = 0;
 		}
 
 		for( TwistyPuzzle::FaceList::iterator iter = capturedFaceList.begin(); iter != capturedFaceList.end(); iter++ )
 		{
 			TwistyPuzzle::Face* face = *iter;
-			face->rotationAngleForAnimation = rotationAngle;
-			face->axisOfRotation = cutShape->axisOfRotation;
+			face->boundCutShapeHandle = cutShapeHandle;
 		}
 
 		canvas->Refresh();

@@ -104,8 +104,7 @@ public:
 
 		_3DMath::Vector color;
 		_3DMath::Polygon* polygon;
-		_3DMath::Line axisOfRotation;
-		double rotationAngleForAnimation;
+		int boundCutShapeHandle;
 		bool tessellationNeeded;
 	};
 
@@ -124,6 +123,7 @@ public:
 		_3DMath::Line axisOfRotation;
 		_3DMath::Surface::Side captureSide;
 		double rotationAngleForSingleTurn;
+		double rotationAngleForAnimation;
 		wxString label;		// These may be static or dynamically assigned.
 	};
 

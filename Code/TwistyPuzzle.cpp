@@ -145,18 +145,18 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 {
 	bool motion = false;
 
-	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
+	for( CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
 	{
-		Face* face = *iter;
-		if( face->rotationAngleForAnimation != 0.0 )
+		CutShape* cutShape = *iter;
+		if( cutShape->rotationAngleForAnimation != 0.0 )
 		{
-			double rotationRateRadiansPerSecond = -face->rotationAngleForAnimation * rotationSpeedCoeficient;
+			double rotationRateRadiansPerSecond = -cutShape->rotationAngleForAnimation * rotationSpeedCoeficient;
 			double thresholdAngle = 0.01;
 
-			if( fabs( face->rotationAngleForAnimation ) < thresholdAngle )
-				face->rotationAngleForAnimation = 0.0;
+			if( fabs( cutShape->rotationAngleForAnimation ) < thresholdAngle )
+				cutShape->rotationAngleForAnimation = 0.0;
 			else
-				face->rotationAngleForAnimation += rotationRateRadiansPerSecond * timeKeeper.GetDeltaTimeSeconds();
+				cutShape->rotationAngleForAnimation += rotationRateRadiansPerSecond * timeKeeper.GetDeltaTimeSeconds();
 
 			motion = true;
 		}
@@ -218,9 +218,10 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 	{
 		Face* face = *iter;
 		face->polygon->Transform( transform );
-		face->axisOfRotation = cutShape->axisOfRotation;
-		face->rotationAngleForAnimation -= rotationAngle;
+		face->boundCutShapeHandle = cutShape->GetHandle();
 	}
+
+	cutShape->rotationAngleForAnimation -= rotationAngle;
 
 	// One major draw-back to how we're manipulating the puzzle is that it is subject
 	// to accumulated round-off error.  This, however, can be overcome for puzzles that
@@ -825,7 +826,7 @@ TwistyPuzzle::Face::Face( _3DMath::Polygon* polygon )
 {
 	this->polygon = polygon;
 	tessellationNeeded = true;
-	rotationAngleForAnimation = 0.0;
+	boundCutShapeHandle = 0;
 }
 
 TwistyPuzzle::Face::~Face( void )
@@ -899,9 +900,15 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 {
 	_3DMath::AffineTransform renderTransform;
 
-	_3DMath::AffineTransform animationTransform;
-	animationTransform.SetRotation( axisOfRotation, rotationAngleForAnimation );
-	renderTransform.Concatinate( animationTransform, transform );
+	CutShape* cutShape = ( CutShape* )_3DMath::HandleObject::Dereference( boundCutShapeHandle );
+	if( !cutShape )
+		renderTransform = transform;
+	else
+	{
+		_3DMath::AffineTransform animationTransform;
+		animationTransform.SetRotation( cutShape->axisOfRotation, cutShape->rotationAngleForAnimation );
+		renderTransform.Concatinate( animationTransform, transform );
+	}
 
 	if( renderMode == GL_SELECT )
 		glLoadName( GetHandle() );
@@ -980,6 +987,7 @@ TwistyPuzzle::CutShape::CutShape( void )
 	axisOfRotation.normal.Set( 0.0, 0.0, 1.0 );
 	captureSide = _3DMath::Surface::OUTSIDE;
 	rotationAngleForSingleTurn = 0.0;
+	rotationAngleForAnimation = 0.0;
 	surface = nullptr;
 }
 
