@@ -69,14 +69,14 @@ MixupLayerCutShape::MixupLayerCutShape( void )
 // This is somewhat of a hack to compensate for the lack of
 // sophistication had by the polygon split algorithm.  It can't
 // do splits that result in more than two polygons.
-/*virtual*/ void MixupLayerCutShape::CutAndCapture( TwistyPuzzle::FaceList& faceList, TwistyPuzzle::FaceList& capturedFaceList )
+/*virtual*/ void MixupLayerCutShape::CutAndCapture( TwistyPuzzle::FaceList& faceList, TwistyPuzzle::FaceList& capturedFaceList, double eps /*= EPSILON*/ )
 {
-	CutShape::CutAndCapture( faceList, capturedFaceList );
+	CutShape::CutAndCapture( faceList, capturedFaceList, eps );
 
 	_3DMath::Surface* tempSurface = surface;
 	surface = additionalSurface;
 
-	CutShape::CutAndCapture( faceList, capturedFaceList );
+	CutShape::CutAndCapture( faceList, capturedFaceList, eps );
 
 	surface = tempSurface;
 

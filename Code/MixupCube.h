@@ -24,7 +24,7 @@ public:
 	MixupLayerCutShape( void );
 	virtual ~MixupLayerCutShape( void );
 
-	virtual void CutAndCapture( TwistyPuzzle::FaceList& faceList, TwistyPuzzle::FaceList& capturedFaceList ) override;
+	virtual void CutAndCapture( TwistyPuzzle::FaceList& faceList, TwistyPuzzle::FaceList& capturedFaceList, double eps = EPSILON ) override;
 
 	_3DMath::Surface* additionalSurface;
 };

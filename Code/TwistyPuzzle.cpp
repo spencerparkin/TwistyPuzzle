@@ -156,7 +156,12 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 			if( fabs( cutShape->rotationAngleForAnimation ) < thresholdAngle )
 				cutShape->rotationAngleForAnimation = 0.0;
 			else
-				cutShape->rotationAngleForAnimation += rotationRateRadiansPerSecond * timeKeeper.GetDeltaTimeSeconds();
+			{
+				double deltaTimeSeconds = timeKeeper.GetDeltaTimeSeconds();
+				if( deltaTimeSeconds > 0.05 )		// This is a hack to mitigate choppy frame-rate.
+					deltaTimeSeconds = 0.05;
+				cutShape->rotationAngleForAnimation += rotationRateRadiansPerSecond * deltaTimeSeconds;
+			}
 
 			motion = true;
 		}
@@ -203,8 +208,10 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 
 /*virtual*/ bool TwistyPuzzle::ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation )
 {
+	double eps = GetCutAndCaptureEpsilon();
+
 	FaceList capturedFaceList;
-	cutShape->CutAndCapture( faceList, capturedFaceList );
+	cutShape->CutAndCapture( faceList, capturedFaceList, eps );
 
 	double rotationAngle = rotation->turnCount * cutShape->rotationAngleForSingleTurn;
 	if( rotation->direction == Rotation::DIR_CW )
@@ -996,7 +1003,7 @@ TwistyPuzzle::CutShape::CutShape( void )
 	delete surface;
 }
 
-/*virtual*/ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& capturedFaceList )
+/*virtual*/ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& capturedFaceList, double eps /*= EPSILON*/ )
 {
 	capturedFaceList.clear();
 
@@ -1009,7 +1016,7 @@ TwistyPuzzle::CutShape::CutShape( void )
 		Face* face = *iter;
 
 		_3DMath::Polygon polygonArray[2];
-		if( face->polygon->SplitAgainstSurface( surface, polygonArray, 20.0, 1.0 ) )
+		if( face->polygon->SplitAgainstSurface( surface, polygonArray, 20.0, 1.0, eps ) )
 		{
 			for( int i = 0; i < 2; i++ )
 			{

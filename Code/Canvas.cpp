@@ -82,7 +82,8 @@ void Canvas::OnMouseRightUp( wxMouseEvent& event )
 	}
 
 	mouseDragMode = DRAG_MODE_NONE;
-	ReleaseMouse();
+	if( HasCapture() )
+		ReleaseMouse();
 }
 
 void Canvas::OnMouseLeftDown( wxMouseEvent& event )

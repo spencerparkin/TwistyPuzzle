@@ -78,6 +78,7 @@ public:
 	virtual Rotation* CalculateNearestRotation( CutShape* cutShape, double rotationAngle );
 	virtual void EnqueueRandomRotations( _3DMath::Random& random, int rotationCount );
 	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation );
+	virtual double GetCutAndCaptureEpsilon( void ) { return EPSILON; }
 
 	// Compute and return a sequence of rotations that gets us closer, if
 	// not all the way, to the solved state of the puzzle.  The method is
@@ -117,7 +118,7 @@ public:
 		CutShape( void );
 		virtual ~CutShape( void );
 
-		virtual void CutAndCapture( FaceList& faceList, FaceList& capturedFaceList );
+		virtual void CutAndCapture( FaceList& faceList, FaceList& capturedFaceList, double eps = EPSILON );
 
 		_3DMath::Surface* surface;
 		_3DMath::Line axisOfRotation;
