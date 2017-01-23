@@ -5,7 +5,7 @@
 	<body>
 		<h1>4. Program Defects</h1>
 		<p>
-		Please report bugs you find in the program, or give suggestions for improvement, at <a href="https://github.com/spencerparkin/TwistyPuzzle/issues">https://github.com/spencerparkin/TwistyPuzzle/issues</a>.
+		Please report bugs you find in this program, or give suggestions for improvement, at <a href="https://github.com/spencerparkin/TwistyPuzzle/issues">https://github.com/spencerparkin/TwistyPuzzle/issues</a>.
 		This program was particularly challenging to write, and it's certainly not perfect, but
 		it seems to work reasonably well for the most part.  If you find a problem, please let me know.
 		My thanks in advance to anyone who takes the time to file a bug report.  I can't promise I'll
@@ -18,17 +18,15 @@
 		</p>
 		<p>
 		<ul>
-			<li>Polygon tessellation doesn't always find a reasonable result.  Consequently, we get some artifacting.</li>
 			<li>In general the rendering is pretty crappy.  I can think of some ways to improve it, but I don't really have the time.</li>
-			<li>Some of the cut-plane and puzzle vertex calculations are off enough that this can cause some artifacting too.</li>
-			<li>The cut-shape capture logic does not always capture all necessary polygons.  This manifests itself as a face that doesn't, though should, turn with the rest of those that do during a rotation operation.</li>
-			<li>The computer can't yet solve any puzzle.  This is a feature planned for the future, if I ever get around to it.</li>
+			<li>Some of the cut-plane and puzzle vertex calculations are off enough that this can cause some artifacting.</li>
+			<li>The computer can't yet solve any puzzle.  This is a feature planned for the future, if I ever get around to it.  Instead of writing specialized code for each individual puzzle, (which would be an insane amount of work), I'm hoping to encode each puzzle state into a data-structure representative of the associated permutation group, then run some group theory algorithms on it.  This may be too lofty a goal, but I like to kick this can around in my mind from time to time.</li>
 			<li>Though the user wouldn't notice, there are some memory leaks that need to be addressed.  Some are out of my control as they are happening in 3rd-party library code.</li>
 			<li>Certainly not all possible twisty puzzles can be simulated by the software.  This is a limitation of the algorithms and data-structures used to implement it.  Still, it is a generalization I'm quite happy with as it can simulate quite a large class of puzzles, and a few outside that class with some special-case code.</li>
-			<li>One possible flaw in the design of this software is its being susceptable to accumulated round-off error.  In all cases of which I'm currently aware, this doesn't seem to be a problem.</li>
-			<li>Dynamic axis-label assignment can sometimes give the same label to multiple axes.  For the most part, however, if you orient the puzzle reasonably, you get unique labeling.</li>
-			<li>I'm not sure if the click-on-face-and-drag mode of manipulating the puzzle will ever work as nicely as I would like in all puzzle cases.</li>
-			<li>Command-sequence interface-mode can't yet do the jumbling moves or other special moves supported by a puzzle.</li>
+			<li>One possible flaw in the design of this software is its being susceptable to accumulated round-off error.  In all cases of which I'm currently aware, this doesn't seem to come up as a problem.</li>
+			<li>Dynamic axis-label assignment needs to be fixed before the program is released.</li>
+			<li>I'm not sure if the click-on-face-and-drag mode of manipulating the puzzle will ever work as nicely as I would like in all puzzle cases.  It has the potential to be the most convenient and intuitive way of manipulating the puzzle.</li>
+			<li>Command-sequence interface-mode can't yet do the jumbling moves or other special moves supported by some puzzles.</li>
 		</ul>
 		</p>
 		<p>
