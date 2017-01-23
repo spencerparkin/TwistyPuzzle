@@ -244,83 +244,92 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 	return true;
 }
 
-void TwistyPuzzle::SetupStandardDynamicFaceTurningBoxLabels( void )
+void TwistyPuzzle::SetupStandardDynamicFaceTurningBoxLabels( double radius /*= 10.0*/ )
 {
-	labelAxisMap.clear();
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "R", _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "L", _3DMath::Vector( -1.0, 0.0, 0.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "U", _3DMath::Vector( 0.0, 1.0, 0.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "D", _3DMath::Vector( 0.0, -1.0, 0.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "F", _3DMath::Vector( 0.0, 0.0, 1.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "B", _3DMath::Vector( 0.0, 0.0, -1.0 ) ) );
+	labelMap.clear();
+
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "R", _3DMath::Vector( 1.0, 0.0, 0.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "L", _3DMath::Vector( -1.0, 0.0, 0.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "U", _3DMath::Vector( 0.0, 1.0, 0.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "D", _3DMath::Vector( 0.0, -1.0, 0.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "F", _3DMath::Vector( 0.0, 0.0, 1.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "B", _3DMath::Vector( 0.0, 0.0, -1.0 ) * radius ) );
 }
 
-void TwistyPuzzle::SetupStandardDynamicCornerTurningBoxLabels( void )
+void TwistyPuzzle::SetupStandardDynamicCornerTurningBoxLabels( double radius /*= 10.0*/ )
 {
-	labelAxisMap.clear();
+	labelMap.clear();
 
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "X", _3DMath::Vector( -1.0, 1.0, 1.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "Y", _3DMath::Vector( 1.0, 1.0, 1.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "Z", _3DMath::Vector( 1.0, 1.0, -1.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "W", _3DMath::Vector( -1.0, 1.0, -1.0 ) ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "X", _3DMath::Vector( -1.0, 1.0, 1.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "Y", _3DMath::Vector( 1.0, 1.0, 1.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "Z", _3DMath::Vector( 1.0, 1.0, -1.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "W", _3DMath::Vector( -1.0, 1.0, -1.0 ) * radius ) );
 
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "B", _3DMath::Vector( 1.0, -1.0, -1.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "A", _3DMath::Vector( -1.0, -1.0, -1.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "C", _3DMath::Vector( 1.0, -1.0, 1.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "D", _3DMath::Vector( -1.0, -1.0, 1.0 ) ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "B", _3DMath::Vector( 1.0, -1.0, -1.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "A", _3DMath::Vector( -1.0, -1.0, -1.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "C", _3DMath::Vector( 1.0, -1.0, 1.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "D", _3DMath::Vector( -1.0, -1.0, 1.0 ) * radius ) );
 }
 
-void TwistyPuzzle::SetupStandardDynamicEdgeTurningBoxLabels( void )
+void TwistyPuzzle::SetupStandardDynamicEdgeTurningBoxLabels( double radius /*= 10.0*/ )
 {
-	labelAxisMap.clear();
+	labelMap.clear();
 	
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "X", _3DMath::Vector( -1.0, 1.0, 0.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "Y", _3DMath::Vector( 0.0, 1.0, 1.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "Z", _3DMath::Vector( 1.0, 1.0, 0.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "W", _3DMath::Vector( 0.0, 1.0, -1.0 ) ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "X", _3DMath::Vector( -1.0, 1.0, 0.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "Y", _3DMath::Vector( 0.0, 1.0, 1.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "Z", _3DMath::Vector( 1.0, 1.0, 0.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "W", _3DMath::Vector( 0.0, 1.0, -1.0 ) * radius ) );
 
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "A", _3DMath::Vector( -1.0, 0.0, 1.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "B", _3DMath::Vector( 1.0, 0.0, 1.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "C", _3DMath::Vector( 1.0, 0.0, -1.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "D", _3DMath::Vector( -1.0, 0.0, -1.0 ) ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "A", _3DMath::Vector( -1.0, 0.0, 1.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "B", _3DMath::Vector( 1.0, 0.0, 1.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "C", _3DMath::Vector( 1.0, 0.0, -1.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "D", _3DMath::Vector( -1.0, 0.0, -1.0 ) * radius ) );
 
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "S", _3DMath::Vector( -1.0, -1.0, 0.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "T", _3DMath::Vector( 0.0, -1.0, 1.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "U", _3DMath::Vector( 1.0, -1.0, 0.0 ) ) );
-	labelAxisMap.insert( std::pair< std::string, _3DMath::Vector >( "V", _3DMath::Vector( 0.0, -1.0, -1.0 ) ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "S", _3DMath::Vector( -1.0, -1.0, 0.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "T", _3DMath::Vector( 0.0, -1.0, 1.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "U", _3DMath::Vector( 1.0, -1.0, 0.0 ) * radius ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( "V", _3DMath::Vector( 0.0, -1.0, -1.0 ) * radius ) );
+}
+
+void TwistyPuzzle::SetupDynamicLabelUsingCutShape( const CutShape* cutShape )
+{
+	_3DMath::Vector point;
+	point.AddScale( cutShape->axisOfRotation.center, cutShape->axisOfRotation.normal, cutShape->vectorLength );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( cutShape->label, point ) );
 }
 
 /*virtual*/ void TwistyPuzzle::UpdateCutShapeLabels( const _3DMath::AffineTransform& transform )
 {
-	if( labelAxisMap.size() == 0 )
+	if( labelMap.size() == 0 )
 		return;
 
 	_3DMath::LinearTransform normalTransform;
 	transform.linearTransform.GetNormalTransform( normalTransform );
 
-	for( TwistyPuzzle::CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
+	for( CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
 	{
 		TwistyPuzzle::CutShape* cutShape = *iter;
-
-		_3DMath::Vector axis = cutShape->axisOfRotation.normal;
-		normalTransform.Transform( axis );
-
-		cutShape->label = FindLabelForRotationAxis( axis );
+		cutShape->label = FindLabelForCutShape( cutShape, transform, normalTransform );
 	}
 }
 
-wxString TwistyPuzzle::FindLabelForRotationAxis( const _3DMath::Vector& axis )
+wxString TwistyPuzzle::FindLabelForCutShape( const CutShape* cutShape, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform )
 {
-	double smallestAngle = 2.0 * M_PI;
-	wxString label;
+	_3DMath::Vector center, vector, point;
+	transform.Transform( cutShape->axisOfRotation.center, center );
+	normalTransform.Transform( cutShape->axisOfRotation.normal, vector );
+	point.AddScale( center, vector, cutShape->vectorLength );
 
-	for( LabelAxisMap::iterator iter = labelAxisMap.begin(); iter != labelAxisMap.end(); iter++ )
+	wxString label;
+	double smallestDistance = -1.0;
+
+	for( LabelMap::iterator iter = labelMap.begin(); iter != labelMap.end(); iter++ )
 	{
-		double angle = iter->second.AngleBetween( axis );
-		if( angle < smallestAngle )
+		double distance = iter->second.Distance( point );
+		if( smallestDistance < 0.0 || distance < smallestDistance )
 		{
-			smallestAngle = angle;
-			label = iter->first.c_str();
+			smallestDistance = distance;
+			label = iter->first;
 		}
 	}
 
@@ -705,7 +714,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 		transform.Transform( cutShape->axisOfRotation.center, position );
 		normalTransform.Transform( cutShape->axisOfRotation.normal, vector );
 
-		vector.Scale( 10.0 );
+		vector.Scale( cutShape->vectorLength );
 
 		if( cutShape->GetHandle() == selectedObjectHandle )
 			color.Set( 0.8, 0.8, 0.8 );
@@ -995,6 +1004,7 @@ TwistyPuzzle::CutShape::CutShape( void )
 	captureSide = _3DMath::Surface::OUTSIDE;
 	rotationAngleForSingleTurn = 0.0;
 	rotationAngleForAnimation = 0.0;
+	vectorLength = 10.0;
 	surface = nullptr;
 }
 

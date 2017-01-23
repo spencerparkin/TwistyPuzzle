@@ -47,6 +47,8 @@ void CornerTurningOctahedron::MakeCutPlanes( const _3DMath::LineSegment& lineSeg
 	cutShape->label = label++;
 	cutShapeList.push_back( cutShape );
 
+	SetupDynamicLabelUsingCutShape( cutShape );
+
 	lineSegment.Lerp( 5.0 / 6.0, center );
 
 	cutShape = new CutShape();
@@ -56,6 +58,8 @@ void CornerTurningOctahedron::MakeCutPlanes( const _3DMath::LineSegment& lineSeg
 	cutShape->axisOfRotation.center = center;
 	cutShape->label = label++;
 	cutShapeList.push_back( cutShape );
+
+	SetupDynamicLabelUsingCutShape( cutShape );
 
 	normal.Negate();
 
@@ -69,6 +73,8 @@ void CornerTurningOctahedron::MakeCutPlanes( const _3DMath::LineSegment& lineSeg
 	cutShape->label = label++;
 	cutShapeList.push_back( cutShape );
 
+	SetupDynamicLabelUsingCutShape( cutShape );
+
 	lineSegment.Lerp( 1.0 / 6.0, center );
 
 	cutShape = new CutShape();
@@ -78,6 +84,8 @@ void CornerTurningOctahedron::MakeCutPlanes( const _3DMath::LineSegment& lineSeg
 	cutShape->axisOfRotation.center = center;
 	cutShape->label = label++;
 	cutShapeList.push_back( cutShape );
+
+	SetupDynamicLabelUsingCutShape( cutShape );
 }
 
 // CornerTurningOctahedron.cpp

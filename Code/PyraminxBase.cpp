@@ -59,6 +59,8 @@ PyraminxBase::PyraminxBase( void )
 			cutShape->axisOfRotation.center = center;
 			cutShape->label = label++;
 			cutShapeList.push_back( cutShape );
+
+			SetupDynamicLabelUsingCutShape( cutShape );
 		}
 	}
 }

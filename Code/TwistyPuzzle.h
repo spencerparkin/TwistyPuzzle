@@ -45,11 +45,10 @@ public:
 	virtual void UpdateCutShapeLabels( const _3DMath::AffineTransform& transform );
 	virtual double PolygonOutlineScaleFactor( void ) const { return 1.01; }
 
-	// TODO: Revisit the dynamic labeling system.  The problem is that we can't dynamically
-	//       assign labels to two different parallel axes.
-	void SetupStandardDynamicFaceTurningBoxLabels( void );
-	void SetupStandardDynamicCornerTurningBoxLabels( void );
-	void SetupStandardDynamicEdgeTurningBoxLabels( void );
+	void SetupStandardDynamicFaceTurningBoxLabels( double radius = 10.0 );
+	void SetupStandardDynamicCornerTurningBoxLabels( double radius = 10.0 );
+	void SetupStandardDynamicEdgeTurningBoxLabels( double radius = 10.0 );
+	void SetupDynamicLabelUsingCutShape( const CutShape* cutShape );
 
 	class Rotation
 	{
@@ -125,14 +124,15 @@ public:
 		_3DMath::Surface::Side captureSide;
 		double rotationAngleForSingleTurn;
 		double rotationAngleForAnimation;
-		wxString label;		// These may be static or dynamically assigned.
+		double vectorLength;
+		wxString label;		// These can be statically or dynamically assigned.
 	};
 
 	typedef std::list< CutShape* > CutShapeList;
 
 	CutShape* FindCutShapeWithLabel( const wxString& label );
 	CutShape* FindCutShapeNearestDirection( const _3DMath::Vector& direction, const _3DMath::AffineTransform& transform, TwistyPuzzle::CutShapeList::iterator* foundIter = nullptr );
-	wxString FindLabelForRotationAxis( const _3DMath::Vector& axis );
+	wxString FindLabelForCutShape( const CutShape* cutShape, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform );
 
 	void MakeBox( double width, double height, double depth );
 
@@ -171,7 +171,7 @@ public:
 
 	void CollectAdjacentEdges( const Face* face, _3DMath::LineSegmentList& lineSegmentList ) const;
 
-	typedef std::map< std::string, _3DMath::Vector > LabelAxisMap;
+	typedef std::map< std::string, _3DMath::Vector > LabelMap;
 
 	FaceList faceList;
 	CutShapeList cutShapeList;
@@ -180,7 +180,7 @@ public:
 	mutable bool needsSaving;
 	RotationList rotationHistory;
 	RotationList::iterator rotationHistoryIter;
-	LabelAxisMap labelAxisMap;
+	LabelMap labelMap;
 };
 
 // TwistyPuzzle.h
