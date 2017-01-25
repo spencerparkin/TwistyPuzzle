@@ -50,6 +50,7 @@ public:
 	void SetupStandardDynamicCornerTurningBoxLabels( double radius = 10.0 );
 	void SetupStandardDynamicEdgeTurningBoxLabels( double radius = 10.0 );
 	void SetupDynamicLabelUsingCutShape( const CutShape* cutShape );
+	void SetupDynamicLabelUsingCutShapeList( void );
 
 	class Rotation
 	{

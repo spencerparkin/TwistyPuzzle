@@ -18,13 +18,13 @@ MixupCube::MixupCube( void )
 {
 	Clear();
 
-	SetupStandardDynamicFaceTurningBoxLabels();
-
 	double radius = 5.0;
 
 	MakeBox( radius * 2.0, radius * 2.0, radius * 2.0 );
 
 	double distance = radius * tan( M_PI / 8.0 );
+
+	char label = 'A';
 
 	for( int i = 0; i < 6; i++ )
 	{
@@ -46,6 +46,7 @@ MixupCube::MixupCube( void )
 		cutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( center, normal ) );
 		cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 		cutShape->axisOfRotation.normal = normal;
+		cutShape->label = label++;
 		cutShapeList.push_back( cutShape );
 
 		MixupLayerCutShape* mixupCutShape = new MixupLayerCutShape();
@@ -54,8 +55,11 @@ MixupCube::MixupCube( void )
 		mixupCutShape->rotationAngleForSingleTurn = M_PI / 4.0;
 		mixupCutShape->axisOfRotation.normal = normal;
 		mixupCutShape->axisOfRotation.center = center;
+		mixupCutShape->label = label++;
 		cutShapeList.push_back( mixupCutShape );
 	}
+
+	SetupDynamicLabelUsingCutShapeList();
 }
 
 MixupLayerCutShape::MixupLayerCutShape( void )
