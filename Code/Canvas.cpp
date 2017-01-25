@@ -18,6 +18,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	grip = nullptr;
 	axisSelectMode = AXIS_SELECT_MANUAL;
 	renderAxisLabels = true;
+	renderStats = false;
 #if defined LINUX
 	timeOfLastWheelClickSeconds = 0.0;
 #endif
@@ -50,7 +51,6 @@ void Canvas::OnMouseRightDown( wxMouseEvent& event )
 	wxPoint mousePos = event.GetPosition();
 	selectedObjectHandle = 0;
 	Render( GL_SELECT, &mousePos, &selectedObjectHandle );
-	Refresh();
 	mouseDragMode = DRAG_MODE_ROTATE_FACES;
 	mouseDragLastPos = mousePos;
 	mouseDragClickPos = mousePos;
@@ -149,7 +149,6 @@ void Canvas::OnMouseMotion( wxMouseEvent& event )
 					selectedObjectHandle = cutShape->GetHandle();
 			}
 
-			Refresh();
 			break;
 		}
 		case DRAG_MODE_ROTATE_FACES:
@@ -185,6 +184,9 @@ void Canvas::OnMouseCaptureLost( wxMouseCaptureLostEvent& event )
 void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* objectHandle /*= nullptr*/ )
 {
 	BindContext();
+
+	if( renderMode == GL_RENDER )
+		Animate();
 
 	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
 	puzzle->UpdateCutShapeLabels( transform );
@@ -222,6 +224,22 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 	glGetIntegerv( GL_VIEWPORT, viewport );
 
 	double aspectRatio = double( viewport[2] ) / double( viewport[3] );
+
+	if( renderStats )
+	{
+		glMatrixMode( GL_PROJECTION );
+		glLoadIdentity();
+
+		if( aspectRatio > 1.0 )
+			gluOrtho2D( 0.0, 10.0 * aspectRatio, 0.0, 10.0 );
+		else
+			gluOrtho2D( 0.0, 10.0, 0.0, 10.0 / aspectRatio );
+
+		glMatrixMode( GL_MODELVIEW );
+		glLoadIdentity();
+
+		puzzle->RenderStats( timeKeeper );
+	}
 
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
@@ -287,8 +305,6 @@ void Canvas::OnSize( wxSizeEvent& event )
 	{
 		wxSize size = event.GetSize();
 		glViewport( 0, 0, size.GetWidth(), size.GetHeight() );
-
-		Refresh();
 	}
 }
 
@@ -312,8 +328,6 @@ void Canvas::OnMouseWheel( wxMouseEvent& event )
 			eyeDistance *= scale;
 			wheelClicks--;
 		}
-
-		Refresh();
 	}
 	else if( selectedObjectHandle )
 	{
@@ -355,7 +369,6 @@ void Canvas::SetRenderAxisLabels( bool renderAxisLabels )
 {
 	this->renderAxisLabels = renderAxisLabels;
 	wxGetApp().GetPuzzle()->UpdateCutShapeLabels( transform );
-	Refresh();
 }
 
 void Canvas::Animate( void )
@@ -363,10 +376,7 @@ void Canvas::Animate( void )
 	timeKeeper.MarkCurrentTime();
 
 	if( !grip )
-	{
-		if( wxGetApp().GetPuzzle()->ProcessRotationQueue( timeKeeper ) )
-			Refresh();
-	}
+		wxGetApp().GetPuzzle()->ProcessRotationQueue( timeKeeper );
 }
 
 void Canvas::BindContext( void )
@@ -485,8 +495,6 @@ bool Canvas::Grip::PartiallyRotate( Canvas* canvas )
 			TwistyPuzzle::Face* face = *iter;
 			face->boundCutShapeHandle = cutShapeHandle;
 		}
-
-		canvas->Refresh();
 	}
 
 	return true;
@@ -509,8 +517,6 @@ bool Canvas::Grip::CommitRotation( Canvas* canvas )
 			puzzle->EnqueueRotation( rotation );
 
 		// TODO: May need to process queue once here before painting occurs?
-
-		canvas->Refresh();
 	}
 
 	return false;

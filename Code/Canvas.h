@@ -32,6 +32,8 @@ public:
 
 	void SetRenderAxisLabels( bool renderAxisLabels );
 	bool GetRenderAxisLabels( void ) { return renderAxisLabels; }
+	void SetRenderStats( bool renderStats ) { this->renderStats = renderStats; }
+	bool GetRenderStats( void ) { return renderStats; }
 
 private:
 
@@ -74,6 +76,7 @@ private:
 	wxTimeKeeper timeKeeper;
 	Grip* grip;
 	bool renderAxisLabels;
+	bool renderStats;
 #if defined LINUX
 	double timeOfLastWheelClickSeconds;
 #endif

@@ -37,6 +37,7 @@ private:
 		ID_ManualSelectAxis,
 		ID_AutoSelectAxis,
 		ID_DrawAxisLabels,
+		ID_DrawStats,
 		ID_Puzzle,		// This needs to be the last ID.
 	};
 
@@ -58,6 +59,7 @@ private:
 	void OnAutoSelectAxis( wxCommandEvent& event );
 	void OnTextCtrlEnter( wxCommandEvent& event );
 	void OnDrawAxisLabels( wxCommandEvent& event );
+	void OnDrawStats( wxCommandEvent& event );
 
 	class PuzzleMenuItemUserData : public wxObject
 	{

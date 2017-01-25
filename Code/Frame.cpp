@@ -44,10 +44,12 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	wxMenuItem* drawWireFrameMenuItem = new wxMenuItem( renderMenu, ID_DrawWireFrame, "Draw Wire-Frame", "Draw the twisty frame as a bunch of line segments.", wxITEM_CHECK );
 	wxMenuItem* drawSolidMenuItem = new wxMenuItem( renderMenu, ID_DrawSolid, "Draw Solid", "Draw the twisty puzzle as a bunch of solid triangles.", wxITEM_CHECK );
 	wxMenuItem* drawAxisLabelsMenuItem = new wxMenuItem( renderMenu, ID_DrawAxisLabels, "Draw Axis Labels", "Draw the names of each axis.  These are used in the command sequence text control.", wxITEM_CHECK );
+	wxMenuItem* drawStatsMenuItem = new wxMenuItem( renderMenu, ID_DrawStats, "Draw Stats", "Draw some statistics about the puzzle and its rendering.", wxITEM_CHECK );
 	renderMenu->Append( drawWireFrameMenuItem );
 	renderMenu->Append( drawSolidMenuItem );
 	renderMenu->AppendSeparator();
 	renderMenu->Append( drawAxisLabelsMenuItem );
+	renderMenu->Append( drawStatsMenuItem );
 
 	wxMenu* historyMenu = new wxMenu();
 	wxMenuItem* goForwardMenuItem = new wxMenuItem( historyMenu, ID_GoForward, "Go Forward\tF6", "Go forward in your rotation history." );
@@ -106,6 +108,7 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_MENU, &Frame::OnManualSelectAxis, this, ID_ManualSelectAxis );
 	Bind( wxEVT_MENU, &Frame::OnAutoSelectAxis, this, ID_AutoSelectAxis );
 	Bind( wxEVT_MENU, &Frame::OnDrawAxisLabels, this, ID_DrawAxisLabels );
+	Bind( wxEVT_MENU, &Frame::OnDrawStats, this, ID_DrawStats );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawWireFrame );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawSolid );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_Solve );
@@ -114,6 +117,7 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_ManualSelectAxis );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_AutoSelectAxis );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawAxisLabels );
+	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawStats );
 	Bind( wxEVT_COMMAND_TEXT_ENTER, &Frame::OnTextCtrlEnter, this );
 
 #if defined LINUX
@@ -131,6 +135,11 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 void Frame::OnDrawAxisLabels( wxCommandEvent& event )
 {
 	canvas->SetRenderAxisLabels( !canvas->GetRenderAxisLabels() );
+}
+
+void Frame::OnDrawStats( wxCommandEvent& event )
+{
+	canvas->SetRenderStats( !canvas->GetRenderStats() );
 }
 
 void Frame::OnTextCtrlEnter( wxCommandEvent& event )
@@ -277,7 +286,6 @@ bool Frame::Load( void )
 		}
 	}
 
-	wxGetApp().GetFrame()->GetCanvas()->Refresh();
 	return true;
 }
 
@@ -327,13 +335,11 @@ void Frame::OnAbout( wxCommandEvent& event )
 void Frame::OnDrawWireFrame( wxCommandEvent& event )
 {
 	canvas->GetRenderer()->drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
-	canvas->Refresh();
 }
 
 void Frame::OnDrawSolid( wxCommandEvent& event )
 {
 	canvas->GetRenderer()->drawStyle = _3DMath::Renderer::DRAW_STYLE_SOLID;
-	canvas->Refresh();
 }
 
 void Frame::OnExit( wxCommandEvent& event )
@@ -343,7 +349,7 @@ void Frame::OnExit( wxCommandEvent& event )
 
 void Frame::OnTimer( wxTimerEvent& event )
 {
-	canvas->Animate();
+	canvas->Refresh();
 }
 
 wxMenu* Frame::CreatePuzzleMenu( void )
@@ -396,7 +402,6 @@ void Frame::OnPuzzleType( wxCommandEvent& event )
 		TwistyPuzzle* puzzle = ( TwistyPuzzle* )userData->classInfo->CreateObject();
 		puzzle->Reset();
 		wxGetApp().SetPuzzle( puzzle );
-		wxGetApp().GetFrame()->GetCanvas()->Refresh();
 	}
 }
 
@@ -453,6 +458,11 @@ void Frame::OnUpdateUI( wxUpdateUIEvent& event )
 			case ID_DrawAxisLabels:
 			{
 				event.Check( canvas->GetRenderAxisLabels() );
+				break;
+			}
+			case ID_DrawStats:
+			{
+				event.Check( canvas->GetRenderStats() );
 				break;
 			}
 		}

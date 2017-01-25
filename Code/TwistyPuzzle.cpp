@@ -158,8 +158,6 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 			else
 			{
 				double deltaTimeSeconds = timeKeeper.GetDeltaTimeSeconds();
-				if( deltaTimeSeconds > 0.05 )		// This is a hack to mitigate choppy frame-rate.
-					deltaTimeSeconds = 0.05;
 				cutShape->rotationAngleForAnimation += rotationRateRadiansPerSecond * deltaTimeSeconds;
 			}
 
@@ -751,6 +749,48 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 			glPopAttrib();
 		}
 	}
+}
+
+/*virtual*/ void TwistyPuzzle::RenderStats( const _3DMath::TimeKeeper& timeKeeper )
+{
+	double deltaTimeSeconds = timeKeeper.GetDeltaTimeSeconds();
+	double framesPerSecond = 1.0 / deltaTimeSeconds;
+
+	int triangleCount = 0;
+	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
+	{
+		Face* face = *iter;
+		face->UpdateTessellationIfNeeded();
+		triangleCount += face->polygon->indexTriangleList->size();
+	}
+
+	FontSys::System* fontSystem = wxGetApp().GetFontSystem();
+	glColor3d( 1.0, 1.0, 1.0 );
+	fontSystem->SetFont( "Anonymous_Pro.ttf" );
+	fontSystem->SetJustification( FontSys::System::JUSTIFY_LEFT );
+	fontSystem->SetWordWrap( false );
+	fontSystem->SetLineHeight( 0.25 );
+
+	glPushAttrib( GL_LIGHTING_BIT | GL_ENABLE_BIT );
+	glDisable( GL_LIGHTING );
+	glDisable( GL_DEPTH_TEST );
+
+	char buffer[ 256 ];
+
+	sprintf_s( buffer, sizeof( buffer ), "FPS: %02.2f", framesPerSecond );
+	fontSystem->DrawTextCPtr( buffer );
+
+	glTranslatef( 0.f, fontSystem->GetLineHeight() * 1.5, 0.f );
+
+	sprintf_s( buffer, sizeof( buffer ), "Faces: %d", faceList.size() );
+	fontSystem->DrawTextCPtr( buffer );
+
+	glTranslatef( 0.f, fontSystem->GetLineHeight() * 1.5, 0.f );
+
+	sprintf_s( buffer, sizeof( buffer ), "Triangles: %d", triangleCount );
+	fontSystem->DrawTextCPtr( buffer );
+
+	glPopAttrib();
 }
 
 /*static*/ bool TwistyPuzzle::SaveVector( const wxString& name, wxXmlNode* xmlNode, const _3DMath::Vector& vector )
