@@ -8,6 +8,9 @@
     <Filter Include="Code\PuzzleDerivatives">
       <UniqueIdentifier>{715da95b-6501-4e92-a1fa-9e46b3b4e808}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\Shaders">
+      <UniqueIdentifier>{743cddb5-ae64-461e-a312-2b39f706251d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Application.h">
@@ -115,6 +118,9 @@
     <ClInclude Include="Code\Cuboid3x3x5.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ShaderProgram.h">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -219,5 +225,16 @@
     <ClCompile Include="Code\MixupCube.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
+    <ClCompile Include="Code\ShaderProgram.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Shaders\face.f.glsl">
+      <Filter>Code\Shaders</Filter>
+    </None>
+    <None Include="Data\Shaders\face.v.glsl">
+      <Filter>Code\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -5,8 +5,8 @@
 #include "Application.h"
 #include "GLRenderer.h"
 #include "Frame.h"
-//#include <gl/GLU.h>
 #include <HandleObject.h>
+#include <wx/msgdlg.h>
 
 int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
 
@@ -381,10 +381,28 @@ void Canvas::Animate( void )
 
 void Canvas::BindContext( void )
 {
+	bool initGlew = false;
+
 	if( !context )
+	{
 		context = new wxGLContext( this );
+		initGlew = true;
+	}
 
 	SetCurrent( *context );
+
+	if( initGlew )
+	{
+		GLenum error = glewInit();
+		if( error != GLEW_OK )
+		{
+			const GLubyte* errorStr = glewGetErrorString( error );
+			wxMessageBox( "Failed to initialize GLEW library: " + wxString( errorStr ), "Error", wxICON_ERROR | wxCENTRE, this );
+		}
+
+		if( !GLEW_VERSION_2_0 )
+			wxMessageBox( "OpenGL 2.0 or higher is required.", "Error", wxICON_ERROR | wxCENTRE, this );
+	}
 }
 
 Canvas::Grip::Grip( void )
