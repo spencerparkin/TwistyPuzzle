@@ -1011,6 +1011,13 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 		shaderProgram->SetUniformVector( "color", _3DMath::Vector( 0.0, 1.0, 0.0 ) );
 		shaderProgram->SetUniformFloat( "alpha", 1.0 );
 
+		// TODO: The idea to calculate in screen-space the edges of the triangle and
+		//       then communicate that via uniforms to the fragment shader which can
+		//       use the gl_FragCoord input to know its proximity to the edge, and then
+		//       based on that, blend into the border color.  We don't want every edge
+		//       of the triangle to be bordered, though.  Just if the edge of the triangle
+		//       coincides with an edge of the polygon.
+
 		glBegin( GL_TRIANGLES );
 		
 		for( int i = 0; i < 3; i++ )
