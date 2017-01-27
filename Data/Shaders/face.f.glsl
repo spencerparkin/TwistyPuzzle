@@ -2,33 +2,32 @@
 
 uniform vec3 triangleVertex[3];
 uniform float borderMask[3];
-uniform float maxSubTriangleArea;
+uniform float maxDistance;
 uniform vec3 borderColor;
 
 varying vec4 trianglePoint;
 
 void main()
 {
-	float smallestSubTriangleArea = 1000.0;
+	float smallestDistance = 1000.0;
 	
 	for( int i = 0; i < 3; i++ )
 	{
-		vec3 vertexA = triangleVertex[i];
-		vec3 vertexB = triangleVertex[ mod( i + 1, 3 ) ];
+		int j = mod( i + 1, 3 );
 		
-		vec3 edgeA = vertexA - trianglePoint;
-		vec3 edgeB = vertexB - trianglePoint;
+		vec3 edge = triangleVertex[j] - triangleVertex[i];
+		vec3 vec = trianglePoint - triangleVertex[i];
 		
-		vec3 cross = cross( edgeA, edgeB );
-		subTriangleArea = length( cross ) / 2.0;
-		subTriangleArea += borderMask[i] * maxSubTriangleArea;
+		float projDistance = dot( vec, normalize( edge ) );
+		float hypotenuse = length( vec )
+		float distance = sqrt( hypotenuse * hypotenuse - projDistance * projDistance );
 		
-		smallestSubTriangleArea = min( subTriangleArea, smallestSubTriangleArea );
+		distance += borderMask[i] * maxDistance;
+		smallestDistance = min( smallestDistance, distance );
 	}
 	
-	float areaRatio = min( smallestSubTriangleArea / maxSubTriangleArea, 1.0 );
-	
-	vec3 color = mix( borderColor, gl_Color, areaRatio );
+	float lengthRatio = min( smallestDistance / maxDistance, 1.0 );
+	vec3 color = mix( borderColor, gl_Color, lengthRatio );
 	
 	gl_FragColor = vec4( color, 1.0 );
 }
