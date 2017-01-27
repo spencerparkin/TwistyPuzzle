@@ -46,14 +46,22 @@ bool ShaderProgram::Load( const wxString& shaderName )
 		if( fragmentShader )
 			glAttachShader( program, fragmentShader );
 
+		glLinkProgram( program );
+
 		GLint status;
 		glGetProgramiv( program, GL_LINK_STATUS, &status );
 		if( status == GL_FALSE )
 		{
-			char infoBuffer[ 1024 ];
-			GLsizei length;
-			glGetProgramInfoLog( program, sizeof( infoBuffer ), &length, infoBuffer );
-			wxMessageBox( "Failed to link program " + shaderName + ": " + wxString( infoBuffer ), "Error", wxICON_ERROR | wxCENTRE, wxGetApp().GetFrame() );
+			GLint logLength = 0;
+			glGetProgramiv( program, GL_INFO_LOG_LENGTH, &logLength );
+			if( logLength > 0 )
+			{
+				char* infoBuffer = new char[ logLength + 1 ];
+				glGetProgramInfoLog( program, logLength, nullptr, infoBuffer );
+				wxMessageBox( "Failed to link program " + shaderName + ": " + wxString( infoBuffer ), "Error", wxICON_ERROR | wxCENTRE, wxGetApp().GetFrame() );
+				delete[] infoBuffer;
+			}
+
 			return false;
 		}
 
@@ -92,6 +100,9 @@ bool ShaderProgram::MakeShader( const wxString& shaderName, GLuint& shader, GLen
 		if( !shader )
 			return false;
 
+		const char* shaderCodeCStr = ( const char* )shaderCode.c_str();
+		GLint shaderCodeLen = shaderCode.Length();
+		glShaderSource( shader, 1, &shaderCodeCStr, &shaderCodeLen );
 		glCompileShader( shader );
 
 		GLint status;
@@ -99,8 +110,7 @@ bool ShaderProgram::MakeShader( const wxString& shaderName, GLuint& shader, GLen
 		if( status == GL_FALSE )
 		{
 			char infoBuffer[ 1024 ];
-			GLsizei length;
-			glGetShaderInfoLog( shader, sizeof( infoBuffer ), &length, infoBuffer );
+			glGetShaderInfoLog( shader, sizeof( infoBuffer ), nullptr, infoBuffer );
 			wxMessageBox( "Failed to compile shader " + shaderName + "." + shaderExt + ": " + wxString( infoBuffer ), "Error", wxICON_ERROR | wxCENTRE, wxGetApp().GetFrame() );
 			return false;
 		}
@@ -129,16 +139,46 @@ bool ShaderProgram::Unload( void )
 
 bool ShaderProgram::Bind( void )
 {
+	if( !glIsProgram( program ) )
+		return false;
+
+	glUseProgram( program );
 	return true;
 }
 
 bool ShaderProgram::Unbind( void )
 {
+	glUseProgram(0);
 	return true;
 }
 
 bool ShaderProgram::SetUniformVector( const wxString& uniformName, const _3DMath::Vector& vector )
 {
+	GLint location = glGetUniformLocation( program, ( const char* )uniformName.c_str() );
+	if( location < 0 )
+		return false;
+
+	glUniform3f( location, ( float )vector.x, ( float )vector.y, ( float )vector.z );
+
+	GLenum error = glGetError();
+	if( error == GL_INVALID_OPERATION )
+		return false;
+
+	return true;
+}
+
+bool ShaderProgram::SetUniformFloat( const wxString& uniformName, double value )
+{
+	GLint location = glGetUniformLocation( program, ( const char* )uniformName.c_str() );
+	if( location < 0 )
+		return false;
+
+	glUniform1f( location, ( float )value );
+
+	GLenum error = glGetError();
+	if( error == GL_INVALID_OPERATION )
+		return false;
+
 	return true;
 }
 

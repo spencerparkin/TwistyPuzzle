@@ -3,9 +3,11 @@
 #include "TwistyPuzzle.h"
 #include "Application.h"
 #include "Frame.h"
+#include "ShaderProgram.h"
 #include <Surface.h>
 #include <ListFunctions.h>
 #include <wx/wfstream.h>
+#include <wx/msgdlg.h>
 
 //---------------------------------------------------------------------------------
 //                                  TwistyPuzzle
@@ -18,11 +20,14 @@ TwistyPuzzle::TwistyPuzzle( void )
 	rotationSpeedCoeficient = 10.0;
 	needsSaving = false;
 	rotationHistoryIter = rotationHistory.end();
+	shaderProgram = nullptr;
 }
 
 /*virtual*/ TwistyPuzzle::~TwistyPuzzle( void )
 {
 	Clear();
+
+	delete shaderProgram;
 }
 
 /*virtual*/ void TwistyPuzzle::Clear( void )
@@ -686,15 +691,29 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 
 /*virtual*/ void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxisLabels )
 {
+	if( !shaderProgram )
+	{
+		shaderProgram = new ShaderProgram();
+		if( !shaderProgram->Load( "face" ) )
+		{
+			wxMessageBox( "Failed to load face shader program.", "Error", wxICON_ERROR | wxCENTRE, wxGetApp().GetFrame() );
+			wxAbort();
+		}
+	}
+
 	_3DMath::LinearTransform normalTransform;
 	transform.linearTransform.GetNormalTransform( normalTransform );
+
+	shaderProgram->Bind();
 
 	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
 	{
 		Face* face = *iter;
 		face->UpdateTessellationIfNeeded();
-		face->Render( renderer, renderMode, transform, normalTransform, PolygonOutlineScaleFactor() );
+		face->Render( renderer, renderMode, transform, normalTransform, shaderProgram );
 	}
+
+	shaderProgram->Unbind();
 
 	if( renderMode == GL_RENDER )
 	{
@@ -960,7 +979,7 @@ void TwistyPuzzle::Face::UpdateTessellationIfNeeded( void )
 }
 
 // TODO: Add lighting as optionally enabled from the render menu.
-void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, double outlineScaleFactor ) const
+void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, ShaderProgram* shaderProgram ) const
 {
 	_3DMath::AffineTransform renderTransform;
 
@@ -977,27 +996,30 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 	if( renderMode == GL_SELECT )
 		glLoadName( GetHandle() );
 
-	renderer.Color( color );
-	renderer.DrawPolygon( *polygon, &renderTransform );
+	glColor3d( color.x, color.y, color.z );
 
-	// One solution to the problem of outlining may be to simply write our own shader that can
-	// shade black around the edges of the polygon, but fill the middle as normal.
-	if( renderer.drawStyle == _3DMath::Renderer::DRAW_STYLE_SOLID && renderMode == GL_RENDER )
+	for( _3DMath::IndexTriangleList::const_iterator iter = polygon->indexTriangleList->cbegin(); iter != polygon->indexTriangleList->cend(); iter++ )
 	{
-		glLineWidth( 2.5f );
+		const _3DMath::IndexTriangle& indexTriangle = *iter;
+
+		_3DMath::Triangle triangle;
+		indexTriangle.GetTriangle( triangle, polygon->vertexArray );
 		
-		renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
+		for( int i = 0; i < 3; i++ )
+			renderTransform.Transform( triangle.vertex[i] );
 
-		_3DMath::AffineTransform scaleTransform;
-		scaleTransform.linearTransform.SetScale( outlineScaleFactor );
+		shaderProgram->SetUniformVector( "color", _3DMath::Vector( 0.0, 1.0, 0.0 ) );
+		shaderProgram->SetUniformFloat( "alpha", 1.0 );
 
-		_3DMath::AffineTransform silhouetteTransform;
-		silhouetteTransform.Concatinate( scaleTransform, renderTransform );
+		glBegin( GL_TRIANGLES );
+		
+		for( int i = 0; i < 3; i++ )
+		{
+			const _3DMath::Vector* vertex = &triangle.vertex[i];
+			glVertex3d( vertex->x, vertex->y, vertex->z );
+		}
 
-		renderer.Color( _3DMath::Vector( 0.0, 0.0, 0.0 ), 1.0 );
-		renderer.DrawPolygon( *polygon, &silhouetteTransform );
-
-		renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_SOLID;
+		glEnd();
 	}
 }
 

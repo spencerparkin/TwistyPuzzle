@@ -19,6 +19,8 @@
 // TODO: It would be interesting if we based a puzzle off of, say, cone-shaped cut objects.
 //       This would require that we trace out parts of conic sections.  Calculus methods would be in order?
 
+class ShaderProgram;
+
 class TwistyPuzzle : public wxObject
 {
 public:
@@ -44,7 +46,6 @@ public:
 	virtual void Reset( void ) = 0;
 	virtual bool SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown );
 	virtual void UpdateCutShapeLabels( const _3DMath::AffineTransform& transform );
-	virtual double PolygonOutlineScaleFactor( void ) const { return 1.01; }
 
 	void SetupStandardDynamicFaceTurningBoxLabels( double radius = 10.0 );
 	void SetupStandardDynamicCornerTurningBoxLabels( double radius = 10.0 );
@@ -98,7 +99,7 @@ public:
 		~Face( void );
 
 		void UpdateTessellationIfNeeded( void );
-		void Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, double outlineScaleFactor ) const;
+		void Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, ShaderProgram* shaderProgram ) const;
 		bool IsCapturedByCutShape( CutShape* cutShape ) const;
 		bool IsCapturedBySurface( _3DMath::Surface* surface, _3DMath::Surface::Side captureSide ) const;
 		bool Save( wxXmlNode* xmlFaceNode ) const;
@@ -183,6 +184,7 @@ public:
 	RotationList rotationHistory;
 	RotationList::iterator rotationHistoryIter;
 	LabelMap labelMap;
+	ShaderProgram* shaderProgram;
 };
 
 // TwistyPuzzle.h

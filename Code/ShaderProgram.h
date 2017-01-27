@@ -20,6 +20,7 @@ public:
 	bool Unbind( void );
 
 	bool SetUniformVector( const wxString& uniformName, const _3DMath::Vector& vector );
+	bool SetUniformFloat( const wxString& uniformName, double value );
 
 private:
 
