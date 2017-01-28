@@ -28,6 +28,9 @@ private:
 		ID_About,
 		ID_DrawWireFrame,
 		ID_DrawSolid,
+		ID_DrawAxisLabels,
+		ID_DrawStats,
+		ID_DrawBorders,
 		ID_Scramble,
 		ID_Solve,
 		ID_Save,
@@ -36,8 +39,6 @@ private:
 		ID_GoBackward,
 		ID_ManualSelectAxis,
 		ID_AutoSelectAxis,
-		ID_DrawAxisLabels,
-		ID_DrawStats,
 		ID_Puzzle,		// This needs to be the last ID.
 	};
 
@@ -60,6 +61,7 @@ private:
 	void OnTextCtrlEnter( wxCommandEvent& event );
 	void OnDrawAxisLabels( wxCommandEvent& event );
 	void OnDrawStats( wxCommandEvent& event );
+	void OnDrawBorders( wxCommandEvent& event );
 
 	class PuzzleMenuItemUserData : public wxObject
 	{

@@ -1,33 +1,58 @@
-#version 110
+#version 130
 
 uniform vec3 triangleVertex[3];
-uniform float borderMask[3];
-uniform float maxDistance;
-uniform vec3 borderColor;
+uniform vec3 borderColor[3];
+uniform float borderThickness;
 
-varying vec4 trianglePoint;
+varying vec3 trianglePoint;
+varying vec3 color;
+
+void distanceToLineSeg( in vec3 vertexA, in vec3 vertexB, in vec3 point, out float distance )
+{
+	vec3 lineSeg = vertexB - vertexA;
+	vec3 vector = point - vertexA;
+	float lineSegLength = length( lineSeg );
+
+	float projDistance = dot( vector, lineSeg ) / lineSegLength;
+	float lerpValue = projDistance / lineSegLength;
+
+	if( lerpValue < 0.0 )
+		distance = length( point - vertexB );
+	else if( lerpValue > 1.0 )
+		distance = length( vector );
+	else
+	{
+		float hypotenuse = length( vector );
+		distance = sqrt( max( hypotenuse * hypotenuse - projDistance * projDistance, 0.f ) );
+	}
+}
 
 void main()
 {
-	float smallestDistance = 1000.0;
-	
+	float largestWeight = 0.0;
+
+	int k = 0;
+
 	for( int i = 0; i < 3; i++ )
 	{
-		int j = mod( i + 1, 3 );
+		int j = ( i + 1 ) % 3;
 		
-		vec3 edge = triangleVertex[j] - triangleVertex[i];
-		vec3 vec = trianglePoint - triangleVertex[i];
-		
-		float projDistance = dot( vec, normalize( edge ) );
-		float hypotenuse = length( vec )
-		float distance = sqrt( hypotenuse * hypotenuse - projDistance * projDistance );
-		
-		distance += borderMask[i] * maxDistance;
-		smallestDistance = min( smallestDistance, distance );
+		float distance;
+		distanceToLineSeg( triangleVertex[i], triangleVertex[j], trianglePoint, distance );
+
+		float weight = max( 1.f - min( distance / borderThickness, 1.f ), 0.f );
+		if( weight > largestWeight )
+		{
+			largestWeight = weight;
+			k = i;
+		}
 	}
 	
-	float lengthRatio = min( smallestDistance / maxDistance, 1.0 );
-	vec3 color = mix( borderColor, gl_Color, lengthRatio );
-	
-	gl_FragColor = vec4( color, 1.0 );
+	// This is pretty crappy.  Instead of only blending with the
+	// border we weigh the most with, could we weight the result
+	// against all borders?  I think this could fill in some painfully
+	// visible gaps when the border is drawn thicker.
+	largestWeight = clamp( largestWeight, 0.f, 1.f );
+	vec3 blendedColor = mix( color, borderColor[k], largestWeight );
+	gl_FragColor = vec4( blendedColor, 1.f );
 }

@@ -167,6 +167,32 @@ bool ShaderProgram::SetUniformVector( const wxString& uniformName, const _3DMath
 	return true;
 }
 
+bool ShaderProgram::SetUniformVectorArray( const wxString& uniformName, const _3DMath::Vector* vectorArray, int vectorCount )
+{
+	GLint location = glGetUniformLocation( program, ( const char* )uniformName.c_str() );
+	if( location < 0 )
+		return false;
+
+	float* floatArray = new float[ 3 * vectorCount ];
+	int j = 0;
+	for( int i = 0; i < vectorCount; i++ )
+	{
+		floatArray[ j++ ] = ( float )vectorArray[i].x;
+		floatArray[ j++ ] = ( float )vectorArray[i].y;
+		floatArray[ j++ ] = ( float )vectorArray[i].z;
+	}
+
+	glUniform3fv( location, vectorCount, floatArray );
+
+	delete[] floatArray;
+
+	GLenum error = glGetError();
+	if( error == GL_INVALID_OPERATION )
+		return false;
+
+	return true;
+}
+
 bool ShaderProgram::SetUniformFloat( const wxString& uniformName, double value )
 {
 	GLint location = glGetUniformLocation( program, ( const char* )uniformName.c_str() );
@@ -174,6 +200,27 @@ bool ShaderProgram::SetUniformFloat( const wxString& uniformName, double value )
 		return false;
 
 	glUniform1f( location, ( float )value );
+
+	GLenum error = glGetError();
+	if( error == GL_INVALID_OPERATION )
+		return false;
+
+	return true;
+}
+
+bool ShaderProgram::SetUniformFloatArray( const wxString& uniformName, const double* valueArray, int valueCount )
+{
+	GLint location = glGetUniformLocation( program, ( const char* )uniformName.c_str() );
+	if( location < 0 )
+		return false;
+
+	float* floatArray = new float[ valueCount ];
+	for( int i = 0; i < valueCount; i++ )
+		floatArray[i] = ( float )valueArray[i];
+
+	glUniform1fv( location, valueCount, floatArray );
+
+	delete[] floatArray;
 
 	GLenum error = glGetError();
 	if( error == GL_INVALID_OPERATION )

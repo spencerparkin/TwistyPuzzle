@@ -35,6 +35,8 @@ public:
 	bool GetRenderAxisLabels( void ) { return renderAxisLabels; }
 	void SetRenderStats( bool renderStats ) { this->renderStats = renderStats; }
 	bool GetRenderStats( void ) { return renderStats; }
+	void SetRenderBorders( bool renderBorders ) { this->renderBorders = renderBorders; }
+	bool GetRenderBorders( void ) { return renderBorders; }
 
 private:
 
@@ -78,6 +80,7 @@ private:
 	Grip* grip;
 	bool renderAxisLabels;
 	bool renderStats;
+	bool renderBorders;
 #if defined LINUX
 	double timeOfLastWheelClickSeconds;
 #endif

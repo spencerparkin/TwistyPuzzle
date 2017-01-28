@@ -43,10 +43,12 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	wxMenu* renderMenu = new wxMenu();
 	wxMenuItem* drawWireFrameMenuItem = new wxMenuItem( renderMenu, ID_DrawWireFrame, "Draw Wire-Frame", "Draw the twisty frame as a bunch of line segments.", wxITEM_CHECK );
 	wxMenuItem* drawSolidMenuItem = new wxMenuItem( renderMenu, ID_DrawSolid, "Draw Solid", "Draw the twisty puzzle as a bunch of solid triangles.", wxITEM_CHECK );
+	wxMenuItem* drawBordersMenuItem = new wxMenuItem( renderMenu, ID_DrawBorders, "Draw Borders", "Draw a crappy border around faces.", wxITEM_CHECK );
 	wxMenuItem* drawAxisLabelsMenuItem = new wxMenuItem( renderMenu, ID_DrawAxisLabels, "Draw Axis Labels", "Draw the names of each axis.  These are used in the command sequence text control.", wxITEM_CHECK );
 	wxMenuItem* drawStatsMenuItem = new wxMenuItem( renderMenu, ID_DrawStats, "Draw Stats", "Draw some statistics about the puzzle and its rendering.", wxITEM_CHECK );
 	renderMenu->Append( drawWireFrameMenuItem );
 	renderMenu->Append( drawSolidMenuItem );
+	renderMenu->Append( drawBordersMenuItem );
 	renderMenu->AppendSeparator();
 	renderMenu->Append( drawAxisLabelsMenuItem );
 	renderMenu->Append( drawStatsMenuItem );
@@ -109,6 +111,7 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_MENU, &Frame::OnAutoSelectAxis, this, ID_AutoSelectAxis );
 	Bind( wxEVT_MENU, &Frame::OnDrawAxisLabels, this, ID_DrawAxisLabels );
 	Bind( wxEVT_MENU, &Frame::OnDrawStats, this, ID_DrawStats );
+	Bind( wxEVT_MENU, &Frame::OnDrawBorders, this, ID_DrawBorders );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawWireFrame );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawSolid );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_Solve );
@@ -118,14 +121,10 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_AutoSelectAxis );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawAxisLabels );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawStats );
+	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawBorders );
 	Bind( wxEVT_COMMAND_TEXT_ENTER, &Frame::OnTextCtrlEnter, this );
 
-#if defined LINUX
-	// Oddly, this will break us on Linux if we pass in 0.
 	timer.Start(1);
-#else
-	timer.Start(0);
-#endif
 }
 
 /*virtual*/ Frame::~Frame( void )
@@ -226,6 +225,8 @@ void Frame::OnAutoSelectAxis( wxCommandEvent& event )
 
 void Frame::OnScramble( wxCommandEvent& event )
 {
+	timer.Stop();
+
 	int rotationCount = ( int )wxGetNumberFromUser( "Scramble with how many rotations?", "Scrambles:", "Scramble", 50, 1, 500, wxGetApp().GetFrame() );
 
 	_3DMath::Random random;
@@ -241,6 +242,8 @@ void Frame::OnScramble( wxCommandEvent& event )
 	rotation = new TwistyPuzzle::Rotation(0);
 	rotation->newRotationSpeedCoeficient = 10.0;
 	puzzle->EnqueueRotation( rotation );
+
+	timer.Start(1);
 }
 
 void Frame::OnSolve( wxCommandEvent& event )
@@ -342,8 +345,15 @@ void Frame::OnDrawSolid( wxCommandEvent& event )
 	canvas->GetRenderer()->drawStyle = _3DMath::Renderer::DRAW_STYLE_SOLID;
 }
 
+void Frame::OnDrawBorders( wxCommandEvent& event )
+{
+	canvas->SetRenderBorders( !canvas->GetRenderBorders() );
+}
+
 void Frame::OnExit( wxCommandEvent& event )
 {
+	timer.Stop();
+
 	Close( true );
 }
 
@@ -463,6 +473,11 @@ void Frame::OnUpdateUI( wxUpdateUIEvent& event )
 			case ID_DrawStats:
 			{
 				event.Check( canvas->GetRenderStats() );
+				break;
+			}
+			case ID_DrawBorders:
+			{
+				event.Check( canvas->GetRenderBorders() );
 				break;
 			}
 		}

@@ -1,5 +1,6 @@
 // TwistyPuzzle.cpp
 
+#include "Canvas.h"
 #include "TwistyPuzzle.h"
 #include "Application.h"
 #include "Frame.h"
@@ -706,6 +707,9 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 
 	shaderProgram->Bind();
 
+	// If it looks horrible, draw it small!
+	shaderProgram->SetUniformFloat( "borderThickness", 0.02 );
+
 	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
 	{
 		Face* face = *iter;
@@ -998,6 +1002,8 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 
 	glColor3d( color.x, color.y, color.z );
 
+	bool drawBorders = wxGetApp().GetFrame()->GetCanvas()->GetRenderBorders();
+
 	for( _3DMath::IndexTriangleList::const_iterator iter = polygon->indexTriangleList->cbegin(); iter != polygon->indexTriangleList->cend(); iter++ )
 	{
 		const _3DMath::IndexTriangle& indexTriangle = *iter;
@@ -1005,18 +1011,21 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 		_3DMath::Triangle triangle;
 		indexTriangle.GetTriangle( triangle, polygon->vertexArray );
 		
+		_3DMath::Vector borderColor[3];
+
 		for( int i = 0; i < 3; i++ )
+		{
 			renderTransform.Transform( triangle.vertex[i] );
-
-		shaderProgram->SetUniformVector( "color", _3DMath::Vector( 0.0, 1.0, 0.0 ) );
-		shaderProgram->SetUniformFloat( "alpha", 1.0 );
-
-		// TODO: The idea to calculate in screen-space the edges of the triangle and
-		//       then communicate that via uniforms to the fragment shader which can
-		//       use the gl_FragCoord input to know its proximity to the edge, and then
-		//       based on that, blend into the border color.  We don't want every edge
-		//       of the triangle to be bordered, though.  Just if the edge of the triangle
-		//       coincides with an edge of the polygon.
+		
+			int j = ( i + 1 ) % 3;
+			if( ( indexTriangle.vertex[i] + 1 ) % polygon->vertexArray->size() == indexTriangle.vertex[j] && drawBorders )
+				borderColor[i].Set( 0.0, 0.0, 0.0 );
+			else
+				borderColor[i] = color;
+		}
+		
+		shaderProgram->SetUniformVectorArray( "triangleVertex", triangle.vertex, 3 );
+		shaderProgram->SetUniformVectorArray( "borderColor", borderColor, 3 );
 
 		glBegin( GL_TRIANGLES );
 		

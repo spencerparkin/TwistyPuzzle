@@ -19,6 +19,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	axisSelectMode = AXIS_SELECT_MANUAL;
 	renderAxisLabels = true;
 	renderStats = false;
+	renderBorders = true;
 #if defined LINUX
 	timeOfLastWheelClickSeconds = 0.0;
 #endif
