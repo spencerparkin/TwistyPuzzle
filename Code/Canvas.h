@@ -63,9 +63,9 @@ private:
 		~Grip( void );
 
 		bool PartiallyRotate( Canvas* canvas );
-		bool CommitRotation( Canvas* canvas );
+		bool CommitPartialRotation( Canvas* canvas );
 
-		int DetermineCutShapeAndRotation( Canvas* canvas, double& rotationAngle );
+		int DetermineCutShapeAndRotation( Canvas* canvas );
 	};
 
 	wxGLContext* context;

@@ -77,7 +77,7 @@ void Canvas::OnMouseRightUp( wxMouseEvent& event )
 {
 	if( grip )
 	{
-		//grip->CommitRotation( this );
+		grip->CommitPartialRotation( this );
 		delete grip;
 		grip = nullptr;
 	}
@@ -159,7 +159,9 @@ void Canvas::OnMouseMotion( wxMouseEvent& event )
 
 			if( !grip->PartiallyRotate( this ) )
 			{
-				// TODO: Re-render in select mode?
+				// TODO: Re-render in select mode?  Then try to partially rotate again?  Yeah,
+				//       I think it would work, but let's not add that complexity for now if
+				//       we may not need it.
 			}
 
 			break;
@@ -186,11 +188,14 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 {
 	BindContext();
 
+	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
+
 	if( renderMode == GL_RENDER )
+	{
 		Animate();
 
-	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
-	puzzle->UpdateCutShapeLabels( transform );
+		puzzle->UpdateCutShapeLabels( transform );
+	}
 
 	if( objectHandle )
 		*objectHandle = 0;
@@ -260,7 +265,7 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 	glLoadIdentity();
 	gluLookAt( 0.0, 0.0, eyeDistance, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
 
-	puzzle->Render( *renderer, transform, renderMode, selectedObjectHandle, renderAxisLabels, renderBorders );
+	puzzle->Render( *renderer, transform, renderMode, selectedObjectHandle, renderAxisLabels, ( renderBorders && renderMode == GL_RENDER ? true : false ) );
 
 	glFlush();
 
@@ -406,6 +411,10 @@ void Canvas::BindContext( void )
 	}
 }
 
+//---------------------------------------------------------------------------------------
+//                                      Canvas::Grip
+//---------------------------------------------------------------------------------------
+
 Canvas::Grip::Grip( void )
 {
 }
@@ -414,7 +423,7 @@ Canvas::Grip::~Grip( void )
 {
 }
 
-int Canvas::Grip::DetermineCutShapeAndRotation( Canvas* canvas, double& rotationAngle )
+int Canvas::Grip::DetermineCutShapeAndRotation( Canvas* canvas )
 {
 	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
 	if( !puzzle )
@@ -428,37 +437,34 @@ int Canvas::Grip::DetermineCutShapeAndRotation( Canvas* canvas, double& rotation
 
 	wxPoint mouseDragDelta = canvas->mouseDragCurrentPos - canvas->mouseDragClickPos;
 	_3DMath::Vector mouseVector( mouseDragDelta.x, -mouseDragDelta.y, 0.0 );
-	mouseVector.Scale( 1.0 );		// This would be some sort of pixels to space-units conversion.
 
-	_3DMath::AffineTransform transformInverse;
 	_3DMath::LinearTransform normalTransform;
-
-	// This may simplify to just the transpose.
-	canvas->transform.GetInverse( transformInverse );
-	transformInverse.linearTransform.GetNormalTransform( normalTransform );
-
-	normalTransform.Transform( mouseVector );
-
-	_3DMath::Vector unitMouseVector;
-	mouseVector.GetNormalized( unitMouseVector );
-
-	double smallestDot = 1.0;
-	TwistyPuzzle::CutShape* bestCutShape = nullptr;
+	canvas->transform.linearTransform.GetNormalTransform( normalTransform );
 
 	_3DMath::Plane plane;
 	face->polygon->GetPlane( plane );
+	plane.Transform( canvas->transform, &normalTransform );
+
+	TwistyPuzzle::CutShape* bestCutShape = nullptr;
+	double smallestArcLengthDistance = 0.0;
 
 	for( TwistyPuzzle::CutShapeList::iterator iter = puzzle->cutShapeList.begin(); iter != puzzle->cutShapeList.end(); iter++ )
 	{
 		TwistyPuzzle::CutShape* cutShape = *iter;
-		if( face->IsCapturedByCutShape( cutShape ) )
+		_3DMath::Vector axisNormal = cutShape->axisOfRotation.normal;
+		normalTransform.Transform( axisNormal );
+		if( axisNormal.AngleBetween( plane.normal ) > M_PI / 16.0 )
 		{
-			if( fabs( cutShape->axisOfRotation.normal.AngleBetween( plane.normal ) - M_PI / 2.0 ) < M_PI / 4.0 )
+			if( face->IsCapturedByCutShape( cutShape ) )
 			{
-				double dot = cutShape->axisOfRotation.normal.Dot( unitMouseVector );
-				if( fabs( dot ) < fabs( smallestDot ) )
+				_3DMath::Vector rejectedAxisNormal;
+				axisNormal.RejectFrom( _3DMath::Vector( 0.0, 0.0, 1.0 ), rejectedAxisNormal );
+
+				double angle = rejectedAxisNormal.AngleBetween( mouseVector );
+				double arcLengthDistance = fabs( angle - M_PI / 2.0 );
+				if( smallestArcLengthDistance == 0.0 || arcLengthDistance < smallestArcLengthDistance )
 				{
-					smallestDot = dot;
+					smallestArcLengthDistance = arcLengthDistance;
 					bestCutShape = cutShape;
 				}
 			}
@@ -467,18 +473,43 @@ int Canvas::Grip::DetermineCutShapeAndRotation( Canvas* canvas, double& rotation
 
 	if( bestCutShape )
 	{
-		rotationAngle = mouseVector.Length() / 50.0;
+		bestCutShape->rotationAngleForAnimation = mouseVector.Length() / 50.0;
 
-		_3DMath::LinearTransform linearTransform;
-		linearTransform.xAxis = unitMouseVector;
-		linearTransform.yAxis = bestCutShape->axisOfRotation.normal;
-		linearTransform.zAxis.Set( 0.0, 0.0, 1.0 );
+		_3DMath::Vector center;
+		face->polygon->GetCenter( center );
+		canvas->transform.Transform( center );
 
-		transformInverse.Transform( linearTransform.zAxis );
+		_3DMath::Vector intersectionPoint;
 
-		double det = linearTransform.Determinant();
-		if( det < 0.0 )
-			rotationAngle = -rotationAngle;
+		TwistyPuzzle::FaceList::iterator iter = puzzle->faceList.begin();
+		while( iter != puzzle->faceList.end() )
+		{
+			TwistyPuzzle::Face* face = *iter;
+			face->polygon->GetPlane( plane );
+
+			if( plane.Intersect( bestCutShape->axisOfRotation, intersectionPoint ) )
+				if( face->polygon->ContainsPoint( intersectionPoint ) )
+					break;
+
+			iter++;
+		}
+
+		if( iter != puzzle->faceList.end() )
+		{
+			canvas->transform.Transform( intersectionPoint );
+
+			_3DMath::Vector axisNormal = bestCutShape->axisOfRotation.normal;
+			normalTransform.Transform( axisNormal );
+
+			_3DMath::LinearTransform linearTransform;
+			linearTransform.xAxis = axisNormal;
+			linearTransform.yAxis = center - intersectionPoint;
+			linearTransform.zAxis = mouseVector;
+
+			double det = linearTransform.Determinant();
+			if( det < 0.0 )
+				bestCutShape->rotationAngleForAnimation = -bestCutShape->rotationAngleForAnimation;
+		}
 	
 		return bestCutShape->GetHandle();
 	}
@@ -488,8 +519,7 @@ int Canvas::Grip::DetermineCutShapeAndRotation( Canvas* canvas, double& rotation
 
 bool Canvas::Grip::PartiallyRotate( Canvas* canvas )
 {
-	double rotationAngle = 0.0;
-	int cutShapeHandle = DetermineCutShapeAndRotation( canvas, rotationAngle );
+	int cutShapeHandle = DetermineCutShapeAndRotation( canvas );
 	if( !cutShapeHandle )
 		return false;
 
@@ -497,32 +527,15 @@ bool Canvas::Grip::PartiallyRotate( Canvas* canvas )
 	if( cutShape )
 	{
 		TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
-
-		TwistyPuzzle::FaceList capturedFaceList;
-		cutShape->CutAndCapture( puzzle->faceList, capturedFaceList );
-
-		cutShape->rotationAngleForAnimation = rotationAngle;
-
-		for( TwistyPuzzle::FaceList::iterator iter = puzzle->faceList.begin(); iter != puzzle->faceList.end(); iter++ )
-		{
-			TwistyPuzzle::Face* face = *iter;
-			face->boundCutShapeHandle = 0;
-		}
-
-		for( TwistyPuzzle::FaceList::iterator iter = capturedFaceList.begin(); iter != capturedFaceList.end(); iter++ )
-		{
-			TwistyPuzzle::Face* face = *iter;
-			face->boundCutShapeHandle = cutShapeHandle;
-		}
+		puzzle->ApplyCutShapeWithRotation( cutShape, nullptr );
 	}
 
 	return true;
 }
 
-bool Canvas::Grip::CommitRotation( Canvas* canvas )
+bool Canvas::Grip::CommitPartialRotation( Canvas* canvas )
 {
-	double rotationAngle = 0.0;
-	int cutShapeHandle = DetermineCutShapeAndRotation( canvas, rotationAngle );
+	int cutShapeHandle = DetermineCutShapeAndRotation( canvas );
 	if( !cutShapeHandle )
 		return false;
 
@@ -531,11 +544,12 @@ bool Canvas::Grip::CommitRotation( Canvas* canvas )
 	{
 		TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
 
-		TwistyPuzzle::Rotation* rotation = nullptr; //puzzle->CalculateNearestRotation( cutShape, rotationAngle );
+		TwistyPuzzle::Rotation* rotation = puzzle->CalculateNearestRotation( cutShape );
 		if( rotation )
+		{
 			puzzle->EnqueueRotation( rotation );
-
-		// TODO: May need to process queue once here before painting occurs?
+			puzzle->DequeueAndProcessNextRotation();
+		}
 	}
 
 	return false;

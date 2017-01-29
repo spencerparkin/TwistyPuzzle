@@ -123,46 +123,49 @@ SquareOne::SquareOne( void )
 
 /*virtual*/ bool SquareOne::ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation )
 {
-	if( cutShape->GetHandle() == topCutShapeHandle )
+	if( rotation )
 	{
-		int totalSize = Advance( topRight, topLeft, rotation->direction );
-		cutShape->rotationAngleForSingleTurn = wedgeAngle * double( totalSize );
-	}
-	else if( cutShape->GetHandle() == bottomCutShapeHandle )
-	{
-		int totalSize = Advance( bottomRight, bottomLeft, rotation->direction );
-		cutShape->rotationAngleForSingleTurn = wedgeAngle * double( totalSize );
-	}
-	else if( cutShape->GetHandle() == leftCutShapeHandle || cutShape->GetHandle() == rightCutShapeHandle )
-	{
-		Wedge* topRightPrev = topRight->prev;
-		Wedge* topLeftPrev = topLeft->prev;
-		Wedge* bottomRightPrev = bottomRight->prev;
-		Wedge* bottomLeftPrev = bottomLeft->prev;
-
-		topRightPrev->next = bottomRight;
-		bottomRight->prev = topRightPrev;
-
-		bottomLeftPrev->next = topLeft;
-		topLeft->prev = bottomLeftPrev;
-
-		topLeftPrev->next = bottomLeft;
-		bottomLeft->prev = topLeftPrev;
-
-		bottomRightPrev->next = topRight;
-		topRight->prev = bottomRightPrev;
-
-		if( cutShape->GetHandle() == rightCutShapeHandle )
+		if( cutShape->GetHandle() == topCutShapeHandle )
 		{
-			Wedge* wedge = topRight;
-			topRight = bottomRight;
-			bottomRight = wedge;
+			int totalSize = Advance( topRight, topLeft, rotation->direction );
+			cutShape->rotationAngleForSingleTurn = wedgeAngle * double( totalSize );
 		}
-		else if( cutShape->GetHandle() == leftCutShapeHandle )
+		else if( cutShape->GetHandle() == bottomCutShapeHandle )
 		{
-			Wedge* wedge = topLeft;
-			topLeft = bottomLeft;
-			bottomLeft = wedge;
+			int totalSize = Advance( bottomRight, bottomLeft, rotation->direction );
+			cutShape->rotationAngleForSingleTurn = wedgeAngle * double( totalSize );
+		}
+		else if( cutShape->GetHandle() == leftCutShapeHandle || cutShape->GetHandle() == rightCutShapeHandle )
+		{
+			Wedge* topRightPrev = topRight->prev;
+			Wedge* topLeftPrev = topLeft->prev;
+			Wedge* bottomRightPrev = bottomRight->prev;
+			Wedge* bottomLeftPrev = bottomLeft->prev;
+
+			topRightPrev->next = bottomRight;
+			bottomRight->prev = topRightPrev;
+
+			bottomLeftPrev->next = topLeft;
+			topLeft->prev = bottomLeftPrev;
+
+			topLeftPrev->next = bottomLeft;
+			bottomLeft->prev = topLeftPrev;
+
+			bottomRightPrev->next = topRight;
+			topRight->prev = bottomRightPrev;
+
+			if( cutShape->GetHandle() == rightCutShapeHandle )
+			{
+				Wedge* wedge = topRight;
+				topRight = bottomRight;
+				bottomRight = wedge;
+			}
+			else if( cutShape->GetHandle() == leftCutShapeHandle )
+			{
+				Wedge* wedge = topLeft;
+				topLeft = bottomLeft;
+				bottomLeft = wedge;
+			}
 		}
 	}
 
@@ -209,6 +212,7 @@ void SquareOne::AdvanceAndAccumulate( Wedge*& wedge, Rotation::Direction directi
 		return TwistyPuzzle::CalculateNearestRotation( cutShape );
 
 	// TODO: I'll have to do some calculations here to accomodate the click-face-and-drag interface-method.
+	//       Do this next.
 	return nullptr;
 }
 

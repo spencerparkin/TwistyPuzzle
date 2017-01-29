@@ -230,6 +230,7 @@ void Frame::OnScramble( wxCommandEvent& event )
 	int rotationCount = ( int )wxGetNumberFromUser( "Scramble with how many rotations?", "Scrambles:", "Scramble", 50, 1, 500, wxGetApp().GetFrame() );
 
 	_3DMath::Random random;
+	random.Seed( time( nullptr ) );
 
 	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
 	

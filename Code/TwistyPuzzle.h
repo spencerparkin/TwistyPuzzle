@@ -90,6 +90,7 @@ public:
 
 	void EnqueueRotation( Rotation* rotation );
 	bool ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper );
+	bool DequeueAndProcessNextRotation( void );
 
 	class Face : public _3DMath::HandleObject
 	{
@@ -132,6 +133,8 @@ public:
 	};
 
 	typedef std::list< CutShape* > CutShapeList;
+
+	void BindCutShapeToCapturedFaces( CutShape* cutShape, FaceList& capturedFaceList );
 
 	CutShape* FindCutShapeWithLabel( const wxString& label );
 	CutShape* FindCutShapeNearestDirection( const _3DMath::Vector& direction, const _3DMath::AffineTransform& transform, TwistyPuzzle::CutShapeList::iterator* foundIter = nullptr );

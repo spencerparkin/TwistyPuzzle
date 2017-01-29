@@ -146,6 +146,44 @@ void TwistyPuzzle::EnqueueRotation( Rotation* rotation )
 	rotationQueue.push_back( rotation );
 }
 
+bool TwistyPuzzle::DequeueAndProcessNextRotation( void )
+{
+	if( rotationQueue.size() == 0 )
+		return false;
+
+	RotationList::iterator iter = rotationQueue.begin();
+	Rotation* rotation = *iter;
+	rotationQueue.erase( iter );
+
+	wxStatusBar* statusBar = wxGetApp().GetFrame()->GetStatusBar();
+	wxString text = wxString::Format( "%d rotations queued.", int( rotationQueue.size() ) );
+	statusBar->SetStatusText( text );
+
+	if( rotation->newRotationSpeedCoeficient != 0.0 )
+		rotationSpeedCoeficient = rotation->newRotationSpeedCoeficient;
+
+	bool deleteRotation = true;
+
+	_3DMath::HandleObject* object = _3DMath::HandleObject::Dereference( rotation->cutShapeHandle );
+	CutShape* cutShape = dynamic_cast< CutShape* >( object );
+	if( cutShape )
+	{
+		if( ApplyCutShapeWithRotation( cutShape, rotation ) )
+		{
+			if( !( rotation->flags & Rotation::FLAG_HISTORY ) )
+			{
+				AddHistory( rotation );
+				deleteRotation = false;
+			}
+		}
+	}
+
+	if( deleteRotation )
+		delete rotation;
+
+	return true;
+}
+
 bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 {
 	bool motion = false;
@@ -171,42 +209,24 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 	}
 
 	if( !motion )
-	{
-		if( rotationQueue.size() == 0 )
-			return false;
-
-		RotationList::iterator iter = rotationQueue.begin();
-		Rotation* rotation = *iter;
-		rotationQueue.erase( iter );
-
-		wxStatusBar* statusBar = wxGetApp().GetFrame()->GetStatusBar();
-		wxString text = wxString::Format( "%d rotations queued.", int( rotationQueue.size() ) );
-		statusBar->SetStatusText( text );
-
-		if( rotation->newRotationSpeedCoeficient != 0.0 )
-			rotationSpeedCoeficient = rotation->newRotationSpeedCoeficient;
-
-		bool deleteRotation = true;
-
-		_3DMath::HandleObject* object = _3DMath::HandleObject::Dereference( rotation->cutShapeHandle );
-		CutShape* cutShape = dynamic_cast< CutShape* >( object );
-		if( cutShape )
-		{
-			if( ApplyCutShapeWithRotation( cutShape, rotation ) )
-			{
-				if( !( rotation->flags & Rotation::FLAG_HISTORY ) )
-				{
-					AddHistory( rotation );
-					deleteRotation = false;
-				}
-			}
-		}
-
-		if( deleteRotation )
-			delete rotation;
-	}
+		return DequeueAndProcessNextRotation();
 
 	return true;
+}
+
+void TwistyPuzzle::BindCutShapeToCapturedFaces( CutShape* cutShape, FaceList& capturedFaceList )
+{
+	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
+	{
+		Face* face = *iter;
+		face->boundCutShapeHandle = 0;
+	}
+
+	for( FaceList::iterator iter = capturedFaceList.begin(); iter != capturedFaceList.end(); iter++ )
+	{
+		Face* face = *iter;
+		face->boundCutShapeHandle = cutShape->GetHandle();
+	}
 }
 
 /*virtual*/ bool TwistyPuzzle::ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation )
@@ -216,34 +236,39 @@ bool TwistyPuzzle::ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper )
 	FaceList capturedFaceList;
 	cutShape->CutAndCapture( faceList, capturedFaceList, eps );
 
-	double rotationAngle = rotation->turnCount * cutShape->rotationAngleForSingleTurn;
-	if( rotation->direction == Rotation::DIR_CW )
-		rotationAngle = -rotationAngle;
-	rotationAngle = fmod( rotationAngle, 2.0 * M_PI );
+	BindCutShapeToCapturedFaces( cutShape, capturedFaceList );
 
-	_3DMath::AffineTransform transform;
-	transform.SetRotation( cutShape->axisOfRotation, rotationAngle );
-
-	for( FaceList::iterator iter = capturedFaceList.begin(); iter != capturedFaceList.end(); iter++ )
+	if( rotation )
 	{
-		Face* face = *iter;
-		face->polygon->Transform( transform );
-		face->boundCutShapeHandle = cutShape->GetHandle();
+		double rotationAngle = rotation->turnCount * cutShape->rotationAngleForSingleTurn;
+		if( rotation->direction == Rotation::DIR_CW )
+			rotationAngle = -rotationAngle;
+		rotationAngle = fmod( rotationAngle, 2.0 * M_PI );
+
+		_3DMath::AffineTransform transform;
+		transform.SetRotation( cutShape->axisOfRotation, rotationAngle );
+
+		for( FaceList::iterator iter = capturedFaceList.begin(); iter != capturedFaceList.end(); iter++ )
+		{
+			Face* face = *iter;
+			face->polygon->Transform( transform );
+		}
+
+		cutShape->rotationAngleForAnimation -= rotationAngle;
+
+		// One major draw-back to how we're manipulating the puzzle is that it is subject
+		// to accumulated round-off error.  This, however, can be overcome for puzzles that
+		// don't shape-shift.  The idea is simply to cache the original vertices of the puzzle,
+		// and then after each rotation, snap all transformed vertices to their closest cached point.
+		// Hmmm...but this will only work if we also update the cache when new cuts are formed.
+		// This could all be a mechanism handled at this base-class level, unbeknownst to the puzzle
+		// derivative, even if it shape-shifts.  I'm not sure if it will solve the problem currently
+		// had by the Gem6, but it may be worth a try.  The problem with the Gem6, I believe, may
+		// have more to do with inaccuracy in the original vertex calculations.
+
+		needsSaving = true;
 	}
 
-	cutShape->rotationAngleForAnimation -= rotationAngle;
-
-	// One major draw-back to how we're manipulating the puzzle is that it is subject
-	// to accumulated round-off error.  This, however, can be overcome for puzzles that
-	// don't shape-shift.  The idea is simply to cache the original vertices of the puzzle,
-	// and then after each rotation, snap all transformed vertices to their closest cached point.
-	// Hmmm...but this will only work if we also update the cache when new cuts are formed.
-	// This could all be a mechanism handled at this base-class level, unbeknownst to the puzzle
-	// derivative, even if it shape-shifts.  I'm not sure if it will solve the problem currently
-	// had by the Gem6, but it may be worth a try.  The problem with the Gem6, I believe, may
-	// have more to do with inaccuracy in the original vertex calculations.
-
-	needsSaving = true;
 	return true;
 }
 
@@ -658,8 +683,22 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 
 /*virtual*/ TwistyPuzzle::Rotation* TwistyPuzzle::CalculateNearestRotation( CutShape* cutShape )
 {
-	double turnCount = fmod( cutShape->rotationAngleForAnimation, cutShape->rotationAngleForSingleTurn );
-	turnCount = floor( turnCount );
+	double turnCount = 0.0;
+	double rotationAngle = 0.0;
+	while( fabs( rotationAngle - cutShape->rotationAngleForAnimation ) > cutShape->rotationAngleForSingleTurn / 2.0 )
+	{
+		if( rotationAngle < cutShape->rotationAngleForAnimation )
+		{
+			turnCount += 1.0;
+			rotationAngle += cutShape->rotationAngleForSingleTurn;
+		}
+		else
+		{
+			turnCount -= 1.0;
+			rotationAngle -= cutShape->rotationAngleForSingleTurn;
+		}
+	}
+
 	if( fabs( turnCount ) < EPSILON )
 		return nullptr;
 
