@@ -53,6 +53,7 @@ Gem8::Gem8( void )
 		cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 3.0;
 		cutShape->axisOfRotation.normal = normal;
 		cutShape->axisOfRotation.center.Set( 0.0, 0.0, 0.0 );
+		cutShape->vectorLength = center.Length() + 4.0;
 		cutShapeList.push_back( cutShape );
 	}
 }

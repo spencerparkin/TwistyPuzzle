@@ -1040,7 +1040,7 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 			while( lineSegCount < maxLineSegCount )
 			{
 				lineSegEndPointA[ lineSegCount ].Set( 100.0, 100.0, 100.0 );
-				lineSegEndPointB[ lineSegCount ].Set( 100.0, 100.0, 100.0 );
+				lineSegEndPointB[ lineSegCount ].Set( 200.0, 200.0, 200.0 );
 				lineSegCount++;
 			}
 
