@@ -260,7 +260,7 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 	glLoadIdentity();
 	gluLookAt( 0.0, 0.0, eyeDistance, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
 
-	puzzle->Render( *renderer, transform, renderMode, selectedObjectHandle, renderAxisLabels );
+	puzzle->Render( *renderer, transform, renderMode, selectedObjectHandle, renderAxisLabels, renderBorders );
 
 	glFlush();
 
@@ -531,7 +531,7 @@ bool Canvas::Grip::CommitRotation( Canvas* canvas )
 	{
 		TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
 
-		TwistyPuzzle::Rotation* rotation = puzzle->CalculateNearestRotation( cutShape, rotationAngle );
+		TwistyPuzzle::Rotation* rotation = nullptr; //puzzle->CalculateNearestRotation( cutShape, rotationAngle );
 		if( rotation )
 			puzzle->EnqueueRotation( rotation );
 

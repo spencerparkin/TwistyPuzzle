@@ -203,10 +203,10 @@ void SquareOne::AdvanceAndAccumulate( Wedge*& wedge, Rotation::Direction directi
 	}
 }
 
-/*virtual*/ TwistyPuzzle::Rotation* SquareOne::CalculateNearestRotation( CutShape* cutShape, double rotationAngle )
+/*virtual*/ TwistyPuzzle::Rotation* SquareOne::CalculateNearestRotation( CutShape* cutShape )
 {
 	if( rightCutShapeHandle == cutShape->GetHandle() || leftCutShapeHandle == cutShape->GetHandle() )
-		return TwistyPuzzle::CalculateNearestRotation( cutShape, rotationAngle );
+		return TwistyPuzzle::CalculateNearestRotation( cutShape );
 
 	// TODO: I'll have to do some calculations here to accomodate the click-face-and-drag interface-method.
 	return nullptr;

@@ -41,7 +41,7 @@ public:
 	static TwistyPuzzle* AllocateUsingFile( const wxString& file );
 
 	virtual void Clear( void );
-	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxisLabels );
+	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxisLabels, bool renderBorders );
 	virtual void RenderStats( const _3DMath::TimeKeeper& timeKeeper );
 	virtual void Reset( void ) = 0;
 	virtual bool SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown );
@@ -77,7 +77,7 @@ public:
 
 	typedef std::list< Rotation* > RotationList;
 
-	virtual Rotation* CalculateNearestRotation( CutShape* cutShape, double rotationAngle );
+	virtual Rotation* CalculateNearestRotation( CutShape* cutShape );
 	virtual void EnqueueRandomRotations( _3DMath::Random& random, int rotationCount );
 	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation );
 	virtual double GetCutAndCaptureEpsilon( void ) { return EPSILON; }

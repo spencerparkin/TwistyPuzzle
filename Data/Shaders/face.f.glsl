@@ -1,7 +1,8 @@
 #version 130
 
-uniform vec3 triangleVertex[3];
-uniform vec3 borderColor[3];
+uniform vec3 lineSegEndPointA[4];
+uniform vec3 lineSegEndPointB[4];
+uniform vec3 borderColor;
 uniform float borderThickness;
 
 varying vec3 trianglePoint;
@@ -29,30 +30,17 @@ void distanceToLineSeg( in vec3 vertexA, in vec3 vertexB, in vec3 point, out flo
 
 void main()
 {
-	float largestWeight = 0.0;
+	float smallestDistance = 1000.f;
 
-	int k = 0;
-
-	for( int i = 0; i < 3; i++ )
+	// This loop should get unrolled.
+	for( int i = 0; i < 4; i++ )
 	{
-		int j = ( i + 1 ) % 3;
-		
 		float distance;
-		distanceToLineSeg( triangleVertex[i], triangleVertex[j], trianglePoint, distance );
-
-		float weight = max( 1.f - min( distance / borderThickness, 1.f ), 0.f );
-		if( weight > largestWeight )
-		{
-			largestWeight = weight;
-			k = i;
-		}
+		distanceToLineSeg( lineSegEndPointA[i], lineSegEndPointB[i], trianglePoint, distance );
+		smallestDistance = min( smallestDistance, distance );
 	}
 	
-	// This is pretty crappy.  Instead of only blending with the
-	// border we weigh the most with, could we weight the result
-	// against all borders?  I think this could fill in some painfully
-	// visible gaps when the border is drawn thicker.
-	largestWeight = clamp( largestWeight, 0.f, 1.f );
-	vec3 blendedColor = mix( color, borderColor[k], largestWeight );
+	float blendFactor = min( smallestDistance / borderThickness, 1.f );
+	vec3 blendedColor = mix( borderColor, color, blendFactor );
 	gl_FragColor = vec4( blendedColor, 1.f );
 }

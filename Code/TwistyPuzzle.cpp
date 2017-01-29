@@ -1,6 +1,5 @@
 // TwistyPuzzle.cpp
 
-#include "Canvas.h"
 #include "TwistyPuzzle.h"
 #include "Application.h"
 #include "Frame.h"
@@ -657,9 +656,9 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 {
 }
 
-/*virtual*/ TwistyPuzzle::Rotation* TwistyPuzzle::CalculateNearestRotation( CutShape* cutShape, double rotationAngle )
+/*virtual*/ TwistyPuzzle::Rotation* TwistyPuzzle::CalculateNearestRotation( CutShape* cutShape )
 {
-	double turnCount = fmod( rotationAngle, cutShape->rotationAngleForSingleTurn );
+	double turnCount = fmod( cutShape->rotationAngleForAnimation, cutShape->rotationAngleForSingleTurn );
 	turnCount = floor( turnCount );
 	if( fabs( turnCount ) < EPSILON )
 		return nullptr;
@@ -690,9 +689,9 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	}
 }
 
-/*virtual*/ void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxisLabels )
+/*virtual*/ void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxisLabels, bool renderBorders )
 {
-	if( !shaderProgram )
+	if( !shaderProgram && renderBorders )
 	{
 		shaderProgram = new ShaderProgram();
 		if( !shaderProgram->Load( "face" ) )
@@ -705,19 +704,22 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	_3DMath::LinearTransform normalTransform;
 	transform.linearTransform.GetNormalTransform( normalTransform );
 
-	shaderProgram->Bind();
-
-	// If it looks horrible, draw it small!
-	shaderProgram->SetUniformFloat( "borderThickness", 0.02 );
+	if( renderBorders )
+	{
+		shaderProgram->Bind();
+		shaderProgram->SetUniformFloat( "borderThickness", 0.05 );
+		shaderProgram->SetUniformVector( "borderColor", _3DMath::Vector( 0.0, 0.0, 0.0 ) );
+	}
 
 	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
 	{
 		Face* face = *iter;
 		face->UpdateTessellationIfNeeded();
-		face->Render( renderer, renderMode, transform, normalTransform, shaderProgram );
+		face->Render( renderer, renderMode, transform, normalTransform, ( renderBorders ? shaderProgram : nullptr ) );
 	}
 
-	shaderProgram->Unbind();
+	if( renderBorders )
+		shaderProgram->Unbind();
 
 	if( renderMode == GL_RENDER )
 	{
@@ -1002,8 +1004,6 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 
 	glColor3d( color.x, color.y, color.z );
 
-	bool drawBorders = wxGetApp().GetFrame()->GetCanvas()->GetRenderBorders();
-
 	for( _3DMath::IndexTriangleList::const_iterator iter = polygon->indexTriangleList->cbegin(); iter != polygon->indexTriangleList->cend(); iter++ )
 	{
 		const _3DMath::IndexTriangle& indexTriangle = *iter;
@@ -1011,28 +1011,50 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 		_3DMath::Triangle triangle;
 		indexTriangle.GetTriangle( triangle, polygon->vertexArray );
 		
-		_3DMath::Vector borderColor[3];
-
-		for( int i = 0; i < 3; i++ )
+		if( shaderProgram )
 		{
-			renderTransform.Transform( triangle.vertex[i] );
-		
-			int j = ( i + 1 ) % 3;
-			if( ( indexTriangle.vertex[i] + 1 ) % polygon->vertexArray->size() == indexTriangle.vertex[j] && drawBorders )
-				borderColor[i].Set( 0.0, 0.0, 0.0 );
-			else
-				borderColor[i] = color;
+			int lineSegCount = 0;
+			const int maxLineSegCount = 4;
+			_3DMath::Vector lineSegEndPointA[ maxLineSegCount ];
+			_3DMath::Vector lineSegEndPointB[ maxLineSegCount ];
+
+			for( int i = 0; i < ( signed )polygon->vertexArray->size(); i++ )
+			{
+				int j = ( i + 1 ) % polygon->vertexArray->size();
+				
+				int k;
+				for( k = 0; k < 3; k++ )
+					if( indexTriangle.vertex[k] == i || indexTriangle.vertex[k] == j )
+						break;
+
+				if( k < 3 )
+				{
+					renderTransform.Transform( ( *polygon->vertexArray )[i], lineSegEndPointA[ lineSegCount ] );
+					renderTransform.Transform( ( *polygon->vertexArray )[j], lineSegEndPointB[ lineSegCount ] );
+					lineSegCount++;
+					if( lineSegCount == maxLineSegCount )
+						break;
+				}
+			}
+
+			while( lineSegCount < maxLineSegCount )
+			{
+				lineSegEndPointA[ lineSegCount ].Set( 100.0, 100.0, 100.0 );
+				lineSegEndPointB[ lineSegCount ].Set( 100.0, 100.0, 100.0 );
+				lineSegCount++;
+			}
+
+			shaderProgram->SetUniformVectorArray( "lineSegEndPointA", lineSegEndPointA, lineSegCount );
+			shaderProgram->SetUniformVectorArray( "lineSegEndPointB", lineSegEndPointB, lineSegCount );
 		}
-		
-		shaderProgram->SetUniformVectorArray( "triangleVertex", triangle.vertex, 3 );
-		shaderProgram->SetUniformVectorArray( "borderColor", borderColor, 3 );
 
 		glBegin( GL_TRIANGLES );
 		
 		for( int i = 0; i < 3; i++ )
 		{
-			const _3DMath::Vector* vertex = &triangle.vertex[i];
-			glVertex3d( vertex->x, vertex->y, vertex->z );
+			_3DMath::Vector& vertex = triangle.vertex[i];
+			renderTransform.Transform( vertex );
+			glVertex3d( vertex.x, vertex.y, vertex.z );
 		}
 
 		glEnd();

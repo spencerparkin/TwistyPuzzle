@@ -23,6 +23,7 @@ public:
 	bool SetUniformVectorArray( const wxString& uniformName, const _3DMath::Vector* vectorArray, int vectorCount );
 	bool SetUniformFloat( const wxString& uniformName, double value );
 	bool SetUniformFloatArray( const wxString& uniformName, const double* valueArray, int valueCount );
+	bool SetUniformInt( const wxString& uniformName, int value );
 
 private:
 

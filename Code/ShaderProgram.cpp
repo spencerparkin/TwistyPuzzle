@@ -229,4 +229,19 @@ bool ShaderProgram::SetUniformFloatArray( const wxString& uniformName, const dou
 	return true;
 }
 
+bool ShaderProgram::SetUniformInt( const wxString& uniformName, int value )
+{
+	GLint location = glGetUniformLocation( program, ( const char* )uniformName.c_str() );
+	if( location < 0 )
+		return false;
+
+	glUniform1i( location, value );
+
+	GLenum error = glGetError();
+	if( error == GL_INVALID_OPERATION )
+		return false;
+
+	return true;
+}
+
 // ShaderProgram.cpp

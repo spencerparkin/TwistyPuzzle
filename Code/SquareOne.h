@@ -17,7 +17,7 @@ public:
 	virtual void Clear( void ) override;
 	virtual void Reset( void ) override;
 	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation ) override;
-	virtual Rotation* CalculateNearestRotation( CutShape* cutShape, double rotationAngle ) override;
+	virtual Rotation* CalculateNearestRotation( CutShape* cutShape ) override;
 
 	int topCutShapeHandle;
 	int bottomCutShapeHandle;
