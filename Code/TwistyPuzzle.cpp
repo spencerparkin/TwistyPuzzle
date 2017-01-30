@@ -756,8 +756,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 		}
 		else
 		{
-			if( !shaderProgram->SetUniformFloat( "borderThickness", 0.05 ) )
-				renderBorders = false;
+			shaderProgram->SetUniformFloat( "borderThickness", 0.05 );
 			shaderProgram->SetUniformVector( "borderColor", _3DMath::Vector( 0.0, 0.0, 0.0 ) );
 		}
 	}
