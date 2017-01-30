@@ -1,4 +1,4 @@
-# SConstruct for FontSystem library
+# SConstruct for TwistyPuzzle library
 
 import os
 
@@ -10,7 +10,7 @@ obj_env.Append( CCFLAGS = '-I../FontSystem/Code' )
 obj_env.Append( CCFLAGS = '-I../../fontsystem/install/include' )
 obj_env.Append( CCFLAGS = '-I../3DMath/Code' )
 obj_env.Append( CCFLAGS = '-I../../3dmath/install/include' )
-obj_env.Append( CCFLAGS = '-ggdb' )
+#obj_env.Append( CCFLAGS = '-ggdb' )
 
 cpp_source_list = Glob( 'Code/*.cpp' )
 h_source_list = Glob( 'Code/*.h' )
@@ -32,6 +32,7 @@ prog_env = Environment(
   parse_flags = '!wx-config --libs core base adv html xml gl' )
 prog_env.Append( LIBS = '-lGL' )
 prog_env.Append( LIBS = '-lGLU' )
+prog_env.Append( LIBS = '-lGLEW' )
 prog_env.Append( LIBS = '-l3DMath' )
 prog_env.Append( LIBS = '-lFontSystem' )
 prog_env.Append( LIBS = '-lfreetype' )

@@ -9,6 +9,10 @@
 #include <wx/wfstream.h>
 #include <wx/msgdlg.h>
 
+#if defined LINUX
+#	define sprintf_s snprintf
+#endif
+
 //---------------------------------------------------------------------------------
 //                                  TwistyPuzzle
 //---------------------------------------------------------------------------------
@@ -323,7 +327,7 @@ void TwistyPuzzle::SetupDynamicLabelUsingCutShape( const CutShape* cutShape )
 {
 	_3DMath::Vector point;
 	point.AddScale( cutShape->axisOfRotation.center, cutShape->axisOfRotation.normal, cutShape->vectorLength );
-	labelMap.insert( std::pair< std::string, _3DMath::Vector >( cutShape->label, point ) );
+	labelMap.insert( std::pair< std::string, _3DMath::Vector >( ( const char* )cutShape->label.c_str(), point ) );
 }
 
 void TwistyPuzzle::SetupDynamicLabelUsingCutShapeList( void )
@@ -854,7 +858,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 
 	glTranslatef( 0.f, fontSystem->GetLineHeight() * 1.5, 0.f );
 
-	sprintf_s( buffer, sizeof( buffer ), "Faces: %d", faceList.size() );
+	sprintf_s( buffer, sizeof( buffer ), "Faces: %d", int( faceList.size() ) );
 	fontSystem->DrawTextCPtr( buffer );
 
 	glTranslatef( 0.f, fontSystem->GetLineHeight() * 1.5, 0.f );

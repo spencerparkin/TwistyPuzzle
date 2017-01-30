@@ -4,7 +4,7 @@
 #include "ShaderProgram.h"
 #include "Application.h"
 #include "Frame.h"
-#include <gl/GL.h>
+#include <wx/glcanvas.h>
 #include <wx/file.h>
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
