@@ -198,8 +198,6 @@ bool ShaderProgram::SetUniformVectorArray( const wxString& uniformName, const _3
 	return true;
 }
 
-#include <wx/msgdlg.h>
-
 bool ShaderProgram::SetUniformFloat( const wxString& uniformName, double value )
 {
 	GLint location = glGetUniformLocation( program, ( const char* )uniformName.c_str() );
