@@ -26,8 +26,6 @@ private:
 		ID_Timer,
 		ID_Documentation,
 		ID_About,
-		ID_DrawWireFrame,
-		ID_DrawSolid,
 		ID_DrawAxisLabels,
 		ID_DrawStats,
 		ID_DrawBorders,
@@ -44,8 +42,6 @@ private:
 
 	void OnExit( wxCommandEvent& event );
 	void OnTimer( wxTimerEvent& event );
-	void OnDrawWireFrame( wxCommandEvent& event );
-	void OnDrawSolid( wxCommandEvent& event );
 	void OnPuzzleType( wxCommandEvent& event );
 	void OnUpdateUI( wxUpdateUIEvent& event );
 	void OnAbout( wxCommandEvent& event );
