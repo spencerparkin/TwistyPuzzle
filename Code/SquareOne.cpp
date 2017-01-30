@@ -123,23 +123,43 @@ SquareOne::SquareOne( void )
 
 /*virtual*/ bool SquareOne::ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation )
 {
-	if( rotation )
-	{
-		// TODO: SIGH...I found a bug where I was able to cut a layer into 12 wedges.
-		//       This should not be possible.  It should only be possible to cut a
-		//       layer into at most 8 wedges.  Where have I gone wrong?
+	if( !rotation )
+		return TwistyPuzzle::ApplyCutShapeWithRotation( cutShape, rotation );
 
-		if( cutShape->GetHandle() == topCutShapeHandle )
+	if( cutShape->GetHandle() == topCutShapeHandle || cutShape->GetHandle() == bottomCutShapeHandle )
+	{
+		Rotation::Direction rotDir = rotation->direction;
+		int turnCount = int( rotation->turnCount );
+		if( turnCount < 0 )
 		{
-			int totalSize = Advance( topRight, topLeft, rotation->direction );
-			cutShape->rotationAngleForSingleTurn = wedgeAngle * double( totalSize );
+			turnCount = -turnCount;
+			rotDir = ( rotDir == Rotation::DIR_CW ) ? Rotation::DIR_CCW : Rotation::DIR_CW;
 		}
-		else if( cutShape->GetHandle() == bottomCutShapeHandle )
+
+		while( turnCount > 0 )
 		{
-			int totalSize = Advance( bottomRight, bottomLeft, rotation->direction );
+			Rotation* subRotation = new Rotation( rotation->cutShapeHandle, rotDir, 1.0 );
+
+			int totalSize = 0;
+			if( cutShape->GetHandle() == topCutShapeHandle )
+				totalSize = Advance( topRight, topLeft, rotation->direction );
+			else if( cutShape->GetHandle() == bottomCutShapeHandle )
+				totalSize = Advance( bottomRight, bottomLeft, rotation->direction );
+
 			cutShape->rotationAngleForSingleTurn = wedgeAngle * double( totalSize );
+			bool applied = TwistyPuzzle::ApplyCutShapeWithRotation( cutShape, subRotation );
+			delete subRotation;
+			if( !applied )
+				return false;
+
+			turnCount--;
 		}
-		else if( cutShape->GetHandle() == leftCutShapeHandle || cutShape->GetHandle() == rightCutShapeHandle )
+
+		return true;
+	}
+	else if( cutShape->GetHandle() == leftCutShapeHandle || cutShape->GetHandle() == rightCutShapeHandle )
+	{
+		if( int( rotation->turnCount ) % 2 == 1 )
 		{
 			Wedge* topRightPrev = topRight->prev;
 			Wedge* topLeftPrev = topLeft->prev;
@@ -171,9 +191,11 @@ SquareOne::SquareOne( void )
 				bottomLeft = wedge;
 			}
 		}
+
+		return TwistyPuzzle::ApplyCutShapeWithRotation( cutShape, rotation );
 	}
 
-	return TwistyPuzzle::ApplyCutShapeWithRotation( cutShape, rotation );
+	return false;
 }
 
 int SquareOne::Advance( Wedge*& wedgeA, Wedge*& wedgeB, Rotation::Direction direction )
@@ -229,33 +251,46 @@ void SquareOne::AdvanceAndAccumulate( Wedge*& wedge, Rotation::Direction directi
 		left = bottomLeft;
 	}
 
-	double turnCount = 0.0;
+	int turnCount = 0;
 	double rotationAngle = 0.0;
-	double initialDistance = fabs( rotationAngle - cutShape->rotationAngleForAnimation );
 	
+	std::vector< double > distanceArray;
+	distanceArray.push_back( fabs( rotationAngle - cutShape->rotationAngleForAnimation ) );
+
 	while( true )
 	{
-		turnCount += 1.0;
+		turnCount++;
 
 		if( cutShape->rotationAngleForAnimation > 0.0 )
 		{
-			int totalSize = Advance( right, left, Rotation::DIR_CW );
+			int totalSize = Advance( right, left, Rotation::DIR_CCW );
 			rotationAngle += wedgeAngle * double( totalSize );
+			distanceArray.push_back( fabs( rotationAngle - cutShape->rotationAngleForAnimation ) );
 			if( rotationAngle >= cutShape->rotationAngleForAnimation )
 				break;
 		}
 		else
 		{
-			int totalSize = Advance( right, left, Rotation::DIR_CCW );
+			int totalSize = Advance( right, left, Rotation::DIR_CW );
 			rotationAngle -= wedgeAngle * double( totalSize );
+			distanceArray.push_back( fabs( rotationAngle - cutShape->rotationAngleForAnimation ) );
 			if( rotationAngle <= cutShape->rotationAngleForAnimation )
 				break;
 		}
 	}
 
-	double finalDistance = fabs( rotationAngle - cutShape->rotationAngleForAnimation );
+	double smallestDistance = -1.0;
+	int i;
+	for( i = 0; i < ( signed )distanceArray.size(); i++ )
+	{
+		if( smallestDistance == -1.0 || distanceArray[i] < smallestDistance )
+		{
+			turnCount = i;
+			smallestDistance = distanceArray[i];
+		}
+	}
 
-	if( initialDistance < finalDistance )
+	if( turnCount == 0 )
 		return nullptr;
 
 	Rotation::Direction rotDir = ( cutShape->rotationAngleForAnimation > 0.0 ) ? Rotation::DIR_CCW : Rotation::DIR_CW;
