@@ -198,17 +198,25 @@ bool ShaderProgram::SetUniformVectorArray( const wxString& uniformName, const _3
 	return true;
 }
 
+#include <wx/msgdlg.h>
+
 bool ShaderProgram::SetUniformFloat( const wxString& uniformName, double value )
 {
 	GLint location = glGetUniformLocation( program, ( const char* )uniformName.c_str() );
 	if( location < 0 )
+	{
+		wxMessageBox( "Location bad" );
 		return false;
+	}
 
 	glUniform1f( location, ( float )value );
 
 	GLenum error = glGetError();
 	if( error == GL_INVALID_OPERATION )
+	{
+		wxMessageBox( "invalid op" );
 		return false;
+	}
 
 	return true;
 }

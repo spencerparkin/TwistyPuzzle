@@ -757,10 +757,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 		else
 		{
 			if( !shaderProgram->SetUniformFloat( "borderThickness", 0.05 ) )
-			{
-				wxMessageBox( "Ffailed to set border thickness unifoirm variable", "Error", wxICON_ERROR | wxCENTRE, wxGetApp().GetFrame() );
-			}
-
+				renderBorders = false;
 			shaderProgram->SetUniformVector( "borderColor", _3DMath::Vector( 0.0, 0.0, 0.0 ) );
 		}
 	}
