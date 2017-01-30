@@ -48,11 +48,14 @@ install_env = Environment(
 
 doc_list = Glob( 'Data/Documentation/*' )
 font_list = Glob( 'Data/Fonts/*' )
+shader_list = Glob( 'Data/Shaders/*' )
 
 install_env.Install( '$SHARE/TwistyPuzzle/Data/Documentation', doc_list )
 install_env.Install( '$SHARE/TwistyPuzzle/Data/Fonts', font_list )
+install_env.Install( '$SHARE/TwistyPuzzle/Data/Shaders', shader_list )
 install_env.Install( '$BIN', prog )
 install_env.Alias( 'install', [
   '$BIN',
   '$SHARE/TwistyPuzzle/Data/Documentation',
-  '$SHARE/TwistyPuzzle/Data/Fonts' ] )
+  '$SHARE/TwistyPuzzle/Data/Fonts',
+  '$SHARE/TwistyPuzzle/Data/Shaders' ] )
