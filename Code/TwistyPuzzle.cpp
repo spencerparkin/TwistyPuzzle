@@ -749,9 +749,20 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 
 	if( renderBorders )
 	{
-		shaderProgram->Bind();
-		shaderProgram->SetUniformFloat( "borderThickness", 0.05 );
-		shaderProgram->SetUniformVector( "borderColor", _3DMath::Vector( 0.0, 0.0, 0.0 ) );
+		if( !shaderProgram->Bind() )
+		{
+			wxMessageBox( "Failed to find face shader program.", "Error", wxICON_ERROR | wxCENTRE, wxGetApp().GetFrame() );
+			renderBorders = false;
+		}
+		else
+		{
+			if( !shaderProgram->SetUniformFloat( "borderThickness", 0.05 ) )
+			{
+				wxMessageBox( "Ffailed to set border thickness unifoirm variable", "Error", wxICON_ERROR | wxCENTRE, wxGetApp().GetFrame() );
+			}
+
+			shaderProgram->SetUniformVector( "borderColor", _3DMath::Vector( 0.0, 0.0, 0.0 ) );
+		}
 	}
 
 	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )

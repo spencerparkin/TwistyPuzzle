@@ -143,6 +143,11 @@ bool ShaderProgram::Bind( void )
 		return false;
 
 	glUseProgram( program );
+
+	GLenum error = glGetError();
+	if( error == GL_INVALID_OPERATION || error == GL_INVALID_VALUE )
+		return false;
+
 	return true;
 }
 
