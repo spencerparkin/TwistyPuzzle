@@ -125,6 +125,10 @@ SquareOne::SquareOne( void )
 {
 	if( rotation )
 	{
+		// TODO: SIGH...I found a bug where I was able to cut a layer into 12 wedges.
+		//       This should not be possible.  It should only be possible to cut a
+		//       layer into at most 8 wedges.  Where have I gone wrong?
+
 		if( cutShape->GetHandle() == topCutShapeHandle )
 		{
 			int totalSize = Advance( topRight, topLeft, rotation->direction );
@@ -211,9 +215,52 @@ void SquareOne::AdvanceAndAccumulate( Wedge*& wedge, Rotation::Direction directi
 	if( rightCutShapeHandle == cutShape->GetHandle() || leftCutShapeHandle == cutShape->GetHandle() )
 		return TwistyPuzzle::CalculateNearestRotation( cutShape );
 
-	// TODO: I'll have to do some calculations here to accomodate the click-face-and-drag interface-method.
-	//       Do this next.
-	return nullptr;
+	Wedge* right = nullptr;
+	Wedge* left = nullptr;
+
+	if( topCutShapeHandle == cutShape->GetHandle() )
+	{
+		right = topRight;
+		left = topLeft;
+	}
+	else if( bottomCutShapeHandle == cutShape->GetHandle() )
+	{
+		right = bottomRight;
+		left = bottomLeft;
+	}
+
+	double turnCount = 0.0;
+	double rotationAngle = 0.0;
+	double initialDistance = fabs( rotationAngle - cutShape->rotationAngleForAnimation );
+	
+	while( true )
+	{
+		turnCount += 1.0;
+
+		if( cutShape->rotationAngleForAnimation > 0.0 )
+		{
+			int totalSize = Advance( right, left, Rotation::DIR_CW );
+			rotationAngle += wedgeAngle * double( totalSize );
+			if( rotationAngle >= cutShape->rotationAngleForAnimation )
+				break;
+		}
+		else
+		{
+			int totalSize = Advance( right, left, Rotation::DIR_CCW );
+			rotationAngle -= wedgeAngle * double( totalSize );
+			if( rotationAngle <= cutShape->rotationAngleForAnimation )
+				break;
+		}
+	}
+
+	double finalDistance = fabs( rotationAngle - cutShape->rotationAngleForAnimation );
+
+	if( initialDistance < finalDistance )
+		return nullptr;
+
+	Rotation::Direction rotDir = ( cutShape->rotationAngleForAnimation > 0.0 ) ? Rotation::DIR_CCW : Rotation::DIR_CW;
+	Rotation* rotation = new Rotation( cutShape->GetHandle(), rotDir, turnCount );
+	return rotation;
 }
 
 // SquareOne.cpp
