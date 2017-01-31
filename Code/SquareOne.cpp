@@ -159,7 +159,11 @@ SquareOne::SquareOne( void )
 	}
 	else if( cutShape->GetHandle() == leftCutShapeHandle || cutShape->GetHandle() == rightCutShapeHandle )
 	{
-		if( int( rotation->turnCount ) % 2 == 1 )
+		int turnCount = int( rotation->turnCount );
+		if( turnCount < 0 )
+			turnCount = -turnCount;
+
+		if( turnCount % 2 == 1 )
 		{
 			Wedge* topRightPrev = topRight->prev;
 			Wedge* topLeftPrev = topLeft->prev;
