@@ -1115,10 +1115,10 @@ bool TwistyPuzzle::Face::IsCapturedByCutShape( CutShape* cutShape ) const
 {
 	const_cast< Face* >( this )->UpdateTessellationIfNeeded();
 
+	// TODO: We need to deligate this task to the cut-shape as a virtual method which can be overridden by the mixup cube's custom cut-shape.
 	return IsCapturedBySurface( cutShape->surface, cutShape->captureSide );
 }
 
-// TODO: There is a bug here; this logic does not always give us what we want.
 bool TwistyPuzzle::Face::IsCapturedBySurface( _3DMath::Surface* surface, _3DMath::Surface::Side captureSide ) const
 {
 	int insideCount = 0;
