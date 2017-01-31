@@ -4,6 +4,7 @@
 
 #include <wx/glcanvas.h>
 #include <wx/xml/xml.h>
+#include <wx/colour.h>
 #include <Vector.h>
 #include <Polygon.h>
 #include <AffineTransform.h>
@@ -105,6 +106,8 @@ public:
 		bool IsCapturedBySurface( _3DMath::Surface* surface, _3DMath::Surface::Side captureSide ) const;
 		bool Save( wxXmlNode* xmlFaceNode ) const;
 		bool Load( const wxXmlNode* xmlFaceNode );
+		wxColour GetColor( void ) const;
+		void SetColor( const wxColour& colour );
 
 		_3DMath::Vector color;
 		_3DMath::Polygon* polygon;

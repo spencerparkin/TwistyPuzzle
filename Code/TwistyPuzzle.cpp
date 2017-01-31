@@ -1151,6 +1151,18 @@ bool TwistyPuzzle::Face::IsCapturedBySurface( _3DMath::Surface* surface, _3DMath
 	return( dominantSide == captureSide ) ? true : false;
 }
 
+wxColour TwistyPuzzle::Face::GetColor( void ) const
+{
+	wxColour colour;
+	colour.Set( char( color.x * 255.0 ), char( color.y * 255.0 ), char( color.z * 255.0 ) );
+	return colour;
+}
+
+void TwistyPuzzle::Face::SetColor( const wxColour& colour )
+{
+	color.Set( double( colour.Red() ) / 255.0, double( colour.Green() ) / 255.0, double( colour.Blue() ) / 255.0 );
+}
+
 //---------------------------------------------------------------------------------
 //                               TwistyPuzzle::CutShape
 //---------------------------------------------------------------------------------

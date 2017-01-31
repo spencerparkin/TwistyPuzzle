@@ -7,6 +7,7 @@
 #include "Frame.h"
 #include <HandleObject.h>
 #include <wx/msgdlg.h>
+#include <wx/colordlg.h>
 
 int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
 
@@ -38,6 +39,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	Bind( wxEVT_MOTION, &Canvas::OnMouseMotion, this );
 	Bind( wxEVT_MOUSE_CAPTURE_LOST, &Canvas::OnMouseCaptureLost, this );
 	Bind( wxEVT_MOUSEWHEEL, &Canvas::OnMouseWheel, this );
+	Bind( wxEVT_RIGHT_DCLICK, &Canvas::OnMouseRightDoubleClick, this );
 }
 
 /*virtual*/ Canvas::~Canvas( void )
@@ -70,6 +72,25 @@ void Canvas::OnMouseRightDown( wxMouseEvent& event )
 	{
 		delete grip;
 		grip = nullptr;
+	}
+}
+
+void Canvas::OnMouseRightDoubleClick( wxMouseEvent& event )
+{
+	wxPoint mousePos = event.GetPosition();
+	selectedObjectHandle = 0;
+	Render( GL_SELECT, &mousePos, &selectedObjectHandle );
+	TwistyPuzzle::Face* face = dynamic_cast< TwistyPuzzle::Face* >( _3DMath::HandleObject::Dereference( selectedObjectHandle ) );
+	if( face )
+	{
+		wxColourData colorData;
+		colorData.SetColour( face->GetColor() );
+
+		wxColourDialog colorDialog( wxGetApp().GetFrame(), &colorData );
+		if( wxID_OK == colorDialog.ShowModal() )
+		{
+			face->SetColor( colorDialog.GetColourData().GetColour() );
+		}
 	}
 }
 
