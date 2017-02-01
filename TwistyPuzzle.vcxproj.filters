@@ -121,6 +121,9 @@
     <ClInclude Include="Code\ShaderProgram.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="Code\FisherCube.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -227,6 +230,9 @@
     </ClCompile>
     <ClCompile Include="Code\ShaderProgram.cpp">
       <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\FisherCube.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
