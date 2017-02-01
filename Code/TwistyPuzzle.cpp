@@ -712,9 +712,20 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 
 /*virtual*/ void TwistyPuzzle::EnqueueRandomRotations( _3DMath::Random& random, int rotationCount )
 {
+	if( cutShapeList.size() < 2 )
+		return;
+
+	int k = -1;
 	for( int i = 0; i < rotationCount; i++ )
 	{
-		int j = random.Integer( 0, cutShapeList.size() - 1 );
+		// This should help a little bit, but still doesn't guarentee
+		// that part, if not all, of the scramble sequence is dumb.
+		int j = k;
+		while( j == k )
+			j = random.Integer( 0, cutShapeList.size() - 1 );
+
+		k = j;
+
 		CutShapeList::iterator iter = cutShapeList.begin();
 		while( j > 0 )
 		{
