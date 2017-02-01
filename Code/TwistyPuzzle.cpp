@@ -238,7 +238,7 @@ void TwistyPuzzle::BindCutShapeToCapturedFaces( CutShape* cutShape, FaceList& ca
 	double eps = GetCutAndCaptureEpsilon();
 
 	FaceList capturedFaceList;
-	cutShape->CutAndCapture( faceList, capturedFaceList, eps );
+	cutShape->CutAndCapture( faceList, &capturedFaceList, eps );
 
 	BindCutShapeToCapturedFaces( cutShape, capturedFaceList );
 
@@ -1113,42 +1113,7 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 
 bool TwistyPuzzle::Face::IsCapturedByCutShape( CutShape* cutShape ) const
 {
-	const_cast< Face* >( this )->UpdateTessellationIfNeeded();
-
-	// TODO: We need to deligate this task to the cut-shape as a virtual method which can be overridden by the mixup cube's custom cut-shape.
-	return IsCapturedBySurface( cutShape->surface, cutShape->captureSide );
-}
-
-bool TwistyPuzzle::Face::IsCapturedBySurface( _3DMath::Surface* surface, _3DMath::Surface::Side captureSide ) const
-{
-	int insideCount = 0;
-	int outsideCount = 0;
-
-	_3DMath::IndexTriangleList::const_iterator triangleIter = polygon->indexTriangleList->cbegin();
-	while( triangleIter != polygon->indexTriangleList->cend() )
-	{
-		const _3DMath::IndexTriangle& indexTriangle = *triangleIter;
-
-		_3DMath::Triangle triangle;
-		indexTriangle.GetTriangle( triangle, polygon->vertexArray );
-
-		_3DMath::Vector triangleCenter;
-		triangle.GetCenter( triangleCenter );
-
-		_3DMath::Surface::Side side = surface->GetSide( triangleCenter );
-		if( side == _3DMath::Surface::INSIDE )
-			insideCount++;
-		else if( side == _3DMath::Surface::OUTSIDE )
-			outsideCount++;
-
-		triangleIter++;
-	}
-
-	_3DMath::Surface::Side dominantSide = _3DMath::Surface::OUTSIDE;
-	if( insideCount > outsideCount )
-		dominantSide = _3DMath::Surface::INSIDE;
-
-	return( dominantSide == captureSide ) ? true : false;
+	return cutShape->CapturesFace( this );
 }
 
 wxColour TwistyPuzzle::Face::GetColor( void ) const
@@ -1183,10 +1148,42 @@ TwistyPuzzle::CutShape::CutShape( void )
 	delete surface;
 }
 
-/*virtual*/ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList& capturedFaceList, double eps /*= EPSILON*/ )
+/*virtual*/ bool TwistyPuzzle::CutShape::CapturesFace( const Face* face )
 {
-	capturedFaceList.clear();
+	int insideCount = 0;
+	int outsideCount = 0;
 
+	const_cast< Face* >( face )->UpdateTessellationIfNeeded();
+
+	_3DMath::IndexTriangleList::const_iterator triangleIter = face->polygon->indexTriangleList->cbegin();
+	while( triangleIter != face->polygon->indexTriangleList->cend() )
+	{
+		const _3DMath::IndexTriangle& indexTriangle = *triangleIter;
+
+		_3DMath::Triangle triangle;
+		indexTriangle.GetTriangle( triangle, face->polygon->vertexArray );
+
+		_3DMath::Vector triangleCenter;
+		triangle.GetCenter( triangleCenter );
+
+		_3DMath::Surface::Side side = surface->GetSide( triangleCenter );
+		if( side == _3DMath::Surface::INSIDE )
+			insideCount++;
+		else if( side == _3DMath::Surface::OUTSIDE )
+			outsideCount++;
+
+		triangleIter++;
+	}
+
+	_3DMath::Surface::Side dominantSide = _3DMath::Surface::OUTSIDE;
+	if( insideCount > outsideCount )
+		dominantSide = _3DMath::Surface::INSIDE;
+
+	return( dominantSide == captureSide ) ? true : false;
+}
+
+/*virtual*/ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList* capturedFaceList /*= nullptr*/, double eps /*= EPSILON*/ )
+{
 	FaceList::iterator iter = faceList.begin();
 	while( iter != faceList.end() )
 	{
@@ -1214,11 +1211,16 @@ TwistyPuzzle::CutShape::CutShape( void )
 		iter = nextIter;
 	}
 
-	for( FaceList::const_iterator iter = faceList.cbegin(); iter != faceList.cend(); iter++ )
+	if( capturedFaceList )
 	{
-		Face* face = *iter;
-		if( face->IsCapturedByCutShape( this ) )
-			capturedFaceList.push_back( face );
+		capturedFaceList->clear();
+
+		for( FaceList::const_iterator iter = faceList.cbegin(); iter != faceList.cend(); iter++ )
+		{
+			Face* face = *iter;
+			if( face->IsCapturedByCutShape( this ) )
+				capturedFaceList->push_back( face );
+		}
 	}
 }
 

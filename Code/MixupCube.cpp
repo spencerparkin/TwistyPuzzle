@@ -56,6 +56,7 @@ MixupCube::MixupCube( void )
 		mixupCutShape->axisOfRotation.normal = normal;
 		mixupCutShape->axisOfRotation.center = center;
 		mixupCutShape->label = label++;
+		mixupCutShape->captureSide = _3DMath::Surface::OUTSIDE;
 		cutShapeList.push_back( mixupCutShape );
 	}
 
@@ -73,29 +74,42 @@ MixupLayerCutShape::MixupLayerCutShape( void )
 // This is somewhat of a hack to compensate for the lack of
 // sophistication had by the polygon split algorithm.  It can't
 // do splits that result in more than two polygons.
-/*virtual*/ void MixupLayerCutShape::CutAndCapture( TwistyPuzzle::FaceList& faceList, TwistyPuzzle::FaceList& capturedFaceList, double eps /*= EPSILON*/ )
+/*virtual*/ void MixupLayerCutShape::CutAndCapture( TwistyPuzzle::FaceList& faceList, TwistyPuzzle::FaceList* capturedFaceList /*= nullptr*/, double eps /*= EPSILON*/ )
 {
-	CutShape::CutAndCapture( faceList, capturedFaceList, eps );
+	CutShape::CutAndCapture( faceList, nullptr, eps );
 
 	_3DMath::Surface* tempSurface = surface;
 	surface = additionalSurface;
 
-	CutShape::CutAndCapture( faceList, capturedFaceList, eps );
+	CutShape::CutAndCapture( faceList, nullptr, eps );
 
 	surface = tempSurface;
 
-	capturedFaceList.clear();
-
-	for( TwistyPuzzle::FaceList::const_iterator iter = faceList.cbegin(); iter != faceList.cend(); iter++ )
+	if( capturedFaceList )
 	{
-		TwistyPuzzle::Face* face = *iter;
-		
-		bool capturedA = face->IsCapturedBySurface( surface, _3DMath::Surface::OUTSIDE );
-		bool capturedB = face->IsCapturedBySurface( additionalSurface, _3DMath::Surface::OUTSIDE );
+		capturedFaceList->clear();
 
-		if( capturedA && capturedB )
-			capturedFaceList.push_back( face );
+		for( TwistyPuzzle::FaceList::const_iterator iter = faceList.cbegin(); iter != faceList.cend(); iter++ )
+		{
+			TwistyPuzzle::Face* face = *iter;
+			if( CapturesFace( face ) )
+				capturedFaceList->push_back( face );
+		}
 	}
+}
+
+/*virtual*/ bool MixupLayerCutShape::CapturesFace( const TwistyPuzzle::Face* face )
+{
+	bool capturedA = CutShape::CapturesFace( face );
+
+	_3DMath::Surface* tempSurface = surface;
+	surface = additionalSurface;
+
+	bool capturedB =  CutShape::CapturesFace( face );
+
+	surface = tempSurface;
+
+	return( capturedA && capturedB );
 }
 
 // MixupCube.cpp

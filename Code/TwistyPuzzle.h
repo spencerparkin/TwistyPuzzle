@@ -103,7 +103,6 @@ public:
 		void UpdateTessellationIfNeeded( void );
 		void Render( _3DMath::Renderer& renderer, GLenum renderMode, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, ShaderProgram* shaderProgram ) const;
 		bool IsCapturedByCutShape( CutShape* cutShape ) const;
-		bool IsCapturedBySurface( _3DMath::Surface* surface, _3DMath::Surface::Side captureSide ) const;
 		bool Save( wxXmlNode* xmlFaceNode ) const;
 		bool Load( const wxXmlNode* xmlFaceNode );
 		wxColour GetColor( void ) const;
@@ -124,7 +123,8 @@ public:
 		CutShape( void );
 		virtual ~CutShape( void );
 
-		virtual void CutAndCapture( FaceList& faceList, FaceList& capturedFaceList, double eps = EPSILON );
+		virtual void CutAndCapture( FaceList& faceList, FaceList* capturedFaceList = nullptr, double eps = EPSILON );
+		virtual bool CapturesFace( const Face* face );
 
 		_3DMath::Surface* surface;
 		_3DMath::Line axisOfRotation;
