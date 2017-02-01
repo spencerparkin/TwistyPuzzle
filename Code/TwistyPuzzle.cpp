@@ -330,7 +330,7 @@ void TwistyPuzzle::SetupDynamicLabelUsingCutShape( const CutShape* cutShape )
 	labelMap.insert( std::pair< std::string, _3DMath::Vector >( ( const char* )cutShape->label.c_str(), point ) );
 }
 
-void TwistyPuzzle::SetupDynamicLabelUsingCutShapeList( void )
+void TwistyPuzzle::SetupDynamicLabelsUsingCutShapeList( void )
 {
 	labelMap.clear();
 

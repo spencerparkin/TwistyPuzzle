@@ -60,7 +60,7 @@ MixupCube::MixupCube( void )
 		cutShapeList.push_back( doubleSurfaceCutShape );
 	}
 
-	SetupDynamicLabelUsingCutShapeList();
+	SetupDynamicLabelsUsingCutShapeList();
 }
 
 // MixupCube.cpp
