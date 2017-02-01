@@ -1161,6 +1161,11 @@ TwistyPuzzle::CutShape::CutShape( void )
 
 /*virtual*/ bool TwistyPuzzle::CutShape::CapturesFace( const Face* face )
 {
+	return DoesSurfaceCaptureFace( surface, face );
+}
+
+bool TwistyPuzzle::CutShape::DoesSurfaceCaptureFace( _3DMath::Surface* captureSurface, const Face* face )
+{
 	int insideCount = 0;
 	int outsideCount = 0;
 
@@ -1177,7 +1182,7 @@ TwistyPuzzle::CutShape::CutShape( void )
 		_3DMath::Vector triangleCenter;
 		triangle.GetCenter( triangleCenter );
 
-		_3DMath::Surface::Side side = surface->GetSide( triangleCenter );
+		_3DMath::Surface::Side side = captureSurface->GetSide( triangleCenter );
 		if( side == _3DMath::Surface::INSIDE )
 			insideCount++;
 		else if( side == _3DMath::Surface::OUTSIDE )
@@ -1194,6 +1199,14 @@ TwistyPuzzle::CutShape::CutShape( void )
 }
 
 /*virtual*/ void TwistyPuzzle::CutShape::CutAndCapture( FaceList& faceList, FaceList* capturedFaceList /*= nullptr*/, double eps /*= EPSILON*/ )
+{
+	CutUsingSurface( faceList, surface, eps );
+
+	if( capturedFaceList )
+		GenerateCapturedFaceList( faceList, *capturedFaceList );
+}
+
+void TwistyPuzzle::CutShape::CutUsingSurface( FaceList& faceList, _3DMath::Surface* cuttingSurface, double eps /*= EPSILON*/ )
 {
 	FaceList::iterator iter = faceList.begin();
 	while( iter != faceList.end() )
@@ -1221,18 +1234,49 @@ TwistyPuzzle::CutShape::CutShape( void )
 
 		iter = nextIter;
 	}
+}
+
+void TwistyPuzzle::CutShape::GenerateCapturedFaceList( FaceList& faceList, FaceList& capturedFaceList )
+{
+	capturedFaceList.clear();
+
+	for( FaceList::const_iterator iter = faceList.cbegin(); iter != faceList.cend(); iter++ )
+	{
+		Face* face = *iter;
+		if( face->IsCapturedByCutShape( this ) )
+			capturedFaceList.push_back( face );
+	}
+}
+
+//---------------------------------------------------------------------------------
+//                       TwistyPuzzle::DoubeSurfaceCutShape
+//---------------------------------------------------------------------------------
+
+TwistyPuzzle::DoubleSurfaceCutShape::DoubleSurfaceCutShape( void )
+{
+}
+
+/*virtual*/ TwistyPuzzle::DoubleSurfaceCutShape::~DoubleSurfaceCutShape( void )
+{
+}
+
+// This is somewhat of a hack to compensate for the lack of sophistication had by the polygon split algorithm.  It can't
+// do splits that result in more than two polygons, but we can get the same result here using a double-surface cut-shape.
+/*virtual*/ void TwistyPuzzle::DoubleSurfaceCutShape::CutAndCapture( TwistyPuzzle::FaceList& faceList, TwistyPuzzle::FaceList* capturedFaceList /*= nullptr*/, double eps /*= EPSILON*/ )
+{
+	CutUsingSurface( faceList, surface, eps );
+	CutUsingSurface( faceList, additionalSurface, eps );
 
 	if( capturedFaceList )
-	{
-		capturedFaceList->clear();
+		GenerateCapturedFaceList( faceList, *capturedFaceList );
+}
 
-		for( FaceList::const_iterator iter = faceList.cbegin(); iter != faceList.cend(); iter++ )
-		{
-			Face* face = *iter;
-			if( face->IsCapturedByCutShape( this ) )
-				capturedFaceList->push_back( face );
-		}
-	}
+/*virtual*/ bool TwistyPuzzle::DoubleSurfaceCutShape::CapturesFace( const TwistyPuzzle::Face* face )
+{
+	bool capturedA = DoesSurfaceCaptureFace( surface, face );
+	bool capturedB =  DoesSurfaceCaptureFace( additionalSurface, face );
+
+	return( capturedA && capturedB );
 }
 
 //---------------------------------------------------------------------------------

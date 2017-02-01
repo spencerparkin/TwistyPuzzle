@@ -126,6 +126,10 @@ public:
 		virtual void CutAndCapture( FaceList& faceList, FaceList* capturedFaceList = nullptr, double eps = EPSILON );
 		virtual bool CapturesFace( const Face* face );
 
+		void GenerateCapturedFaceList( FaceList& faceList, FaceList& capturedFaceList );
+		void CutUsingSurface( FaceList& faceList, _3DMath::Surface* cuttingSurface, double eps = EPSILON );
+		bool DoesSurfaceCaptureFace( _3DMath::Surface* captureSurface, const Face* face );
+
 		_3DMath::Surface* surface;
 		_3DMath::Line axisOfRotation;
 		_3DMath::Surface::Side captureSide;
@@ -136,6 +140,19 @@ public:
 	};
 
 	typedef std::list< CutShape* > CutShapeList;
+
+	class DoubleSurfaceCutShape : public CutShape
+	{
+	public:
+
+		DoubleSurfaceCutShape( void );
+		virtual ~DoubleSurfaceCutShape( void );
+
+		virtual void CutAndCapture( TwistyPuzzle::FaceList& faceList, TwistyPuzzle::FaceList* capturedFaceList = nullptr, double eps = EPSILON ) override;
+		virtual bool CapturesFace( const TwistyPuzzle::Face* face ) override;
+
+		_3DMath::Surface* additionalSurface;
+	};
 
 	void BindCutShapeToCapturedFaces( CutShape* cutShape, FaceList& capturedFaceList );
 

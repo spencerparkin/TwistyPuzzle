@@ -49,67 +49,18 @@ MixupCube::MixupCube( void )
 		cutShape->label = label++;
 		cutShapeList.push_back( cutShape );
 
-		MixupLayerCutShape* mixupCutShape = new MixupLayerCutShape();
-		mixupCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( center, normal * -1.0 ) );
-		mixupCutShape->additionalSurface = new _3DMath::PlaneSurface( _3DMath::Plane( center * -1.0, normal ) );
-		mixupCutShape->rotationAngleForSingleTurn = M_PI / 4.0;
-		mixupCutShape->axisOfRotation.normal = normal;
-		mixupCutShape->axisOfRotation.center = center;
-		mixupCutShape->label = label++;
-		mixupCutShape->captureSide = _3DMath::Surface::OUTSIDE;
-		cutShapeList.push_back( mixupCutShape );
+		DoubleSurfaceCutShape* doubleSurfaceCutShape = new DoubleSurfaceCutShape();
+		doubleSurfaceCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( center, normal * -1.0 ) );
+		doubleSurfaceCutShape->additionalSurface = new _3DMath::PlaneSurface( _3DMath::Plane( center * -1.0, normal ) );
+		doubleSurfaceCutShape->rotationAngleForSingleTurn = M_PI / 4.0;
+		doubleSurfaceCutShape->axisOfRotation.normal = normal;
+		doubleSurfaceCutShape->axisOfRotation.center = center;
+		doubleSurfaceCutShape->label = label++;
+		doubleSurfaceCutShape->captureSide = _3DMath::Surface::OUTSIDE;
+		cutShapeList.push_back( doubleSurfaceCutShape );
 	}
 
 	SetupDynamicLabelUsingCutShapeList();
-}
-
-MixupLayerCutShape::MixupLayerCutShape( void )
-{
-}
-
-/*virtual*/ MixupLayerCutShape::~MixupLayerCutShape( void )
-{
-}
-
-// This is somewhat of a hack to compensate for the lack of
-// sophistication had by the polygon split algorithm.  It can't
-// do splits that result in more than two polygons.
-/*virtual*/ void MixupLayerCutShape::CutAndCapture( TwistyPuzzle::FaceList& faceList, TwistyPuzzle::FaceList* capturedFaceList /*= nullptr*/, double eps /*= EPSILON*/ )
-{
-	CutShape::CutAndCapture( faceList, nullptr, eps );
-
-	_3DMath::Surface* tempSurface = surface;
-	surface = additionalSurface;
-
-	CutShape::CutAndCapture( faceList, nullptr, eps );
-
-	surface = tempSurface;
-
-	if( capturedFaceList )
-	{
-		capturedFaceList->clear();
-
-		for( TwistyPuzzle::FaceList::const_iterator iter = faceList.cbegin(); iter != faceList.cend(); iter++ )
-		{
-			TwistyPuzzle::Face* face = *iter;
-			if( CapturesFace( face ) )
-				capturedFaceList->push_back( face );
-		}
-	}
-}
-
-/*virtual*/ bool MixupLayerCutShape::CapturesFace( const TwistyPuzzle::Face* face )
-{
-	bool capturedA = CutShape::CapturesFace( face );
-
-	_3DMath::Surface* tempSurface = surface;
-	surface = additionalSurface;
-
-	bool capturedB =  CutShape::CapturesFace( face );
-
-	surface = tempSurface;
-
-	return( capturedA && capturedB );
 }
 
 // MixupCube.cpp
