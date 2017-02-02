@@ -69,6 +69,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	doubleSurfaceCutShape->axisOfRotation.normal.Set( 1.0, 0.0, 0.0 );
 	doubleSurfaceCutShape->vectorLength = 12.0;
 	doubleSurfaceCutShape->label = 'X';
+	doubleSurfaceCutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( doubleSurfaceCutShape );
 
 	doubleSurfaceCutShape = new DoubleSurfaceCutShape();
@@ -78,6 +79,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	doubleSurfaceCutShape->axisOfRotation.normal.Set( 0.0, 1.0, 0.0 );
 	doubleSurfaceCutShape->vectorLength = 12.0;
 	doubleSurfaceCutShape->label = 'Y';
+	doubleSurfaceCutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( doubleSurfaceCutShape );
 
 	doubleSurfaceCutShape = new DoubleSurfaceCutShape();
@@ -87,6 +89,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	doubleSurfaceCutShape->axisOfRotation.normal.Set( 0.0, 0.0, 1.0 );
 	doubleSurfaceCutShape->vectorLength = 12.0;
 	doubleSurfaceCutShape->label = 'Z';
+	doubleSurfaceCutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( doubleSurfaceCutShape );
 
 	SetupDynamicLabelsUsingCutShapeList();

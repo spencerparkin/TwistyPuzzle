@@ -1217,7 +1217,7 @@ void TwistyPuzzle::CutShape::CutUsingSurface( FaceList& faceList, _3DMath::Surfa
 		Face* face = *iter;
 
 		_3DMath::Polygon polygonArray[2];
-		if( face->polygon->SplitAgainstSurface( surface, polygonArray, 20.0, 1.0, eps ) )
+		if( face->polygon->SplitAgainstSurface( cuttingSurface, polygonArray, 20.0, 1.0, eps ) )
 		{
 			for( int i = 0; i < 2; i++ )
 			{
