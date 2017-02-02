@@ -92,6 +92,36 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	doubleSurfaceCutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( doubleSurfaceCutShape );
 
+	doubleSurfaceCutShape = new DoubleSurfaceCutShape();
+	doubleSurfaceCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 5.0 - 10.0 / 3.0, 0.0, 0.0 ), _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
+	doubleSurfaceCutShape->additionalSurface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( -5.0 + 10.0 / 3.0, 0.0, 0.0 ), _3DMath::Vector( -1.0, 0.0, 0.0 ) ) );
+	doubleSurfaceCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
+	doubleSurfaceCutShape->axisOfRotation.normal.Set( -1.0, 0.0, 0.0 );
+	doubleSurfaceCutShape->vectorLength = 12.0;
+	doubleSurfaceCutShape->label = 'x';
+	doubleSurfaceCutShape->captureSide = _3DMath::Surface::INSIDE;
+	cutShapeList.push_back( doubleSurfaceCutShape );
+
+	doubleSurfaceCutShape = new DoubleSurfaceCutShape();
+	doubleSurfaceCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 5.0 - 10.0 / 3.0, 0.0 ), _3DMath::Vector( 0.0, 1.0, 0.0 ) ) );
+	doubleSurfaceCutShape->additionalSurface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, -5.0 + 10 / 3.0, 0.0 ), _3DMath::Vector( 0.0, -1.0, 0.0 ) ) );
+	doubleSurfaceCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
+	doubleSurfaceCutShape->axisOfRotation.normal.Set( 0.0, -1.0, 0.0 );
+	doubleSurfaceCutShape->vectorLength = 12.0;
+	doubleSurfaceCutShape->label = 'y';
+	doubleSurfaceCutShape->captureSide = _3DMath::Surface::INSIDE;
+	cutShapeList.push_back( doubleSurfaceCutShape );
+
+	doubleSurfaceCutShape = new DoubleSurfaceCutShape();
+	doubleSurfaceCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, 5.0 - 10.0 / 3.0 ), _3DMath::Vector( 0.0, 0.0, 1.0 ) ) );
+	doubleSurfaceCutShape->additionalSurface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, -5.0 + 10.0 / 3.0 ), _3DMath::Vector( 0.0, 0.0, -1.0 ) ) );
+	doubleSurfaceCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
+	doubleSurfaceCutShape->axisOfRotation.normal.Set( 0.0, 0.0, -1.0 );
+	doubleSurfaceCutShape->vectorLength = 12.0;
+	doubleSurfaceCutShape->label = 'z';
+	doubleSurfaceCutShape->captureSide = _3DMath::Surface::INSIDE;
+	cutShapeList.push_back( doubleSurfaceCutShape );
+
 	SetupDynamicLabelsUsingCutShapeList();
 }
 
