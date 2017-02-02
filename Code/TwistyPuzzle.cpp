@@ -743,7 +743,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	}
 }
 
-/*virtual*/ void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxisLabels, bool renderBorders )
+/*virtual*/ void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxes, bool renderAxisLabels, bool renderBorders )
 {
 	if( !shaderProgram && renderBorders )
 	{
@@ -797,50 +797,53 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 		}
 	}
 
-	for( CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
+	if( renderAxes )
 	{
-		CutShape* cutShape = *iter;
-
-		_3DMath::Vector vector, position, color;
-
-		transform.Transform( cutShape->axisOfRotation.center, position );
-		normalTransform.Transform( cutShape->axisOfRotation.normal, vector );
-
-		vector.Scale( cutShape->vectorLength );
-
-		if( cutShape->GetHandle() == selectedObjectHandle )
-			color.Set( 0.8, 0.8, 0.8 );
-		else
-			color.Set( 0.5, 0.5, 0.5 );
-
-		if( renderMode == GL_SELECT )
-			glLoadName( cutShape->GetHandle() );
-
-		renderer.DrawVector( vector, position, color, 0.5, 0.5 );
-
-		if( renderAxisLabels && renderMode == GL_RENDER && !cutShape->label.empty() )
+		for( CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
 		{
-			FontSys::System* fontSystem = wxGetApp().GetFontSystem();
-			glColor4d( 0.9, 0.9, 0.9, 0.5 );
-			fontSystem->SetFont( "ChanticleerRomanNF.ttf" );
-			fontSystem->SetJustification( FontSys::System::JUSTIFY_CENTER );
-			fontSystem->SetWordWrap( false );
-			fontSystem->SetLineHeight( 1.0 );
+			CutShape* cutShape = *iter;
 
-			glPushAttrib( GL_LIGHTING_BIT | GL_ENABLE_BIT );
-			glDisable( GL_LIGHTING );
-			glDisable( GL_DEPTH_TEST );
+			_3DMath::Vector vector, position, color;
 
-			_3DMath::Vector arrowPosition = position + vector;
+			transform.Transform( cutShape->axisOfRotation.center, position );
+			normalTransform.Transform( cutShape->axisOfRotation.normal, vector );
 
-			glMatrixMode( GL_MODELVIEW_MATRIX );
-			glPushMatrix();
-			glTranslatef( arrowPosition.x, arrowPosition.y, arrowPosition.z );
+			vector.Scale( cutShape->vectorLength );
 
-			fontSystem->DrawTextCPtr( cutShape->label.c_str(), true );
+			if( cutShape->GetHandle() == selectedObjectHandle )
+				color.Set( 0.8, 0.8, 0.8 );
+			else
+				color.Set( 0.5, 0.5, 0.5 );
 
-			glPopMatrix();
-			glPopAttrib();
+			if( renderMode == GL_SELECT )
+				glLoadName( cutShape->GetHandle() );
+
+			renderer.DrawVector( vector, position, color, 0.5, 0.5 );
+
+			if( renderAxisLabels && renderMode == GL_RENDER && !cutShape->label.empty() )
+			{
+				FontSys::System* fontSystem = wxGetApp().GetFontSystem();
+				glColor4d( 0.9, 0.9, 0.9, 0.5 );
+				fontSystem->SetFont( "ChanticleerRomanNF.ttf" );
+				fontSystem->SetJustification( FontSys::System::JUSTIFY_CENTER );
+				fontSystem->SetWordWrap( false );
+				fontSystem->SetLineHeight( 1.0 );
+
+				glPushAttrib( GL_LIGHTING_BIT | GL_ENABLE_BIT );
+				glDisable( GL_LIGHTING );
+				glDisable( GL_DEPTH_TEST );
+
+				_3DMath::Vector arrowPosition = position + vector;
+
+				glMatrixMode( GL_MODELVIEW_MATRIX );
+				glPushMatrix();
+				glTranslatef( arrowPosition.x, arrowPosition.y, arrowPosition.z );
+
+				fontSystem->DrawTextCPtr( cutShape->label.c_str(), true );
+
+				glPopMatrix();
+				glPopAttrib();
+			}
 		}
 	}
 }

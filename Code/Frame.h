@@ -26,6 +26,7 @@ private:
 		ID_Timer,
 		ID_Documentation,
 		ID_About,
+		ID_DrawAxes,
 		ID_DrawAxisLabels,
 		ID_DrawStats,
 		ID_DrawBorders,
@@ -55,6 +56,7 @@ private:
 	void OnManualSelectAxis( wxCommandEvent& event );
 	void OnAutoSelectAxis( wxCommandEvent& event );
 	void OnTextCtrlEnter( wxCommandEvent& event );
+	void OnDrawAxes( wxCommandEvent& event );
 	void OnDrawAxisLabels( wxCommandEvent& event );
 	void OnDrawStats( wxCommandEvent& event );
 	void OnDrawBorders( wxCommandEvent& event );

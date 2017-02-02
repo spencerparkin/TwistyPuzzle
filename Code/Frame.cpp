@@ -42,9 +42,11 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 
 	wxMenu* renderMenu = new wxMenu();
 	wxMenuItem* drawBordersMenuItem = new wxMenuItem( renderMenu, ID_DrawBorders, "Draw Borders", "Draw a crappy border around faces.", wxITEM_CHECK );
+	wxMenuItem* drawAxesMenuItem = new wxMenuItem( renderMenu, ID_DrawAxes, "Draw Axes", "Draw the rotation axes of the puzzle.", wxITEM_CHECK );
 	wxMenuItem* drawAxisLabelsMenuItem = new wxMenuItem( renderMenu, ID_DrawAxisLabels, "Draw Axis Labels", "Draw the names of each axis.  These are used in the command sequence text control.", wxITEM_CHECK );
 	wxMenuItem* drawStatsMenuItem = new wxMenuItem( renderMenu, ID_DrawStats, "Draw Stats", "Draw some statistics about the puzzle and its rendering.", wxITEM_CHECK );
 	renderMenu->Append( drawBordersMenuItem );
+	renderMenu->Append( drawAxesMenuItem );
 	renderMenu->Append( drawAxisLabelsMenuItem );
 	renderMenu->Append( drawStatsMenuItem );
 
@@ -102,6 +104,7 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_MENU, &Frame::OnGoBackward, this, ID_GoBackward );
 	Bind( wxEVT_MENU, &Frame::OnManualSelectAxis, this, ID_ManualSelectAxis );
 	Bind( wxEVT_MENU, &Frame::OnAutoSelectAxis, this, ID_AutoSelectAxis );
+	Bind( wxEVT_MENU, &Frame::OnDrawAxes, this, ID_DrawAxes );
 	Bind( wxEVT_MENU, &Frame::OnDrawAxisLabels, this, ID_DrawAxisLabels );
 	Bind( wxEVT_MENU, &Frame::OnDrawStats, this, ID_DrawStats );
 	Bind( wxEVT_MENU, &Frame::OnDrawBorders, this, ID_DrawBorders );
@@ -110,6 +113,7 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_GoBackward );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_ManualSelectAxis );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_AutoSelectAxis );
+	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawAxes );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawAxisLabels );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawStats );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawBorders );
@@ -120,6 +124,11 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 
 /*virtual*/ Frame::~Frame( void )
 {
+}
+
+void Frame::OnDrawAxes( wxCommandEvent& event )
+{
+	canvas->SetRenderAxes( !canvas->GetRenderAxes() );
 }
 
 void Frame::OnDrawAxisLabels( wxCommandEvent& event )
@@ -435,6 +444,11 @@ void Frame::OnUpdateUI( wxUpdateUIEvent& event )
 			case ID_AutoSelectAxis:
 			{
 				event.Check( canvas->axisSelectMode == Canvas::AXIS_SELECT_AUTO );
+				break;
+			}
+			case ID_DrawAxes:
+			{
+				event.Check( canvas->GetRenderAxes() );
 				break;
 			}
 			case ID_DrawAxisLabels:

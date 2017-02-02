@@ -31,6 +31,8 @@ public:
 
 	AxisSelectMode axisSelectMode;
 
+	void SetRenderAxes( bool renderAxes ) { this->renderAxes = renderAxes; }
+	bool GetRenderAxes( void ) { return renderAxes; }
 	void SetRenderAxisLabels( bool renderAxisLabels );
 	bool GetRenderAxisLabels( void ) { return renderAxisLabels; }
 	void SetRenderStats( bool renderStats ) { this->renderStats = renderStats; }
@@ -79,6 +81,7 @@ private:
 	int selectedObjectHandle;
 	wxTimeKeeper timeKeeper;
 	Grip* grip;
+	bool renderAxes;
 	bool renderAxisLabels;
 	bool renderStats;
 	bool renderBorders;

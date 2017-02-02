@@ -18,6 +18,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	mouseDragMode = DRAG_MODE_NONE;
 	grip = nullptr;
 	axisSelectMode = AXIS_SELECT_MANUAL;
+	renderAxes = true;
 	renderAxisLabels = true;
 	renderStats = false;
 	renderBorders = true;
@@ -286,7 +287,7 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 	glLoadIdentity();
 	gluLookAt( 0.0, 0.0, eyeDistance, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
 
-	puzzle->Render( *renderer, transform, renderMode, selectedObjectHandle, renderAxisLabels, ( renderBorders && renderMode == GL_RENDER ? true : false ) );
+	puzzle->Render( *renderer, transform, renderMode, selectedObjectHandle, renderAxes, renderAxisLabels, ( renderBorders && renderMode == GL_RENDER ? true : false ) );
 
 	glFlush();
 

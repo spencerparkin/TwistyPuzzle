@@ -42,7 +42,7 @@ public:
 	static TwistyPuzzle* AllocateUsingFile( const wxString& file );
 
 	virtual void Clear( void );
-	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxisLabels, bool renderBorders );
+	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxes, bool renderAxisLabels, bool renderBorders );
 	virtual void RenderStats( const _3DMath::TimeKeeper& timeKeeper );
 	virtual void Reset( void ) = 0;
 	virtual bool SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown );
