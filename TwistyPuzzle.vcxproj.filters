@@ -115,13 +115,16 @@
     <ClInclude Include="Code\Gem8.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Cuboid3x3x5.h">
-      <Filter>Code\PuzzleDerivatives</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ShaderProgram.h">
       <Filter>Code</Filter>
     </ClInclude>
     <ClInclude Include="Code\FisherCube.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Cuboid3x3x3Base.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Cuboid3x3x3.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
   </ItemGroup>
@@ -232,6 +235,12 @@
       <Filter>Code</Filter>
     </ClCompile>
     <ClCompile Include="Code\FisherCube.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Cuboid3x3x3Base.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Cuboid3x3x3.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
   </ItemGroup>
