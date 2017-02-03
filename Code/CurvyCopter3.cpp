@@ -4,6 +4,11 @@
 #include <Surface.h>
 #include <Sphere.h>
 
+// TODO: Sigh...So this puzzle was had been working well for a long time, but recent changes,
+//       I suppose, have added a new bug where I'm hitting the "intersectionCount >= 2" case
+//       in the polygon splitter algorithm.  This is 100% reproducable right now with a scramble.
+//       And the bug manifests itself in a very unsightly way.  This is a must fix.
+
 wxIMPLEMENT_DYNAMIC_CLASS( CurvyCopter3, CurvyCopterBase );
 
 CurvyCopter3::CurvyCopter3( void )
