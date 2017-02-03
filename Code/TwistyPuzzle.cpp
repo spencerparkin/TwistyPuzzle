@@ -1194,6 +1194,9 @@ bool TwistyPuzzle::CutShape::DoesSurfaceCaptureFace( _3DMath::Surface* captureSu
 		triangleIter++;
 	}
 
+	if( insideCount == 0 && outsideCount == 0 )
+		return false;
+
 	_3DMath::Surface::Side dominantSide = _3DMath::Surface::OUTSIDE;
 	if( insideCount > outsideCount )
 		dominantSide = _3DMath::Surface::INSIDE;

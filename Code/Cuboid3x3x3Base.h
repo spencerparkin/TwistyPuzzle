@@ -17,7 +17,7 @@ public:
 	virtual void Reset( void ) override;
 	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation ) override;
 
-	void MakeHead( const _3DMath::LinearTransform& linearTransform, int extrusion );
+	void MakeHead( double sideLength, const _3DMath::LinearTransform& linearTransform, int extrusion, int maxExtrusion );
 
 	int negX, posX;
 	int negY, posY;

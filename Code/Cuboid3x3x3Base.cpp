@@ -29,31 +29,39 @@ Cuboid3x3x3Base::Cuboid3x3x3Base( int negX, int posX, int negY, int posY, int ne
 
 /*virtual*/ void Cuboid3x3x3Base::Reset( void )
 {
+	double sideLength = 5.0;
+
+	int maxExtrusion = 0;
+	maxExtrusion = MAX( maxExtrusion, negX );
+	maxExtrusion = MAX( maxExtrusion, posX );
+	maxExtrusion = MAX( maxExtrusion, negY );
+	maxExtrusion = MAX( maxExtrusion, posY );
+	maxExtrusion = MAX( maxExtrusion, negZ );
+	maxExtrusion = MAX( maxExtrusion, posZ );
+
 	_3DMath::LinearTransform transform;
 
 	transform.Identity();
-	MakeHead( transform, posY );
+	MakeHead( sideLength, transform, posY, maxExtrusion );
 
 	transform.SetRotation( _3DMath::Vector( 1.0, 0.0, 0.0 ), M_PI );
-	MakeHead( transform, negY );
+	MakeHead( sideLength, transform, negY, maxExtrusion );
 
 	transform.SetRotation( _3DMath::Vector( 1.0, 0.0, 0.0 ), M_PI / 2.0 );
-	MakeHead( transform, posZ );
+	MakeHead( sideLength, transform, posZ, maxExtrusion );
 
 	transform.SetRotation( _3DMath::Vector( 1.0, 0.0, 0.0 ), -M_PI / 2.0 );
-	MakeHead( transform, negZ );
+	MakeHead( sideLength, transform, negZ, maxExtrusion );
 
 	transform.SetRotation( _3DMath::Vector( 0.0, 0.0, 1.0 ), -M_PI / 2.0 );
-	MakeHead( transform, posX );
+	MakeHead( sideLength, transform, posX, maxExtrusion );
 
 	transform.SetRotation( _3DMath::Vector( 0.0, 0.0, 1.0 ), M_PI / 2.0 );
-	MakeHead( transform, negX );
+	MakeHead( sideLength, transform, negX, maxExtrusion );
 }
 
-void Cuboid3x3x3Base::MakeHead( const _3DMath::LinearTransform& linearTransform, int extrusion )
+void Cuboid3x3x3Base::MakeHead( double sideLength, const _3DMath::LinearTransform& linearTransform, int extrusion, int maxExtrusion )
 {
-	double sideLength = 5.0;
-
 	FaceList newFaceList;
 
 	double extraHeight = double( extrusion ) * sideLength / 3.0;
@@ -114,7 +122,7 @@ void Cuboid3x3x3Base::MakeHead( const _3DMath::LinearTransform& linearTransform,
 			face->color = orange;
 		else if( plane.normal.IsEqualTo( _3DMath::Vector( 0.0, 0.0, -1.0 ) ) )
 			face->color = red;
-		else if( plane.normal.IsEqualTo( _3DMath::Vector( 1.0, 0.0, 1.0 ) ) )
+		else if( plane.normal.IsEqualTo( _3DMath::Vector( 1.0, 0.0, 0.0 ) ) )
 			face->color = green;
 		else if( plane.normal.IsEqualTo( _3DMath::Vector( -1.0, 0.0, 0.0 ) ) )
 			face->color = blue;
@@ -126,10 +134,10 @@ void Cuboid3x3x3Base::MakeHead( const _3DMath::LinearTransform& linearTransform,
 		faceList.push_back( face );
 	}
 
-	for( int i = 0; i <= extrusion; i++ )
+	for( int i = 0; i <= maxExtrusion; i++ )
 	{
 		_3DMath::Vector center;
-		center.Set( 0.0, sideLength / 6.0 + double( extrusion ) * sideLength / 3.0, 0.0 );
+		center.Set( 0.0, sideLength / 6.0 + double(i) * sideLength / 3.0, 0.0 );
 
 		_3DMath::Plane plane;
 		plane.SetCenterAndNormal( center, _3DMath::Vector( 0.0, 1.0, 0.0 ) );
@@ -143,13 +151,19 @@ void Cuboid3x3x3Base::MakeHead( const _3DMath::LinearTransform& linearTransform,
 		CutShape* cutShape = new CutShape();
 		cutShape->surface = new _3DMath::PlaneSurface( plane );
 		cutShape->axisOfRotation = axisOfRotation;
-		cutShape->vectorLength = 4.0 + double( extrusion );
+		cutShape->vectorLength = 7.0 + double(i);
 		cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 		cutShapeList.push_back( cutShape );
 	}
 }
 
-// TODO: The cut-shape may need a virtual method: CanBeRotated().  This might also handle puzzles that lock up when jumbled
+//bool Cuboid3x3x3Base::CanBeRotated( CutShape* cutShape )
+//{
+//	TODO: Ray-cast for all 9 applicable heights.  If they're all height enough for the cut-shape,
+//        then I believe the answer is yes; no, otherwise.
+//}
+
+// TODO: The cut-shape will need a virtual method: CanBeRotated().  This might also handle puzzles that lock up when jumbled
 //       a certain way?  (If we could detect that.)  The easiest way to detect that would be to pre-cut a puzzle, then only
 //       let a cut-shape rotate if it doesn't cut anything.
 /*virtual*/ bool Cuboid3x3x3Base::ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation )
