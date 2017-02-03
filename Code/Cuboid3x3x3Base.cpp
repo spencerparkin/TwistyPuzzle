@@ -106,6 +106,23 @@ void Cuboid3x3x3Base::MakeHead( const _3DMath::LinearTransform& linearTransform,
 		Face* face = *iter;
 		newFaceList.erase( iter );
 		face->polygon->Transform( affineTransform );
+
+		_3DMath::Plane plane;
+		face->polygon->GetPlane( plane );
+
+		if( plane.normal.IsEqualTo( _3DMath::Vector( 0.0, 0.0, 1.0 ) ) )
+			face->color = orange;
+		else if( plane.normal.IsEqualTo( _3DMath::Vector( 0.0, 0.0, -1.0 ) ) )
+			face->color = red;
+		else if( plane.normal.IsEqualTo( _3DMath::Vector( 1.0, 0.0, 1.0 ) ) )
+			face->color = green;
+		else if( plane.normal.IsEqualTo( _3DMath::Vector( -1.0, 0.0, 0.0 ) ) )
+			face->color = blue;
+		else if( plane.normal.IsEqualTo( _3DMath::Vector( 0.0, 1.0, 0.0 ) ) )
+			face->color = white;
+		else if( plane.normal.IsEqualTo( _3DMath::Vector( 0.0, -1.0, 0.0 ) ) )
+			face->color = yellow;
+
 		faceList.push_back( face );
 	}
 
