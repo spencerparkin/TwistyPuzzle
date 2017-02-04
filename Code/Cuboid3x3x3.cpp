@@ -2,6 +2,8 @@
 
 #include "Cuboid3x3x3.h"
 
+#if 0
+
 wxIMPLEMENT_DYNAMIC_CLASS( Cuboid3x3x5, Cuboid3x3x3Base );
 
 Cuboid3x3x5::Cuboid3x3x5( void ) : Cuboid3x3x3Base( 0, 0, 1, 1, 0, 0 )
@@ -41,5 +43,7 @@ XCube::XCube( void ) : Cuboid3x3x3Base( 1, 1, 1, 1, 0, 0 )
 /*virtual*/ XCube::~XCube( void )
 {
 }
+
+#endif
 
 // Cuboid3x3x3.cpp
