@@ -49,9 +49,6 @@
     <ClInclude Include="Code\CurvyCopter3.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Permutation.h">
-      <Filter>Code</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Megaminx.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
@@ -164,9 +161,6 @@
     </ClCompile>
     <ClCompile Include="Code\CurvyCopter3.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Permutation.cpp">
-      <Filter>Code</Filter>
     </ClCompile>
     <ClCompile Include="Code\Megaminx.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
