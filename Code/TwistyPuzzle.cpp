@@ -1222,16 +1222,17 @@ void TwistyPuzzle::CutShape::CutUsingSurface( FaceList& faceList, _3DMath::Surfa
 
 		Face* face = *iter;
 
-		_3DMath::Polygon polygonArray[2];
-		if( face->polygon->SplitAgainstSurface( cuttingSurface, polygonArray, 20.0, 1.0, eps ) )
+		_3DMath::PolygonList polygonList;
+		if( face->polygon->SplitAgainstSurface( cuttingSurface, polygonList, 20.0, 1.0, eps ) )
 		{
-			for( int i = 0; i < 2; i++ )
+			while( polygonList.size() > 0 )
 			{
-				_3DMath::Polygon* polygon = new _3DMath::Polygon();
-				polygonArray[i].GetCopy( *polygon );
-				Face* newFace = new Face( polygon );
+				_3DMath::PolygonList::iterator iter = polygonList.begin();
+				_3DMath::Polygon* newPolygon = *iter;
+				polygonList.erase( iter );
+				Face* newFace = new Face( newPolygon );
 				newFace->color = face->color;
-				faceList.push_front( newFace );
+				faceList.push_back( newFace );
 			}
 
 			delete face;
