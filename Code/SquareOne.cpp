@@ -1,6 +1,7 @@
 // SquareOne.cpp
 
 #include "SquareOne.h"
+#include <wx/debug.h>
 
 wxIMPLEMENT_DYNAMIC_CLASS( SquareOne, TwistyPuzzle );
 
@@ -121,6 +122,23 @@ SquareOne::SquareOne( void )
 	bottomLeft = &wedgeArray[12];
 }
 
+void SquareOne::SanityCheck( void )
+{
+	int bigWedgeCount = 0;
+	int smallWedgeCount = 0;
+
+	for( int i = 0; i < 16; i++ )
+	{
+		if( wedgeArray[i].size == 1 )
+			smallWedgeCount++;
+		else if( wedgeArray[i].size == 2 )
+			bigWedgeCount++;
+	}
+
+	wxASSERT( bigWedgeCount == 8 );
+	wxASSERT( smallWedgeCount == 8 );
+}
+
 /*virtual*/ bool SquareOne::ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation )
 {
 	if( !rotation )
@@ -155,6 +173,7 @@ SquareOne::SquareOne( void )
 			turnCount--;
 		}
 
+		SanityCheck();
 		return true;
 	}
 	else if( cutShape->GetHandle() == leftCutShapeHandle || cutShape->GetHandle() == rightCutShapeHandle )
@@ -196,6 +215,7 @@ SquareOne::SquareOne( void )
 			}
 		}
 
+		SanityCheck();
 		return TwistyPuzzle::ApplyCutShapeWithRotation( cutShape, rotation );
 	}
 

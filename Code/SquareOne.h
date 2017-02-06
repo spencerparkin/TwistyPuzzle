@@ -41,6 +41,8 @@ public:
 
 	int Advance( Wedge*& wedgeA, Wedge*& wedgeB, Rotation::Direction direction );
 	void AdvanceAndAccumulate( Wedge*& wedge, Rotation::Direction direction, int& totalSize );
+
+	void SanityCheck( void );
 };
 
 // SquareOne.h
