@@ -129,6 +129,7 @@ public:
 		void GenerateCapturedFaceList( FaceList& faceList, FaceList& capturedFaceList );
 		void CutUsingSurface( FaceList& faceList, _3DMath::Surface* cuttingSurface, double eps = EPSILON );
 		bool DoesSurfaceCaptureFace( _3DMath::Surface* captureSurface, const Face* face );
+		void GetArrowTipPosition( const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, _3DMath::Vector& point ) const;
 
 		_3DMath::Surface* surface;
 		_3DMath::Line axisOfRotation;
@@ -157,7 +158,7 @@ public:
 	void BindCutShapeToCapturedFaces( CutShape* cutShape, FaceList& capturedFaceList );
 
 	CutShape* FindCutShapeWithLabel( const wxString& label );
-	CutShape* FindCutShapeNearestDirection( const _3DMath::Vector& direction, const _3DMath::AffineTransform& transform, TwistyPuzzle::CutShapeList::iterator* foundIter = nullptr );
+	CutShape* FindCutShapeNearestLine( const _3DMath::Line& line, const _3DMath::AffineTransform& transform, TwistyPuzzle::CutShapeList::iterator* foundIter = nullptr );
 	wxString FindLabelForCutShape( const CutShape* cutShape, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform );
 
 	void MakeBox( double width, double height, double depth );

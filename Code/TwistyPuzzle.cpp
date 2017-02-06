@@ -355,10 +355,8 @@ void TwistyPuzzle::SetupDynamicLabelsUsingCutShapeList( void )
 
 wxString TwistyPuzzle::FindLabelForCutShape( const CutShape* cutShape, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform )
 {
-	_3DMath::Vector center, vector, point;
-	transform.Transform( cutShape->axisOfRotation.center, center );
-	normalTransform.Transform( cutShape->axisOfRotation.normal, vector );
-	point.AddScale( center, vector, cutShape->vectorLength );
+	_3DMath::Vector point;
+	cutShape->GetArrowTipPosition( transform, normalTransform, point );
 
 	wxString label;
 	double smallestDistance = -1.0;
@@ -376,12 +374,12 @@ wxString TwistyPuzzle::FindLabelForCutShape( const CutShape* cutShape, const _3D
 	return label;
 }
 
-TwistyPuzzle::CutShape* TwistyPuzzle::FindCutShapeNearestDirection( const _3DMath::Vector& direction, const _3DMath::AffineTransform& transform, TwistyPuzzle::CutShapeList::iterator* foundIter /*= nullptr*/ )
+TwistyPuzzle::CutShape* TwistyPuzzle::FindCutShapeNearestLine( const _3DMath::Line& line, const _3DMath::AffineTransform& transform, TwistyPuzzle::CutShapeList::iterator* foundIter /*= nullptr*/ )
 {
 	_3DMath::LinearTransform normalTransform;
 	transform.linearTransform.GetNormalTransform( normalTransform );
 
-	double smallestAngle = 2.0 * M_PI;
+	double smallestDistance = 1000.0;
 	CutShape* nearestCutShape = nullptr;
 
 	if( foundIter )
@@ -391,13 +389,13 @@ TwistyPuzzle::CutShape* TwistyPuzzle::FindCutShapeNearestDirection( const _3DMat
 	{
 		TwistyPuzzle::CutShape* cutShape = *iter;
 
-		_3DMath::Vector normal;
-		normalTransform.Transform( cutShape->axisOfRotation.normal, normal );
+		_3DMath::Vector point;
+		cutShape->GetArrowTipPosition( transform, normalTransform, point );
 
-		double angle = normal.AngleBetween( direction );
-		if( angle < smallestAngle )
+		double distance = line.ShortestDistance( point );
+		if( distance < smallestDistance )
 		{
-			smallestAngle = angle;
+			smallestDistance = distance;
 			nearestCutShape = cutShape;
 			if( foundIter )
 				*foundIter = iter;
@@ -1165,6 +1163,14 @@ TwistyPuzzle::CutShape::CutShape( void )
 /*virtual*/ bool TwistyPuzzle::CutShape::CapturesFace( const Face* face )
 {
 	return DoesSurfaceCaptureFace( surface, face );
+}
+
+void TwistyPuzzle::CutShape::GetArrowTipPosition( const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, _3DMath::Vector& point ) const
+{
+	_3DMath::Vector center, vector;
+	transform.Transform( axisOfRotation.center, center );
+	normalTransform.Transform( axisOfRotation.normal, vector );
+	point.AddScale( center, vector, vectorLength );
 }
 
 bool TwistyPuzzle::CutShape::DoesSurfaceCaptureFace( _3DMath::Surface* captureSurface, const Face* face )

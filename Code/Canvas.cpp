@@ -13,6 +13,7 @@ int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE
 
 Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList )
 {
+	foviAngle = 70.0 * M_PI / 180.0;
 	selectedObjectHandle = 0;
 	eyeDistance = 20.0;
 	mouseDragMode = DRAG_MODE_NONE;
@@ -162,16 +163,6 @@ void Canvas::OnMouseMotion( wxMouseEvent& event )
 			rotation.linearTransform.SetRotation( yAxis, yAngle );
 			transform.Concatinate( rotation );
 
-			TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
-
-			if( axisSelectMode == AXIS_SELECT_AUTO )
-			{
-				_3DMath::Vector zAxis( 0.0, 0.0, 1.0 );
-				TwistyPuzzle::CutShape* cutShape = puzzle->FindCutShapeNearestDirection( zAxis, transform );
-				if( cutShape )
-					selectedObjectHandle = cutShape->GetHandle();
-			}
-
 			break;
 		}
 		case DRAG_MODE_ROTATE_FACES:
@@ -190,6 +181,41 @@ void Canvas::OnMouseMotion( wxMouseEvent& event )
 		}
 		case DRAG_MODE_NONE:
 		{
+			if( axisSelectMode == AXIS_SELECT_AUTO )
+			{
+				TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
+
+				GLint viewport[4];
+				glGetIntegerv( GL_VIEWPORT, viewport );
+
+				double viewportWidth = double( viewport[2] );
+				double viewportHeight = double( viewport[3] );
+				double aspectRatio = viewportWidth / viewportHeight;
+
+				double width = 2.0 * eyeDistance * tan( foviAngle / 2.0 );
+				double height = width;
+				if( aspectRatio > 1.0 )
+					width *= aspectRatio;
+				else
+					height /= aspectRatio;
+
+				_3DMath::Vector vector;
+				double lambda = double( mouseDragCurrentPos.x ) / viewportWidth;
+				vector.x = -width / 2.0 + lambda * width;
+				lambda = double( viewport[3] - 1 - mouseDragCurrentPos.y ) / viewportHeight;
+				vector.y = -height / 2.0 + lambda * height;
+				vector.z = 0.0;
+
+				_3DMath::Line line;
+				line.center.Set( 0.0, 0.0, eyeDistance );
+				line.normal.Subtract( vector, line.center );
+				line.normal.Normalize();
+				
+				TwistyPuzzle::CutShape* cutShape = puzzle->FindCutShapeNearestLine( line, transform );
+				if( cutShape )
+					selectedObjectHandle = cutShape->GetHandle();
+			}
+
 			break;
 		}
 	}
@@ -281,7 +307,7 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 		gluPickMatrix( x, y, w, h, viewport );
 	}
 
-	gluPerspective( 70.0, aspectRatio, 0.1, 1000.0 );
+	gluPerspective( foviAngle * 180.0 / M_PI, aspectRatio, 0.1, 1000.0 );
 
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();

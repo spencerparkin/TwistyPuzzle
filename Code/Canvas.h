@@ -71,6 +71,7 @@ private:
 		int DetermineCutShapeAndRotation( Canvas* canvas );
 	};
 
+	double foviAngle;
 	wxGLContext* context;
 	GLRenderer* renderer;
 	_3DMath::AffineTransform transform;
