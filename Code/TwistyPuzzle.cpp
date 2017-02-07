@@ -4,8 +4,10 @@
 #include "Application.h"
 #include "Frame.h"
 #include "ShaderProgram.h"
+#include "Canvas.h"
 #include <Surface.h>
 #include <ListFunctions.h>
+#include <Spline.h>
 #include <wx/wfstream.h>
 #include <wx/msgdlg.h>
 
@@ -107,6 +109,15 @@ bool TwistyPuzzle::CanGoBackward( void )
 	if( rotationHistoryIter == rotationHistory.begin() )
 		return false;
 	return true;
+}
+
+void TwistyPuzzle::TakeSnapshot( void )
+{
+	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
+	{
+		Face* face = *iter;
+		face->polygon->GetCenter( face->snapshotPoint );
+	}
 }
 
 TwistyPuzzle::CutShape* TwistyPuzzle::FindCutShapeWithLabel( const wxString& label )
@@ -741,9 +752,12 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	}
 }
 
-/*virtual*/ void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxes, bool renderAxisLabels, bool renderBorders )
+/*virtual*/ void TwistyPuzzle::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, int renderFlags )
 {
-	if( !shaderProgram && renderBorders )
+	if( renderMode == GL_SELECT )
+		renderFlags &= ~Canvas::RENDER_BORDERS;
+
+	if( !shaderProgram && ( renderFlags & Canvas::RENDER_BORDERS ) )
 	{
 		shaderProgram = new ShaderProgram();
 		if( !shaderProgram->Load( "face" ) )
@@ -756,12 +770,12 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	_3DMath::LinearTransform normalTransform;
 	transform.linearTransform.GetNormalTransform( normalTransform );
 
-	if( renderBorders )
+	if( renderFlags & Canvas::RENDER_BORDERS )
 	{
 		if( !shaderProgram->Bind() )
 		{
 			wxMessageBox( "Failed to find face shader program.", "Error", wxICON_ERROR | wxCENTRE, wxGetApp().GetFrame() );
-			renderBorders = false;
+			renderFlags &= ~Canvas::RENDER_BORDERS;
 		}
 		else
 		{
@@ -774,10 +788,10 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	{
 		Face* face = *iter;
 		face->UpdateTessellationIfNeeded();
-		face->Render( renderer, renderMode, transform, normalTransform, ( renderBorders ? shaderProgram : nullptr ) );
+		face->Render( renderer, renderMode, transform, normalTransform, ( ( renderFlags & Canvas::RENDER_BORDERS ) ? shaderProgram : nullptr ) );
 	}
 
-	if( renderBorders )
+	if( renderFlags & Canvas::RENDER_BORDERS )
 		shaderProgram->Unbind();
 
 	if( renderMode == GL_RENDER )
@@ -795,7 +809,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 		}
 	}
 
-	if( renderAxes )
+	if( renderFlags & Canvas::RENDER_AXES )
 	{
 		for( CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
 		{
@@ -818,7 +832,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 
 			renderer.DrawVector( vector, position, color, 0.5, 0.5 );
 
-			if( renderAxisLabels && renderMode == GL_RENDER && !cutShape->label.empty() )
+			if( ( renderFlags & Canvas::RENDER_AXIS_LABELS ) && renderMode == GL_RENDER && !cutShape->label.empty() )
 			{
 				FontSys::System* fontSystem = wxGetApp().GetFontSystem();
 				glColor4d( 0.9, 0.9, 0.9, 0.5 );
@@ -842,6 +856,15 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 				glPopMatrix();
 				glPopAttrib();
 			}
+		}
+	}
+
+	if( ( renderFlags & Canvas::RENDER_DIFF ) && renderMode == GL_RENDER )
+	{
+		for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
+		{
+			Face* face = *iter;
+			face->RenderSnapshotSpline( renderer, transform );
 		}
 	}
 }
@@ -1120,6 +1143,37 @@ void TwistyPuzzle::Face::Render( _3DMath::Renderer& renderer, GLenum renderMode,
 		}
 
 		glEnd();
+	}
+}
+
+void TwistyPuzzle::Face::RenderSnapshotSpline( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform )
+{
+	_3DMath::Vector center;
+	polygon->GetCenter( center );
+
+	if( !center.IsEqualTo( snapshotPoint ) )
+	{
+		double length = snapshotPoint.Length() + center.Length();
+
+		_3DMath::Vector axis;
+		axis.Cross( snapshotPoint, center );
+		axis.Normalize();
+
+		double angle = snapshotPoint.AngleBetween( center );
+
+		_3DMath::Vector pointA, pointB;
+		snapshotPoint.Rotate( axis, angle / 3.0, pointA );
+		snapshotPoint.Rotate( axis, 2.0 * angle / 3.0, pointB );
+
+		_3DMath::BezierSpline spline;
+		spline.controlPointList.push_back( snapshotPoint );
+		spline.controlPointList.push_back( pointA * ( length / pointA.Length() ) );
+		spline.controlPointList.push_back( pointB * ( length / pointB.Length() ) );
+		spline.controlPointList.push_back( center );
+
+		glColor3d( color.x, color.y, color.z );
+		glLineWidth( 1.5f );
+		renderer.DrawSpline( spline, transform, 1.0 );
 	}
 }
 

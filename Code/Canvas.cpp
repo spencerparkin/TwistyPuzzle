@@ -19,10 +19,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	mouseDragMode = DRAG_MODE_NONE;
 	grip = nullptr;
 	axisSelectMode = AXIS_SELECT_MANUAL;
-	renderAxes = true;
-	renderAxisLabels = true;
-	renderStats = false;
-	renderBorders = true;
+	renderFlags = RENDER_AXES | RENDER_AXIS_LABELS | RENDER_BORDERS;
 #if defined LINUX
 	timeOfLastWheelClickSeconds = 0.0;
 #endif
@@ -279,7 +276,7 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 
 	double aspectRatio = double( viewport[2] ) / double( viewport[3] );
 
-	if( renderStats )
+	if( renderFlags & RENDER_STATS )
 	{
 		glMatrixMode( GL_PROJECTION );
 		glLoadIdentity();
@@ -313,7 +310,7 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 	glLoadIdentity();
 	gluLookAt( 0.0, 0.0, eyeDistance, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
 
-	puzzle->Render( *renderer, transform, renderMode, selectedObjectHandle, renderAxes, renderAxisLabels, ( renderBorders && renderMode == GL_RENDER ? true : false ) );
+	puzzle->Render( *renderer, transform, renderMode, selectedObjectHandle, renderFlags );
 
 	glFlush();
 
@@ -419,9 +416,10 @@ void Canvas::OnMouseWheel( wxMouseEvent& event )
 	}
 }
 
-void Canvas::SetRenderAxisLabels( bool renderAxisLabels )
+void Canvas::SetRenderFlags( int renderFlags )
 {
-	this->renderAxisLabels = renderAxisLabels;
+	this->renderFlags = renderFlags;
+
 	wxGetApp().GetPuzzle()->UpdateCutShapeLabels( transform );
 }
 

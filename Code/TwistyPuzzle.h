@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <GL/glew.h>
 #include <wx/glcanvas.h>
 #include <wx/xml/xml.h>
 #include <wx/colour.h>
@@ -42,7 +43,7 @@ public:
 	static TwistyPuzzle* AllocateUsingFile( const wxString& file );
 
 	virtual void Clear( void );
-	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, bool renderAxes, bool renderAxisLabels, bool renderBorders );
+	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, int renderFlags );
 	virtual void RenderStats( const _3DMath::TimeKeeper& timeKeeper );
 	virtual void Reset( void ) = 0;
 	virtual bool SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown );
@@ -93,6 +94,8 @@ public:
 	bool ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper );
 	bool DequeueAndProcessNextRotation( void );
 
+	void TakeSnapshot( void );
+
 	class Face : public _3DMath::HandleObject
 	{
 	public:
@@ -107,11 +110,13 @@ public:
 		bool Load( const wxXmlNode* xmlFaceNode );
 		wxColour GetColor( void ) const;
 		void SetColor( const wxColour& colour );
+		void RenderSnapshotSpline( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform );
 
 		_3DMath::Vector color;
 		_3DMath::Polygon* polygon;
 		int boundCutShapeHandle;
 		bool tessellationNeeded;
+		_3DMath::Vector snapshotPoint;
 	};
 
 	typedef std::list< Face* > FaceList;

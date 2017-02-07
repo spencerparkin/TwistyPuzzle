@@ -3,6 +3,7 @@
 #pragma once
 
 #include <wx/app.h>
+#include <GL/glew.h>
 #include <FontSystem.h>
 
 class Frame;

@@ -45,10 +45,12 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	wxMenuItem* drawAxesMenuItem = new wxMenuItem( renderMenu, ID_DrawAxes, "Draw Axes", "Draw the rotation axes of the puzzle.", wxITEM_CHECK );
 	wxMenuItem* drawAxisLabelsMenuItem = new wxMenuItem( renderMenu, ID_DrawAxisLabels, "Draw Axis Labels", "Draw the names of each axis.  These are used in the command sequence text control.", wxITEM_CHECK );
 	wxMenuItem* drawStatsMenuItem = new wxMenuItem( renderMenu, ID_DrawStats, "Draw Stats", "Draw some statistics about the puzzle and its rendering.", wxITEM_CHECK );
+	wxMenuItem* drawDiffMenuItem = new wxMenuItem( renderMenu, ID_DrawDiff, "Draw Diff", "If you've taken a snap-shot, show the difference between the current state of the puzzle and the stored snap-shot.", wxITEM_CHECK );
 	renderMenu->Append( drawBordersMenuItem );
 	renderMenu->Append( drawAxesMenuItem );
 	renderMenu->Append( drawAxisLabelsMenuItem );
 	renderMenu->Append( drawStatsMenuItem );
+	renderMenu->Append( drawDiffMenuItem );
 
 	wxMenu* historyMenu = new wxMenu();
 	wxMenuItem* goForwardMenuItem = new wxMenuItem( historyMenu, ID_GoForward, "Go Forward\tF6", "Go forward in your rotation history." );
@@ -108,6 +110,7 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_MENU, &Frame::OnDrawAxisLabels, this, ID_DrawAxisLabels );
 	Bind( wxEVT_MENU, &Frame::OnDrawStats, this, ID_DrawStats );
 	Bind( wxEVT_MENU, &Frame::OnDrawBorders, this, ID_DrawBorders );
+	Bind( wxEVT_MENU, &Frame::OnDrawDiff, this, ID_DrawDiff );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_Solve );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_GoForward );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_GoBackward );
@@ -117,6 +120,7 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawAxisLabels );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawStats );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawBorders );
+	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawDiff );
 	Bind( wxEVT_COMMAND_TEXT_ENTER, &Frame::OnTextCtrlEnter, this );
 
 	timer.Start(1);
@@ -128,17 +132,43 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 
 void Frame::OnDrawAxes( wxCommandEvent& event )
 {
-	canvas->SetRenderAxes( !canvas->GetRenderAxes() );
+	int renderFlags = canvas->GetRenderFlags();
+	renderFlags ^= Canvas::RENDER_AXES;
+	canvas->SetRenderFlags( renderFlags );
 }
 
 void Frame::OnDrawAxisLabels( wxCommandEvent& event )
 {
-	canvas->SetRenderAxisLabels( !canvas->GetRenderAxisLabels() );
+	int renderFlags = canvas->GetRenderFlags();
+	renderFlags ^= Canvas::RENDER_AXIS_LABELS;
+	canvas->SetRenderFlags( renderFlags );
 }
 
 void Frame::OnDrawStats( wxCommandEvent& event )
 {
-	canvas->SetRenderStats( !canvas->GetRenderStats() );
+	int renderFlags = canvas->GetRenderFlags();
+	renderFlags ^= Canvas::RENDER_STATS;
+	canvas->SetRenderFlags( renderFlags );
+}
+
+void Frame::OnDrawBorders( wxCommandEvent& event )
+{
+	int renderFlags = canvas->GetRenderFlags();
+	renderFlags ^= Canvas::RENDER_BORDERS;
+	canvas->SetRenderFlags( renderFlags );
+}
+
+void Frame::OnDrawDiff( wxCommandEvent& event )
+{
+	int renderFlags = canvas->GetRenderFlags();
+	renderFlags ^= Canvas::RENDER_DIFF;
+	canvas->SetRenderFlags( renderFlags );
+}
+
+void Frame::OnTakeSnapshot( wxCommandEvent& event )
+{
+	wxGetApp().GetPuzzle()->TakeSnapshot();
+	wxMessageBox( "Snap-shot taken!", "Snapshot", wxICON_INFORMATION, this );
 }
 
 void Frame::OnTextCtrlEnter( wxCommandEvent& event )
@@ -336,11 +366,6 @@ void Frame::OnAbout( wxCommandEvent& event )
 	wxAboutBox( aboutDialogInfo );
 }
 
-void Frame::OnDrawBorders( wxCommandEvent& event )
-{
-	canvas->SetRenderBorders( !canvas->GetRenderBorders() );
-}
-
 void Frame::OnExit( wxCommandEvent& event )
 {
 	timer.Stop();
@@ -448,22 +473,27 @@ void Frame::OnUpdateUI( wxUpdateUIEvent& event )
 			}
 			case ID_DrawAxes:
 			{
-				event.Check( canvas->GetRenderAxes() );
+				event.Check( ( canvas->GetRenderFlags() & Canvas::RENDER_AXES ) ? true : false );
 				break;
 			}
 			case ID_DrawAxisLabels:
 			{
-				event.Check( canvas->GetRenderAxisLabels() );
+				event.Check( ( canvas->GetRenderFlags() & Canvas::RENDER_AXIS_LABELS ) ? true : false );
 				break;
 			}
 			case ID_DrawStats:
 			{
-				event.Check( canvas->GetRenderStats() );
+				event.Check( ( canvas->GetRenderFlags() & Canvas::RENDER_STATS ) ? true : false );
 				break;
 			}
 			case ID_DrawBorders:
 			{
-				event.Check( canvas->GetRenderBorders() );
+				event.Check( ( canvas->GetRenderFlags() & Canvas::RENDER_BORDERS ) ? true : false );
+				break;
+			}
+			case ID_DrawDiff:
+			{
+				event.Check( ( canvas->GetRenderFlags() & Canvas::RENDER_DIFF ) ? true : false );
 				break;
 			}
 		}

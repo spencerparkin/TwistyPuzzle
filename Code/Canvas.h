@@ -31,14 +31,17 @@ public:
 
 	AxisSelectMode axisSelectMode;
 
-	void SetRenderAxes( bool renderAxes ) { this->renderAxes = renderAxes; }
-	bool GetRenderAxes( void ) { return renderAxes; }
-	void SetRenderAxisLabels( bool renderAxisLabels );
-	bool GetRenderAxisLabels( void ) { return renderAxisLabels; }
-	void SetRenderStats( bool renderStats ) { this->renderStats = renderStats; }
-	bool GetRenderStats( void ) { return renderStats; }
-	void SetRenderBorders( bool renderBorders ) { this->renderBorders = renderBorders; }
-	bool GetRenderBorders( void ) { return renderBorders; }
+	enum RenderFlag
+	{
+		RENDER_AXES =				0x00000001,
+		RENDER_AXIS_LABELS =		0x00000002,
+		RENDER_STATS =				0x00000004,
+		RENDER_BORDERS =			0x00000008,
+		RENDER_DIFF =				0x00000010,
+	};
+
+	void SetRenderFlags( int renderFlags );
+	int GetRenderFlags( void ) { return renderFlags; }
 
 private:
 
@@ -82,10 +85,7 @@ private:
 	int selectedObjectHandle;
 	wxTimeKeeper timeKeeper;
 	Grip* grip;
-	bool renderAxes;
-	bool renderAxisLabels;
-	bool renderStats;
-	bool renderBorders;
+	int renderFlags;
 #if defined LINUX
 	double timeOfLastWheelClickSeconds;
 #endif
