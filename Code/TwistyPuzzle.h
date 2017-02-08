@@ -95,6 +95,7 @@ public:
 	bool DequeueAndProcessNextRotation( void );
 
 	void TakeSnapshot( void );
+	void ClearAllSnapshotPolylines( void );
 
 	class Face : public _3DMath::HandleObject
 	{
@@ -117,6 +118,7 @@ public:
 		int boundCutShapeHandle;
 		bool tessellationNeeded;
 		_3DMath::Vector snapshotPoint;
+		_3DMath::VectorArray splinePolylineArray;
 	};
 
 	typedef std::list< Face* > FaceList;

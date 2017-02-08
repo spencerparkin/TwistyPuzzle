@@ -37,8 +37,11 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	wxMenu* interfaceMenu = new wxMenu();
 	wxMenuItem* selectAxisMenuItem = new wxMenuItem( interfaceMenu, ID_ManualSelectAxis, "Manual Select Axis", "Manually select the axis to rotate about with the mouse wheel.", wxITEM_CHECK );
 	wxMenuItem* nearestAxisMenuItem = new wxMenuItem( interfaceMenu, ID_AutoSelectAxis, "Auto Select Axis", "Auto-select the axis to rotate about with the mouse wheel.", wxITEM_CHECK );
+	wxMenuItem* takeSnapshotMenuItem = new wxMenuItem( interfaceMenu, ID_TakeSnapshot, "Take Snap-shot", "Take a snap-shot of the puzzle faces for diff-ing later." );
 	interfaceMenu->Append( selectAxisMenuItem );
 	interfaceMenu->Append( nearestAxisMenuItem );
+	interfaceMenu->AppendSeparator();
+	interfaceMenu->Append( takeSnapshotMenuItem );
 
 	wxMenu* renderMenu = new wxMenu();
 	wxMenuItem* drawBordersMenuItem = new wxMenuItem( renderMenu, ID_DrawBorders, "Draw Borders", "Draw a crappy border around faces.", wxITEM_CHECK );
@@ -111,6 +114,7 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_MENU, &Frame::OnDrawStats, this, ID_DrawStats );
 	Bind( wxEVT_MENU, &Frame::OnDrawBorders, this, ID_DrawBorders );
 	Bind( wxEVT_MENU, &Frame::OnDrawDiff, this, ID_DrawDiff );
+	Bind( wxEVT_MENU, &Frame::OnTakeSnapshot, this, ID_TakeSnapshot );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_Solve );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_GoForward );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_GoBackward );

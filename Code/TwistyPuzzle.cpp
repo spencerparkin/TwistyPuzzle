@@ -118,6 +118,17 @@ void TwistyPuzzle::TakeSnapshot( void )
 		Face* face = *iter;
 		face->polygon->GetCenter( face->snapshotPoint );
 	}
+
+	ClearAllSnapshotPolylines();
+}
+
+void TwistyPuzzle::ClearAllSnapshotPolylines( void )
+{
+	for( FaceList::iterator iter = faceList.begin(); iter != faceList.end(); iter++ )
+	{
+		Face* face = *iter;
+		face->splinePolylineArray.clear();
+	}
 }
 
 TwistyPuzzle::CutShape* TwistyPuzzle::FindCutShapeWithLabel( const wxString& label )
@@ -282,6 +293,8 @@ void TwistyPuzzle::BindCutShapeToCapturedFaces( CutShape* cutShape, FaceList& ca
 		// have more to do with inaccuracy in the original vertex calculations.
 
 		needsSaving = true;
+
+		ClearAllSnapshotPolylines();
 	}
 
 	return true;
@@ -1153,27 +1166,51 @@ void TwistyPuzzle::Face::RenderSnapshotSpline( _3DMath::Renderer& renderer, cons
 
 	if( !center.IsEqualTo( snapshotPoint ) )
 	{
-		double length = snapshotPoint.Length() + center.Length();
+		if( splinePolylineArray.size() == 0 )
+		{
+			_3DMath::Vector axis;
+			axis.Cross( snapshotPoint, center );
+			if( axis.IsZero() )
+				center.Orthogonal( axis );
+			axis.Normalize();
 
-		_3DMath::Vector axis;
-		axis.Cross( snapshotPoint, center );
-		axis.Normalize();
+			double angle = snapshotPoint.AngleBetween( center );
 
-		double angle = snapshotPoint.AngleBetween( center );
+			int steps = 10;
+			double angleDelta = angle / double( steps );
 
-		_3DMath::Vector pointA, pointB;
-		snapshotPoint.Rotate( axis, angle / 3.0, pointA );
-		snapshotPoint.Rotate( axis, 2.0 * angle / 3.0, pointB );
+			_3DMath::BezierSpline spline;
+			spline.controlPointList.push_back( snapshotPoint );
 
-		_3DMath::BezierSpline spline;
-		spline.controlPointList.push_back( snapshotPoint );
-		spline.controlPointList.push_back( pointA * ( length / pointA.Length() ) );
-		spline.controlPointList.push_back( pointB * ( length / pointB.Length() ) );
-		spline.controlPointList.push_back( center );
+			double length = snapshotPoint.Length() + center.Length();
+			_3DMath::Vector point = snapshotPoint;
+			point.Scale( length / point.Length() );
 
-		glColor3d( color.x, color.y, color.z );
-		glLineWidth( 1.5f );
-		renderer.DrawSpline( spline, transform, 1.0 );
+			angle = 0.0;
+			for( int i = 0; i <= steps; i++ )
+			{
+				spline.controlPointList.push_back( point );
+				point.Rotate( axis, angleDelta );
+			}
+
+			spline.controlPointList.push_back( center );
+
+			spline.CalcSplinePolyline( 1.0, splinePolylineArray );
+		}
+
+		glColor3d( color.x / 2.0, color.y / 2.0, color.z / 2.0 );
+		glLineWidth( 3.f );
+
+		glBegin( GL_LINE_STRIP );
+
+		for( int i = 0; i < ( signed )splinePolylineArray.size(); i++ )
+		{
+			_3DMath::Vector point = splinePolylineArray[i];
+			transform.Transform( point );
+			glVertex3f( point.x, point.y, point.z );
+		}
+
+		glEnd();
 	}
 }
 
