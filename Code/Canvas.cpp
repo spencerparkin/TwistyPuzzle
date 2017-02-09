@@ -39,6 +39,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	Bind( wxEVT_MOUSE_CAPTURE_LOST, &Canvas::OnMouseCaptureLost, this );
 	Bind( wxEVT_MOUSEWHEEL, &Canvas::OnMouseWheel, this );
 	Bind( wxEVT_RIGHT_DCLICK, &Canvas::OnMouseRightDoubleClick, this );
+	Bind( wxEVT_CHAR_HOOK, &Canvas::OnKeyDown, this );
 }
 
 /*virtual*/ Canvas::~Canvas( void )
@@ -46,6 +47,15 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	delete context;
 	delete renderer;
 	delete grip;
+}
+
+void Canvas::OnKeyDown( wxKeyEvent& event )
+{
+	// Do nothing here.  I'm not sure if this is an issue on Linux, but on
+	// Windows, unless I register this callback, pressing the ALT key will
+	// change focus from the canvas to the menu-bar.  This is undesirable,
+	// because I'm using ALT as a modifier for actions performed in the canvas.
+	// When the focus is taken away, I no longer get motion events in the canvas.
 }
 
 void Canvas::OnMouseRightDown( wxMouseEvent& event )

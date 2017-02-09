@@ -57,6 +57,7 @@ private:
 	void OnMouseMotion( wxMouseEvent& event );
 	void OnMouseCaptureLost( wxMouseCaptureLostEvent& event );
 	void OnMouseRightDoubleClick( wxMouseEvent& event );
+	void OnKeyDown( wxKeyEvent& event );
 
 	void BindContext( void );
 	void Render( GLenum renderMode, wxPoint* mousePos = nullptr, int* objectHandle = nullptr );
