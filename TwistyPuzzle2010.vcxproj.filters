@@ -25,9 +25,6 @@
     <ClCompile Include="Code\HtmlFrame.cpp">
       <Filter>Code</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Permutation.cpp">
-      <Filter>Code</Filter>
-    </ClCompile>
     <ClCompile Include="Code\TwistyPuzzle.cpp">
       <Filter>Code</Filter>
     </ClCompile>
@@ -109,6 +106,9 @@
     <ClCompile Include="Code\Gem8.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
+    <ClCompile Include="Code\ShaderProgram.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Application.h">
@@ -124,9 +124,6 @@
       <Filter>Code</Filter>
     </ClInclude>
     <ClInclude Include="Code\HtmlFrame.h">
-      <Filter>Code</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Permutation.h">
       <Filter>Code</Filter>
     </ClInclude>
     <ClInclude Include="Code\TwistyPuzzle.h">
@@ -209,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="Code\Gem8.h">
       <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ShaderProgram.h">
+      <Filter>Code</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

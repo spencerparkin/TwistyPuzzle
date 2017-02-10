@@ -49,14 +49,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;__WXMSW__;_UNICODE_;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\wxWidgets-3.0.2\include;C:\wxWidgets-3.0.2\include\msvc;../3DMath\Code;../boost_1_63_0;../FontSystem/Code/;../freetype-2.7.1/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;__WXMSW__;_UNICODE_;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_NO_CRT_STDIO_INLINE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\wxWidgets-3.0.2\include;C:\wxWidgets-3.0.2\include\msvc;../3DMath\Code;../boost_1_63_0;../FontSystem/Code/;../freetype-2.7.1/include;../../glew-2.0.0/include;../../freetype-2.4.7/include;../../boost_1_59_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:/wxWidgets-3.0.2/lib/vc_dll;../3DMath/Debug/;../FontSystem/Debug/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>wxmsw30ud_core.lib;wxbase30ud.lib;wxmsw30ud_gl.lib;3DMath2010.lib;opengl32.lib;glu32.lib;FontSystem2010.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/wxWidgets-3.0.2/lib/vc_dll;../3DMath/Debug/;../FontSystem/Debug/;../../glew-2.0.0/lib/Release/Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxmsw30ud_core.lib;wxbase30ud.lib;wxmsw30ud_gl.lib;3DMath2010.lib;opengl32.lib;glu32.lib;glew32.lib;FontSystem2010.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -97,13 +97,13 @@
     <ClCompile Include="Code\HtmlFrame.cpp" />
     <ClCompile Include="Code\MasterPyraminx.cpp" />
     <ClCompile Include="Code\Megaminx.cpp" />
-    <ClCompile Include="Code\Permutation.cpp" />
     <ClCompile Include="Code\Pyraminx.cpp" />
     <ClCompile Include="Code\PyraminxBase.cpp" />
     <ClCompile Include="Code\Rubiks2x2x2.cpp" />
     <ClCompile Include="Code\Rubiks2x2x3.cpp" />
     <ClCompile Include="Code\Rubiks2x3x3.cpp" />
     <ClCompile Include="Code\Rubiks3x3x3.cpp" />
+    <ClCompile Include="Code\ShaderProgram.cpp" />
     <ClCompile Include="Code\Skewb.cpp" />
     <ClCompile Include="Code\SkewbDiamond.cpp" />
     <ClCompile Include="Code\SkewbUltimate.cpp" />
@@ -132,13 +132,13 @@
     <ClInclude Include="Code\HtmlFrame.h" />
     <ClInclude Include="Code\MasterPyraminx.h" />
     <ClInclude Include="Code\Megaminx.h" />
-    <ClInclude Include="Code\Permutation.h" />
     <ClInclude Include="Code\Pyraminx.h" />
     <ClInclude Include="Code\PyraminxBase.h" />
     <ClInclude Include="Code\Rubiks2x2x2.h" />
     <ClInclude Include="Code\Rubiks2x2x3.h" />
     <ClInclude Include="Code\Rubiks2x3x3.h" />
     <ClInclude Include="Code\Rubiks3x3x3.h" />
+    <ClInclude Include="Code\ShaderProgram.h" />
     <ClInclude Include="Code\Skewb.h" />
     <ClInclude Include="Code\SkewbDiamond.h" />
     <ClInclude Include="Code\SkewbUltimate.h" />

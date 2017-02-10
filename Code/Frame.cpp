@@ -377,9 +377,11 @@ void Frame::OnAbout( wxCommandEvent& event )
 
 void Frame::OnExit( wxCommandEvent& event )
 {
-	timer.Stop();
-
-	Close( true );
+	if( SaveProtect() )
+	{
+		timer.Stop();
+		Close( true );
+	}
 }
 
 void Frame::OnTimer( wxTimerEvent& event )
