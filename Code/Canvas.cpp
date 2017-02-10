@@ -51,11 +51,19 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 
 void Canvas::OnKeyDown( wxKeyEvent& event )
 {
-	// Do nothing here.  I'm not sure if this is an issue on Linux, but on
-	// Windows, unless I register this callback, pressing the ALT key will
-	// change focus from the canvas to the menu-bar.  This is undesirable,
-	// because I'm using ALT as a modifier for actions performed in the canvas.
-	// When the focus is taken away, I no longer get motion events in the canvas.
+	if( event.GetKeyCode() == WXK_ALT )
+	{
+		// Do nothing here.  I'm not sure if this is an issue on Linux, but on
+		// Windows, unless I register this callback, pressing the ALT key will
+		// change focus from the canvas to the menu-bar.  This is undesirable,
+		// because I'm using ALT as a modifier for actions performed in the canvas.
+		// When the focus is taken away, I no longer get motion events in the canvas.
+	}
+	else
+	{
+		// We didn't handle it.
+		event.Skip();
+	}
 }
 
 void Canvas::OnMouseRightDown( wxMouseEvent& event )
