@@ -6,6 +6,7 @@
 #include <wx/timer.h>
 #include <wx/menu.h>
 #include <wx/textctrl.h>
+#include <wx/slider.h>
 
 class Canvas;
 
@@ -80,6 +81,7 @@ private:
 
 	Canvas* canvas;
 	wxTextCtrl* textCtrl;
+	wxSlider* sliderCtrl;
 	wxTimer timer;
 };
 

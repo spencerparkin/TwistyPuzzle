@@ -12,7 +12,6 @@
 #include <wx/numdlg.h>
 #include <wx/msgdlg.h>
 #include <wx/filedlg.h>
-#include <wx/textctrl.h>
 #include <boost/tokenizer.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -82,12 +81,20 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 
 	canvas = new Canvas( this );
 
-	textCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER | wxTE_LEFT );
+	wxPanel* controlPanel = new wxPanel( this, wxID_ANY );
 
-	wxBoxSizer* boxSizer = new wxBoxSizer( wxVERTICAL );
-	boxSizer->Add( canvas, 1, wxGROW );
-	boxSizer->Add( textCtrl, 0, wxALL | wxGROW, 0 );
-	SetSizer( boxSizer );
+	textCtrl = new wxTextCtrl( controlPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER | wxTE_LEFT );
+	sliderCtrl = new wxSlider( controlPanel, wxID_ANY, ( int )canvas->GetFoviAngleDegrees(), 40, 180, wxDefaultPosition, wxSize( 100, -1 ) );
+
+	wxBoxSizer* horizBoxSizer = new wxBoxSizer( wxHORIZONTAL );
+	horizBoxSizer->Add( textCtrl, 0, wxGROW );
+	horizBoxSizer->Add( sliderCtrl, 1 );
+	controlPanel->SetSizer( horizBoxSizer );
+
+	wxBoxSizer* vertBoxSizer = new wxBoxSizer( wxVERTICAL );
+	vertBoxSizer->Add( canvas, 1, wxGROW );
+	vertBoxSizer->Add( controlPanel, 0 );
+	SetSizer( vertBoxSizer );
 
 	wxAcceleratorEntry acceleratorEntries[3];
 	acceleratorEntries[0].Set( wxACCEL_NORMAL, WXK_F5, ID_GoBackward );
