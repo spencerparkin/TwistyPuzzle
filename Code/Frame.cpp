@@ -297,6 +297,8 @@ bool Frame::Save( void )
 		fileName.SetExt( "xml" );	// This must be done on Linux and won't hurt other platforms.
 		file = fileName.GetFullPath();
 
+		wxBusyCursor busyCursor;
+
 		if( !puzzle->Save( file ) )
 		{
 			wxMessageBox( "Failed to save.", "Error", wxCENTRE | wxICON_ERROR, this );
@@ -314,6 +316,9 @@ bool Frame::Load( void )
 	{
 		wxString file = fileDialog.GetPath();
 		TwistyPuzzle* puzzle = TwistyPuzzle::AllocateUsingFile( file );
+
+		wxBusyCursor busyCursor;
+
 		if( puzzle->Load( file ) )
 			wxGetApp().SetPuzzle( puzzle );
 		else
