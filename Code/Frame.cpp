@@ -83,17 +83,17 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 
 	wxPanel* controlPanel = new wxPanel( this, wxID_ANY );
 
-	textCtrl = new wxTextCtrl( controlPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER | wxTE_LEFT );
-	sliderCtrl = new wxSlider( controlPanel, wxID_ANY, ( int )canvas->GetFoviAngleDegrees(), 40, 180, wxDefaultPosition, wxSize( 100, -1 ) );
+	textCtrl = new wxTextCtrl( controlPanel, ID_SequencedText, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER | wxTE_LEFT );
+	sliderCtrl = new wxSlider( controlPanel, ID_FoviSlider, ( int )canvas->GetFoviAngleDegrees(), 20, 100, wxDefaultPosition, wxSize( 100, -1 ) );
 
 	wxBoxSizer* horizBoxSizer = new wxBoxSizer( wxHORIZONTAL );
-	horizBoxSizer->Add( textCtrl, 0, wxGROW );
-	horizBoxSizer->Add( sliderCtrl, 1 );
+	horizBoxSizer->Add( textCtrl, 1, wxGROW );
+	horizBoxSizer->Add( sliderCtrl, 0 );
 	controlPanel->SetSizer( horizBoxSizer );
 
 	wxBoxSizer* vertBoxSizer = new wxBoxSizer( wxVERTICAL );
 	vertBoxSizer->Add( canvas, 1, wxGROW );
-	vertBoxSizer->Add( controlPanel, 0 );
+	vertBoxSizer->Add( controlPanel, 0, wxGROW );
 	SetSizer( vertBoxSizer );
 
 	wxAcceleratorEntry acceleratorEntries[3];
@@ -132,13 +132,20 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawStats );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawBorders );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawDiff );
-	Bind( wxEVT_COMMAND_TEXT_ENTER, &Frame::OnTextCtrlEnter, this );
+	Bind( wxEVT_COMMAND_TEXT_ENTER, &Frame::OnTextCtrlEnter, this, ID_SequencedText );
+	Bind( wxEVT_SLIDER, &Frame::OnFoviSlider, this, ID_FoviSlider );
 
 	timer.Start(1);
 }
 
 /*virtual*/ Frame::~Frame( void )
 {
+}
+
+void Frame::OnFoviSlider( wxCommandEvent& event )
+{
+	double angleDegrees = ( double )sliderCtrl->GetValue();
+	canvas->SetFoviAngleDegrees( angleDegrees );
 }
 
 void Frame::OnDrawAxes( wxCommandEvent& event )

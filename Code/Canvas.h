@@ -43,9 +43,9 @@ public:
 	void SetRenderFlags( int renderFlags );
 	int GetRenderFlags( void ) { return renderFlags; }
 
-	double GetFoviAngleDegrees( void ) { return foviAngle * M_PI / 180.0; }
-	void SetFoviAngleDegrees( double foviAngle ) { this->foviAngle = foviAngle * 180.0 / M_PI; }
-
+	double GetFoviAngleDegrees( void ) { return foviAngle * 180.0 / M_PI; }
+	void SetFoviAngleDegrees( double foviAngle ) { this->foviAngle = foviAngle * M_PI / 180.0; }
+	
 private:
 
 	void OnPaint( wxPaintEvent& event );
