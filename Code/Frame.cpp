@@ -203,6 +203,8 @@ void Frame::OnTextCtrlEnter( wxCommandEvent& event )
 	{
 		TwistyPuzzle::CutShape* cutShape;
 		bool inverse;
+		bool special;
+		bool alternate;
 	};
 
 	std::list< Element > elementList;
@@ -217,12 +219,23 @@ void Frame::OnTextCtrlEnter( wxCommandEvent& event )
 
 		Element element;
 		element.inverse = false;
+		element.special = false;
+		element.alternate = false;
 		
 		char lastChar = label.GetChar( label.Length() - 1 );
 		if( lastChar == 'i' )
 		{
 			label.Truncate( label.Length() - 1 );
 			element.inverse = true;
+		}
+
+		char firstChar = label.GetChar(0);
+		if( firstChar == '!' || firstChar == '^' )
+		{
+			element.special = true;
+			if( firstChar == '^' )
+				element.alternate = true;
+			label.erase( 0, 1 );
 		}
 
 		element.cutShape = puzzle->FindCutShapeWithLabel( label );
@@ -239,13 +252,22 @@ void Frame::OnTextCtrlEnter( wxCommandEvent& event )
 	while( iter != elementList.end() )
 	{
 		Element& element = *iter;
+		if( element.special )
+		{
+			double wheelClicks = 1.0;
+			if( element.inverse )
+				wheelClicks = -wheelClicks;
+			puzzle->SpecialAction( 1.0, element.cutShape->GetHandle(), element.alternate );
+		}
+		else
+		{
+			TwistyPuzzle::Rotation::Direction rotDir = TwistyPuzzle::Rotation::DIR_CW;
+			if( element.inverse )
+				rotDir = TwistyPuzzle::Rotation::DIR_CCW;
 
-		TwistyPuzzle::Rotation::Direction rotDir = TwistyPuzzle::Rotation::DIR_CW;
-		if( element.inverse )
-			rotDir = TwistyPuzzle::Rotation::DIR_CCW;
-
-		TwistyPuzzle::Rotation* rotation = new TwistyPuzzle::Rotation( element.cutShape->GetHandle(), rotDir );
-		puzzle->EnqueueRotation( rotation );
+			TwistyPuzzle::Rotation* rotation = new TwistyPuzzle::Rotation( element.cutShape->GetHandle(), rotDir );
+			puzzle->EnqueueRotation( rotation );
+		}
 
 		iter++;
 	}
