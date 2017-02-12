@@ -338,7 +338,7 @@ bool Frame::Save( void )
 {
 	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
 
-	wxFileDialog fileDialog( this, "Save puzzle to file.", wxEmptyString, wxEmptyString, "XML file (*.xml)|*.xml", wxFD_SAVE );
+	wxFileDialog fileDialog( this, "Save puzzle to file.", wxEmptyString, wxEmptyString, "XML file (*.xml)|*.xml", wxFD_SAVE | wxFD_OVERWRITE_PROMPT );
 	if( fileDialog.ShowModal() == wxID_OK )
 	{
 		wxString file = fileDialog.GetPath();

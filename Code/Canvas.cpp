@@ -488,6 +488,9 @@ Canvas::Grip::~Grip( void )
 
 int Canvas::Grip::DetermineCutShapeAndRotation( Canvas* canvas )
 {
+	// TODO: If two axes overlap, then we need to choose the one that captures fewer faces.  Is that right?  I want the dogic to work better with the right-click-&-drag interface.
+	// TODO: If the face handle goes stale, then we need to reselect.  I want an uncut puzzle to turn better with the right-click-&-drag interface.
+
 	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
 	if( !puzzle )
 		return 0;
