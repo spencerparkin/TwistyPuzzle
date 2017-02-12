@@ -370,32 +370,37 @@ void TwistyPuzzle::SetupDynamicLabelsUsingCutShapeList( void )
 	_3DMath::LinearTransform normalTransform;
 	transform.linearTransform.GetNormalTransform( normalTransform );
 
+	std::list< std::string > labelList;
+	for( LabelMap::iterator iter = labelMap.begin(); iter != labelMap.end(); iter++ )
+		labelList.push_back( iter->first );
+
+	// This isn't the best algorithm for doing this, but it does ensure unique labeling.
 	for( CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
 	{
 		TwistyPuzzle::CutShape* cutShape = *iter;
-		cutShape->label = FindLabelForCutShape( cutShape, transform, normalTransform );
-	}
-}
+		
+		_3DMath::Vector point;
+		cutShape->GetArrowTipPosition( transform, normalTransform, point );
 
-wxString TwistyPuzzle::FindLabelForCutShape( const CutShape* cutShape, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform )
-{
-	_3DMath::Vector point;
-	cutShape->GetArrowTipPosition( transform, normalTransform, point );
+		double smallestDistance = -1.0;
 
-	wxString label;
-	double smallestDistance = -1.0;
+		std::list< std::string >::iterator labelIterFound = labelList.end();
 
-	for( LabelMap::iterator iter = labelMap.begin(); iter != labelMap.end(); iter++ )
-	{
-		double distance = iter->second.Distance( point );
-		if( smallestDistance < 0.0 || distance < smallestDistance )
+		for( std::list< std::string >::iterator labelIter = labelList.begin(); labelIter != labelList.end(); labelIter++ )
 		{
-			smallestDistance = distance;
-			label = iter->first;
+			LabelMap::iterator mapIter = labelMap.find( *labelIter );
+			double distance = mapIter->second.Distance( point );
+			if( smallestDistance < 0.0 || distance < smallestDistance )
+			{
+				smallestDistance = distance;
+				labelIterFound = labelIter;
+			}
 		}
-	}
 
-	return label;
+		LabelMap::iterator mapIter = labelMap.find( *labelIterFound );
+		cutShape->label = mapIter->first;
+		labelList.erase( labelIterFound );
+	}
 }
 
 TwistyPuzzle::CutShape* TwistyPuzzle::FindCutShapeNearestLine( const _3DMath::Line& line, const _3DMath::AffineTransform& transform, TwistyPuzzle::CutShapeList::iterator* foundIter /*= nullptr*/ )

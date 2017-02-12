@@ -166,7 +166,6 @@ public:
 
 	CutShape* FindCutShapeWithLabel( const wxString& label );
 	CutShape* FindCutShapeNearestLine( const _3DMath::Line& line, const _3DMath::AffineTransform& transform, TwistyPuzzle::CutShapeList::iterator* foundIter = nullptr );
-	wxString FindLabelForCutShape( const CutShape* cutShape, const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform );
 
 	void MakeBox( double width, double height, double depth );
 

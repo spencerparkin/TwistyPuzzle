@@ -19,7 +19,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	mouseDragMode = DRAG_MODE_NONE;
 	grip = nullptr;
 	axisSelectMode = AXIS_SELECT_MANUAL;
-	renderFlags = RENDER_AXES | RENDER_AXIS_LABELS | RENDER_BORDERS;
+	renderFlags = RENDER_AXES | RENDER_AXIS_LABELS | RENDER_BORDERS | RENDER_DYNAMIC_LABELS;
 #if defined LINUX
 	timeOfLastWheelClickSeconds = 0.0;
 #endif
@@ -257,7 +257,8 @@ void Canvas::Render( GLenum renderMode, wxPoint* mousePos /*= nullptr*/, int* ob
 	{
 		Animate();
 
-		puzzle->UpdateCutShapeLabels( transform );
+		if( renderFlags & RENDER_DYNAMIC_LABELS )
+			puzzle->UpdateCutShapeLabels( transform );
 	}
 
 	if( objectHandle )
@@ -437,8 +438,6 @@ void Canvas::OnMouseWheel( wxMouseEvent& event )
 void Canvas::SetRenderFlags( int renderFlags )
 {
 	this->renderFlags = renderFlags;
-
-	wxGetApp().GetPuzzle()->UpdateCutShapeLabels( transform );
 }
 
 void Canvas::Animate( void )

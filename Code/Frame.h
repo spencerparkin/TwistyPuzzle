@@ -42,7 +42,8 @@ private:
 		ID_AutoSelectAxis,
 		ID_TakeSnapshot,
 		ID_FoviSlider,
-		ID_SequencedText,
+		ID_SequenceText,
+		ID_LockLabels,
 		ID_Puzzle,		// This needs to be the last ID.
 	};
 
@@ -68,6 +69,7 @@ private:
 	void OnDrawDiff( wxCommandEvent& event );
 	void OnTakeSnapshot( wxCommandEvent& event );
 	void OnFoviSlider( wxCommandEvent& event );
+	void OnLockLabels( wxCommandEvent& event );
 
 	class PuzzleMenuItemUserData : public wxObject
 	{

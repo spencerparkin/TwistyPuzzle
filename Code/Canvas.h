@@ -38,6 +38,7 @@ public:
 		RENDER_STATS =				0x00000004,
 		RENDER_BORDERS =			0x00000008,
 		RENDER_DIFF =				0x00000010,
+		RENDER_DYNAMIC_LABELS =		0x00000020,
 	};
 
 	void SetRenderFlags( int renderFlags );

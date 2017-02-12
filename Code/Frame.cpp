@@ -36,9 +36,12 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	wxMenu* interfaceMenu = new wxMenu();
 	wxMenuItem* selectAxisMenuItem = new wxMenuItem( interfaceMenu, ID_ManualSelectAxis, "Manual Select Axis", "Manually select the axis to rotate about with the mouse wheel.", wxITEM_CHECK );
 	wxMenuItem* nearestAxisMenuItem = new wxMenuItem( interfaceMenu, ID_AutoSelectAxis, "Auto Select Axis", "Auto-select the axis to rotate about with the mouse wheel.", wxITEM_CHECK );
+	wxMenuItem* lockLabelsMenuItem = new wxMenuItem( interfaceMenu, ID_LockLabels, "Lock Labels\tF4", "Toggle dynamic label assignment.", wxITEM_CHECK );
 	wxMenuItem* takeSnapshotMenuItem = new wxMenuItem( interfaceMenu, ID_TakeSnapshot, "Take Snap-shot", "Take a snap-shot of the puzzle faces for diff-ing later." );
 	interfaceMenu->Append( selectAxisMenuItem );
 	interfaceMenu->Append( nearestAxisMenuItem );
+	interfaceMenu->AppendSeparator();
+	interfaceMenu->Append( lockLabelsMenuItem );
 	interfaceMenu->AppendSeparator();
 	interfaceMenu->Append( takeSnapshotMenuItem );
 
@@ -83,7 +86,7 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 
 	wxPanel* controlPanel = new wxPanel( this, wxID_ANY );
 
-	textCtrl = new wxTextCtrl( controlPanel, ID_SequencedText, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER | wxTE_LEFT );
+	textCtrl = new wxTextCtrl( controlPanel, ID_SequenceText, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER | wxTE_LEFT );
 	sliderCtrl = new wxSlider( controlPanel, ID_FoviSlider, ( int )canvas->GetFoviAngleDegrees(), 20, 100, wxDefaultPosition, wxSize( 100, -1 ) );
 
 	wxBoxSizer* horizBoxSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -96,10 +99,11 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	vertBoxSizer->Add( controlPanel, 0, wxGROW );
 	SetSizer( vertBoxSizer );
 
-	wxAcceleratorEntry acceleratorEntries[3];
+	wxAcceleratorEntry acceleratorEntries[4];
 	acceleratorEntries[0].Set( wxACCEL_NORMAL, WXK_F5, ID_GoBackward );
 	acceleratorEntries[1].Set( wxACCEL_NORMAL, WXK_F6, ID_GoForward );
 	acceleratorEntries[2].Set( wxACCEL_NORMAL, WXK_F1, ID_Documentation );
+	acceleratorEntries[3].Set( wxACCEL_NORMAL, WXK_F4, ID_LockLabels );
 
 	wxAcceleratorTable acceleratorTable( sizeof( acceleratorEntries ) / sizeof( wxAcceleratorEntry ), acceleratorEntries );
 	SetAcceleratorTable( acceleratorTable );
@@ -122,6 +126,7 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_MENU, &Frame::OnDrawBorders, this, ID_DrawBorders );
 	Bind( wxEVT_MENU, &Frame::OnDrawDiff, this, ID_DrawDiff );
 	Bind( wxEVT_MENU, &Frame::OnTakeSnapshot, this, ID_TakeSnapshot );
+	Bind( wxEVT_MENU, &Frame::OnLockLabels, this, ID_LockLabels );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_Solve );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_GoForward );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_GoBackward );
@@ -132,7 +137,8 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawStats );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawBorders );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawDiff );
-	Bind( wxEVT_COMMAND_TEXT_ENTER, &Frame::OnTextCtrlEnter, this, ID_SequencedText );
+	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_LockLabels );
+	Bind( wxEVT_COMMAND_TEXT_ENTER, &Frame::OnTextCtrlEnter, this, ID_SequenceText );
 	Bind( wxEVT_SLIDER, &Frame::OnFoviSlider, this, ID_FoviSlider );
 
 	timer.Start(1);
@@ -140,6 +146,13 @@ Frame::Frame( void ) : wxFrame( nullptr, wxID_ANY, "Twisty Puzzle", wxDefaultPos
 
 /*virtual*/ Frame::~Frame( void )
 {
+}
+
+void Frame::OnLockLabels( wxCommandEvent& event )
+{
+	int renderFlags = canvas->GetRenderFlags();
+	renderFlags ^= Canvas::RENDER_DYNAMIC_LABELS;
+	canvas->SetRenderFlags( renderFlags );
 }
 
 void Frame::OnFoviSlider( wxCommandEvent& event )
@@ -541,6 +554,11 @@ void Frame::OnUpdateUI( wxUpdateUIEvent& event )
 			case ID_DrawDiff:
 			{
 				event.Check( ( canvas->GetRenderFlags() & Canvas::RENDER_DIFF ) ? true : false );
+				break;
+			}
+			case ID_LockLabels:
+			{
+				event.Check( ( canvas->GetRenderFlags() & Canvas::RENDER_DYNAMIC_LABELS ) ? false : true );
 				break;
 			}
 		}
