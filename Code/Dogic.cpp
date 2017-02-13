@@ -7,6 +7,9 @@
 wxIMPLEMENT_DYNAMIC_CLASS( Dogic, TwistyPuzzle );
 
 // Ai,Pi,A,Pi,Ai,P,P,A,[Pi,Pi]
+// Ai,Pi,A,Pi,Ai,P,P,A,Pi,Ai,Pi,A,Pi,Ai,P,A,Pi,Ai,P,P,A,P,P
+// Ai,Pi,A,Pi,Ai,P,P,A,Pi,Ai,Pi,A,Pi,Ai,P,A,Pi,Ai,P,P,A,P <-- tri-cycle.
+// Ai,Pi,A,Pi,Ai,P,P,A,Pi,Pi,P,Ai,Pi,A,Pi,Ai,P,P,A,Pi,Pi,P,P,Ai,Pi,A,Pi,Ai,P,P,A,Pi,Pi,Pi,
 
 Dogic::Dogic( void )
 {

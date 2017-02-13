@@ -64,35 +64,33 @@
 		and then return to the former.
 		</p>
 		<p>
-		The following diagram illustrates one possible application of a commutator.  The net effect
-		of a commutator may be desirable in a number of unforseable ways, but the following example
-		will show one way to put commutators to work for us under a certain, yet somewhat general
-		circumstance.  In the diagram below,
+		In the diagram below,
 		each row of slots and their content illustrate the puzzle state, and the mappings "X" and "Y" and their inverses
-		are being used to take us from one state to another.  Notice that a dotted line partitions the
-		puzzle state into two parts.
+		are being used to take us from one state to another.  Notice that dotted lines partition the
+		puzzle state into three sections.
 		<center><img src="CommutatorDiagram.png"/></center>
 		Suppose one day you find a useful rotation sequences (call it "X") that, as shown in the diagram
 		above, transposes the contents of slots A and B, leaves everything else invariant on the
-		left side of the dotted line, but effectively scrambles everything to the right of the dotted line.
+		left and right sections, but effectively scrambles everything in the middle section.
 		We need not despare at the said scrambling, for we may also know of another rotation sequence
 		(call it "Y") that simply transposes the two pairs of slots (A,B) with (C,D), leaving everyting
-		else invarient on both sides of the dotted line.  Now consider the result of the commutator
+		else invarient save what it doesn't preserve in the right section.  Now consider the result of the commutator
 		"X,Y,Xi,Yi" as shown above.  Indeed, we have just found a way to do two flips simultaneously of two different
-		slot pairs.  Notice that the commutator leaves everything right of the dotted line untouched,
-		though this indeed is where some scrambling did occur temprorarily during execution of the commutator.
+		slot pairs.  Notice that the commutator leaves everything in the middle and right sections untouched, though
+		this indeed is where some or much scrambling did occur temprorarily over the course of execution of the commutator.
+		Don't be fooled into thinking that all commutators do a pair of transpositions.  This is only one example
+		of many possible applications of commutators.
 		</p>
 		<p>
 		Another way to think about commutators is as a way of minimizing collateral impact on the puzzle.
 		Commutators are a measure of how well two elements (permutations) X and Y commute.  If they fully
 		commute, then the commutator has no effect on the puzzle.  If they commute a little bit, the effect they'll
 		have on the puzzle can be focused on an isolated region.  If they don't commute very much at all,
-		then their commutator will have a higher net impact on the state puzzle.
+		then their commutator will have a higher net impact on the state puzzle.  In the previous example,
+		the middle and right sections commuted, but the left sections did not, and that is where the action occured.
 		</p>
 		<p>
-		Returning now to conjugates, these too may have a desirable effect in unforseable ways.
-		A common and useful way, however, would
-		be in the form of what are referred to as "setup moves" in cubist parlance.  The idea
+		Returning now to conjugates, the idea
 		is simple.  If you know a useful rotation sequence, but it does not appear immediately
 		applicable in your current situation, start with a rotation sequence that sets you up
 		to do the useful sequence, do the useful sequence, then unwind the setup sequence.
@@ -106,8 +104,11 @@
 		a new tri-cycle move sequences that tri-cycles the contents of 3 different slots.  This is
 		done by conjugating one move sequence with the other as illustrated in the diagram below.
 		<center><img src="ConjugateDiagram.png"/></center>
-		Which tree slots are tri-cycled with the conjugate "X,Y,Xi" that we just created?
-		(Look at the initial state of the puzzle and compare it to the final state.)
+		Which three slots are tri-cycled with the conjugate "X,Y,Xi" that we just created?
+		(Look at the initial state of the puzzle and compare it to the final state.)  Indeed, as you can see,
+		we now have a new tri-cycle.  Also notice that anything X scrambled (in the ellipses) is unscrambled
+		when we perform Xi.  Lastly, notice that we recognized the usefulness of this permutation X in conjugation
+		with Y despite this scrambling.
 		</p>
 		<h3>5.1.2. Recognizing Subgroups</h3>
 		<p>
@@ -143,13 +144,24 @@
 		</p>
 		<p>
 		It may also be possible to define the parity problem in terms of the parity of a given permutation.  By definition, this is the parity (even or odd) of a number N, where N
-		is the number of disjoint cycles you may find
+		is the number of disjoint transpositions (2-cycles) you may find
 		that, taken together, make up the permutation.  Couchy proved that
 		this parity is consistent across all ways a given permutation can be written as a
 		composition of transpositions.  The parity problem can now be thought of as a situation
 		where an odd permutation is needed, but only even permutations appear to
 		be at your disposal.  (Note that the subset of all even permutations forms a subgroup, but not the subset of all odd permutations.)  A solution to the parity problem is then simply any odd permutation.  In many cases it ends up being a permutation that messes the puzzle up quite a bit, but if you begin again with the rest of the move sequences
 		in your repertoire, you eventually reach the solved state without encountering the parity.
+		</p>
+		<p>
+		It's also worth mentioning here that a needed swap in the face only tri-cycle moves being available
+		does not necessarily constitute a parity problem.  This is sometimes the case when there are multiple
+		faces of the same color that move around in the same way.  Consider the following figure where a swap
+		of A and B is illustrated.
+		<center><img src="TriCycleSwap1.png"/></center>
+		But now notice that, effectively, we can get the same result using a tri-cycle.
+		<center><img src="TriCycleSwap2.png"/></center>
+		These are really two different permutations, but they appear to give us the same result, because there are
+		two copies of B involved.
 		</p>
 	</body>
 </html>
