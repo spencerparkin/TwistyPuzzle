@@ -240,6 +240,9 @@
     <ClCompile Include="Code\Cuboid3x3x3.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Bagua.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shaders\face.f.glsl">

@@ -93,6 +93,7 @@ public:
 	void EnqueueRotation( Rotation* rotation );
 	bool ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper );
 	bool DequeueAndProcessNextRotation( void );
+	void FlushRotationQueue( void );
 
 	void TakeSnapshot( void );
 	void ClearAllSnapshotPolylines( void );
@@ -130,11 +131,11 @@ public:
 		CutShape( void );
 		virtual ~CutShape( void );
 
-		virtual void CutAndCapture( FaceList& faceList, FaceList* capturedFaceList = nullptr, double eps = EPSILON );
+		virtual bool CutAndCapture( FaceList& faceList, FaceList* capturedFaceList = nullptr, double eps = EPSILON, bool canCut = true );
 		virtual bool CapturesFace( const Face* face );
 
 		void GenerateCapturedFaceList( FaceList& faceList, FaceList& capturedFaceList );
-		void CutUsingSurface( FaceList& faceList, _3DMath::Surface* cuttingSurface, double eps = EPSILON );
+		bool CutUsingSurface( FaceList& faceList, _3DMath::Surface* cuttingSurface, double eps = EPSILON, bool canCut = true );
 		bool DoesSurfaceCaptureFace( _3DMath::Surface* captureSurface, const Face* face );
 		void GetArrowTipPosition( const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, _3DMath::Vector& point ) const;
 
@@ -156,7 +157,7 @@ public:
 		DoubleSurfaceCutShape( void );
 		virtual ~DoubleSurfaceCutShape( void );
 
-		virtual void CutAndCapture( TwistyPuzzle::FaceList& faceList, TwistyPuzzle::FaceList* capturedFaceList = nullptr, double eps = EPSILON ) override;
+		virtual bool CutAndCapture( FaceList& faceList, TwistyPuzzle::FaceList* capturedFaceList = nullptr, double eps = EPSILON, bool canCut = true ) override;
 		virtual bool CapturesFace( const TwistyPuzzle::Face* face ) override;
 
 		_3DMath::Surface* additionalSurface;
@@ -215,6 +216,7 @@ public:
 	RotationList::iterator rotationHistoryIter;
 	LabelMap labelMap;
 	ShaderProgram* shaderProgram;
+	bool canCut;
 };
 
 // TwistyPuzzle.h

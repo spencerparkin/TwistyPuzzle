@@ -186,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp" />
+    <ClCompile Include="Code\Bagua.cpp" />
     <ClCompile Include="Code\BauhiniaDodecahedron.cpp" />
     <ClCompile Include="Code\Bubbloid3x3x3.cpp" />
     <ClCompile Include="Code\Bubbloid4x4x5.cpp" />
