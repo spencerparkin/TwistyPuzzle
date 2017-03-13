@@ -44,7 +44,7 @@ TwistyPuzzle::TwistyPuzzle( void )
 	_3DMath::FreeList< Rotation >( rotationHistory );
 }
 
-/*virtual*/ bool TwistyPuzzle::SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown )
+/*virtual*/ bool TwistyPuzzle::SpecialAction( double wheelClicks, int selectedObjectHandle, int flags )
 {
 	return false;
 }

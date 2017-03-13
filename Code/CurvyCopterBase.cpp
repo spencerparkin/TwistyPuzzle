@@ -218,7 +218,7 @@ CurvyCopterBase::CurvyCopterBase( void )
 }
 
 // TODO: How do you jumble if you're using the command-line interface?
-/*virtual*/ bool CurvyCopterBase::SpecialAction( double wheelClicks, int selectedObjectHandle, bool shiftDown )
+/*virtual*/ bool CurvyCopterBase::SpecialAction( double wheelClicks, int selectedObjectHandle, int type )
 {
 	_3DMath::HandleObject* object = _3DMath::HandleObject::Dereference( selectedObjectHandle );
 	if( !object )
@@ -232,11 +232,11 @@ CurvyCopterBase::CurvyCopterBase( void )
 	if( iter == jumbleMap.end() )
 		return false;
 
-	EnqueueJumble( iter, shiftDown );
+	EnqueueJumble( iter, type );
 	return true;
 }
 
-void CurvyCopterBase::EnqueueJumble( JumbleMap::iterator iter, bool shiftDown )
+void CurvyCopterBase::EnqueueJumble( JumbleMap::iterator iter, int flags )
 {
 	int cutShapeHandle = iter->first;
 	const Jumble* jumble = iter->second;
@@ -244,7 +244,7 @@ void CurvyCopterBase::EnqueueJumble( JumbleMap::iterator iter, bool shiftDown )
 	int adjCutShapes[2] = { 0, 0 };
 	Rotation::Direction rotDir = Rotation::DIR_CW;
 
-	if( !shiftDown )
+	if( ( flags & 0x00000001 ) == 0 )
 	{
 		adjCutShapes[0] = jumble->adjCutShapeHandles[0];
 		adjCutShapes[1] = jumble->adjCutShapeHandles[1];
@@ -259,11 +259,24 @@ void CurvyCopterBase::EnqueueJumble( JumbleMap::iterator iter, bool shiftDown )
 
 	double jumbleTurnAmount = CalcJumbleTurnAmount();
 
-	EnqueueRotation( new Rotation( adjCutShapes[0], rotDir, jumbleTurnAmount, Rotation::FLAG_FORWARD_AGAIN ) );
-	EnqueueRotation( new Rotation( adjCutShapes[1], rotDir, jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
-	EnqueueRotation( new Rotation( cutShapeHandle, Rotation::DIR_CCW, 1.0, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
-	EnqueueRotation( new Rotation( adjCutShapes[0], rotDir, -jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
-	EnqueueRotation( new Rotation( adjCutShapes[1], rotDir, -jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN ) );
+	if( ( flags & 0x00000002 ) != 0 )
+	{
+		EnqueueRotation( new Rotation( adjCutShapes[0], rotDir, jumbleTurnAmount, Rotation::FLAG_FORWARD_AGAIN ) );
+		EnqueueRotation( new Rotation( adjCutShapes[1], rotDir, jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
+		EnqueueRotation( new Rotation( cutShapeHandle, Rotation::DIR_CCW, 1.0, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
+		EnqueueRotation( new Rotation( adjCutShapes[0], rotDir, -jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
+		EnqueueRotation( new Rotation( adjCutShapes[1], rotDir, -jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN ) );
+	}
+	else if( ( flags & 0x00000004 ) != 0 )
+	{
+		EnqueueRotation( new Rotation( cutShapeHandle, rotDir, -jumbleTurnAmount, Rotation::FLAG_FORWARD_AGAIN ) );
+		EnqueueRotation( new Rotation( adjCutShapes[0], rotDir, jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
+		EnqueueRotation( new Rotation( adjCutShapes[1], rotDir, jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
+		EnqueueRotation( new Rotation( cutShapeHandle, Rotation::DIR_CCW, 1.0, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
+		EnqueueRotation( new Rotation( adjCutShapes[0], rotDir, -jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
+		EnqueueRotation( new Rotation( adjCutShapes[1], rotDir, -jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN | Rotation::FLAG_FORWARD_AGAIN ) );
+		EnqueueRotation( new Rotation( cutShapeHandle, rotDir, jumbleTurnAmount, Rotation::FLAG_BACK_AGAIN ) );
+	}
 }
 
 /*virtual*/ void CurvyCopterBase::EnqueueRandomRotations( _3DMath::Random& random, int rotationCount )
@@ -282,7 +295,7 @@ void CurvyCopterBase::EnqueueJumble( JumbleMap::iterator iter, bool shiftDown )
 				i--;
 			}
 
-			EnqueueJumble( iter, ( random.Integer( 0, 1 ) ? true : false ) );
+			EnqueueJumble( iter, random.Integer( 1, 8 ) );
 		}
 
 		rotationCount--;
