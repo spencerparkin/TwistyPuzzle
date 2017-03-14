@@ -65,6 +65,7 @@ public:
 			FLAG_HISTORY			= 0x00000001,
 			FLAG_BACK_AGAIN			= 0x00000002,
 			FLAG_FORWARD_AGAIN		= 0x00000004,
+			FLAG_PRECUT				= 0x00000008,
 		};
 
 		Rotation( int cutShapeHandle, Direction direction = DIR_CW, double turnCount = 1.0, int flags = 0 );

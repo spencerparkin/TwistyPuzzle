@@ -197,7 +197,7 @@ bool TwistyPuzzle::DequeueAndProcessNextRotation( void )
 	{
 		if( ApplyCutShapeWithRotation( cutShape, rotation ) )
 		{
-			if( !( rotation->flags & Rotation::FLAG_HISTORY ) )
+			if( !( rotation->flags & Rotation::FLAG_HISTORY ) && !( rotation->flags & Rotation::FLAG_PRECUT ) )
 			{
 				AddHistory( rotation );
 				deleteRotation = false;
@@ -271,7 +271,8 @@ void TwistyPuzzle::BindCutShapeToCapturedFaces( CutShape* cutShape, FaceList& ca
 	if( !cutShape->CutAndCapture( faceList, &capturedFaceList, eps, canCut ) )
 		return false;
 
-	BindCutShapeToCapturedFaces( cutShape, capturedFaceList );
+	if( !rotation || !( rotation->flags & Rotation::FLAG_PRECUT ) )
+		BindCutShapeToCapturedFaces( cutShape, capturedFaceList );
 
 	if( rotation )
 	{
@@ -289,19 +290,12 @@ void TwistyPuzzle::BindCutShapeToCapturedFaces( CutShape* cutShape, FaceList& ca
 			face->polygon->Transform( transform );
 		}
 
-		cutShape->rotationAngleForAnimation -= rotationAngle;
+		if( !( rotation->flags & Rotation::FLAG_PRECUT ) )
+		{
+			cutShape->rotationAngleForAnimation -= rotationAngle;
 
-		// One major draw-back to how we're manipulating the puzzle is that it is subject
-		// to accumulated round-off error.  This, however, can be overcome for puzzles that
-		// don't shape-shift.  The idea is simply to cache the original vertices of the puzzle,
-		// and then after each rotation, snap all transformed vertices to their closest cached point.
-		// Hmmm...but this will only work if we also update the cache when new cuts are formed.
-		// This could all be a mechanism handled at this base-class level, unbeknownst to the puzzle
-		// derivative, even if it shape-shifts.  I'm not sure if it will solve the problem currently
-		// had by the Gem6, but it may be worth a try.  The problem with the Gem6, I believe, may
-		// have more to do with inaccuracy in the original vertex calculations.
-
-		needsSaving = true;
+			needsSaving = true;
+		}
 
 		ClearAllSnapshotPolylines();
 	}
