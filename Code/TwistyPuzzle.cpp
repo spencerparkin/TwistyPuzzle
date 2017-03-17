@@ -5,11 +5,13 @@
 #include "Frame.h"
 #include "ShaderProgram.h"
 #include "Canvas.h"
+#include <StabilizerChain.h>
 #include <Surface.h>
 #include <ListFunctions.h>
 #include <Spline.h>
 #include <wx/wfstream.h>
 #include <wx/msgdlg.h>
+#include <wx/scopedptr.h>
 
 #if defined LINUX
 #	define sprintf_s snprintf
@@ -43,6 +45,8 @@ TwistyPuzzle::TwistyPuzzle( void )
 	_3DMath::FreeList< CutShape >( cutShapeList );
 	_3DMath::FreeList< Rotation >( rotationQueue );
 	_3DMath::FreeList< Rotation >( rotationHistory );
+
+	permutation.DefineIdentity();
 }
 
 /*virtual*/ bool TwistyPuzzle::SpecialAction( double wheelClicks, int selectedObjectHandle, int flags )
@@ -173,6 +177,17 @@ void TwistyPuzzle::EnqueueRotation( Rotation* rotation )
 	rotationQueue.push_back( rotation );
 }
 
+void TwistyPuzzle::EnqueueRotationList( RotationList& rotationList )
+{
+	while( rotationList.size() > 0 )
+	{
+		RotationList::iterator iter = rotationList.begin();
+		Rotation* rotation = *iter;
+		EnqueueRotation( rotation );
+		rotationList.erase( iter );
+	}
+}
+
 bool TwistyPuzzle::DequeueAndProcessNextRotation( void )
 {
 	if( rotationQueue.size() == 0 )
@@ -280,6 +295,21 @@ void TwistyPuzzle::BindCutShapeToCapturedFaces( CutShape* cutShape, FaceList& ca
 		if( rotation->direction == Rotation::DIR_CW )
 			rotationAngle = -rotationAngle;
 		rotationAngle = fmod( rotationAngle, 2.0 * M_PI );
+
+		int turnCount = int( rotation->turnCount );
+		if( double( turnCount ) == rotation->turnCount && turnCount > 0 )
+		{
+			Permutation* turnPermutation = &cutShape->ccwPermutation;
+			Permutation cwPermutation;
+			if( rotation->direction == Rotation::DIR_CW )
+			{
+				cutShape->ccwPermutation.GetInverse( cwPermutation );
+				turnPermutation = &cwPermutation;
+			}
+
+			for( int i = 0; i < turnCount; i++ )
+				permutation.MultiplyOnRight( *turnPermutation );
+		}
 
 		_3DMath::AffineTransform transform;
 		transform.SetRotation( cutShape->axisOfRotation, rotationAngle );
@@ -706,13 +736,44 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 			return false;
 	}
 
+	// TODO: We must save/restore the permutation.  Use CDATA with Json in it?
+
 	// TODO: Save/restore history?
 
 	return true;
 }
 
-/*virtual*/ void TwistyPuzzle::IncrementallySolve( RotationList& rotationList ) const
+/*virtual*/ bool TwistyPuzzle::Solve( RotationList& rotationList ) const
 {
+	wxBusyCursor busyCursor;
+
+	wxString stabChainFile = LocateStabChainFile();
+
+	wxFile file( stabChainFile );
+	wxString jsonString;
+	if( !file.ReadAll( &jsonString ) )
+		return false;
+
+	wxScopedPtr< StabilizerChainGroup > stabChainGroup( new StabilizerChainGroup() );
+	if( !stabChainGroup->LoadFromJsonString( ( const char* )jsonString.c_str() ) )
+		return false;
+
+	Permutation invPermutation;
+	invPermutation.word = new ElementList;
+	if( !stabChainGroup->FactorInverse( permutation, invPermutation ) )
+		return false;
+
+	// TODO: We might want to run a simple compression here on the permutation word.
+
+	if( !TranslatePermutation( invPermutation, rotationList ) )
+		return false;
+
+	return true;
+}
+
+/*virtual*/ bool TwistyPuzzle::TranslatePermutation( const Permutation& permutation, RotationList& rotationList ) const
+{
+	return false;
 }
 
 /*virtual*/ TwistyPuzzle::Rotation* TwistyPuzzle::CalculateNearestRotation( CutShape* cutShape )

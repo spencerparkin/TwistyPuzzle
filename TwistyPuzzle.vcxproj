@@ -88,13 +88,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;__WXMSW__;_UNICODE_;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\wxWidgets-3.0.2\include;C:\wxWidgets-3.0.2\include\msvc;../3DMath\Code;../boost_1_59_0;../FontSystem/Code;../freetype-2.4.7/include;C:\glew-2.0.0\include;../../boost_1_59_0;../../freetype-2.4.7/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\wxWidgets-3.0.2\include;C:\wxWidgets-3.0.2\include\msvc;../3DMath\Code;../boost_1_59_0;../FontSystem/Code;../freetype-2.4.7/include;C:\glew-2.0.0\include;../../boost_1_59_0;../../freetype-2.4.7/include;../rapidjson/include;../PermutationGroup/Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:/wxWidgets-3.0.2/lib/vc_dll;../3DMath/Debug/;../FontSystem/Debug;C:\glew-2.0.0\lib\Release\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>wxmsw30ud_core.lib;wxbase30ud.lib;wxmsw30ud_gl.lib;3DMath.lib;opengl32.lib;glu32.lib;FontSystem.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/wxWidgets-3.0.2/lib/vc_dll;../3DMath/Debug/;../FontSystem/Debug;C:\glew-2.0.0\lib\Release\Win32;../PermutationGroup/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxmsw30ud_core.lib;wxbase30ud.lib;wxmsw30ud_gl.lib;3DMath.lib;opengl32.lib;glu32.lib;FontSystem.lib;glew32.lib;PermutationGroup.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

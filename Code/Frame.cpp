@@ -332,6 +332,13 @@ void Frame::OnScramble( wxCommandEvent& event )
 
 void Frame::OnSolve( wxCommandEvent& event )
 {
+	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
+
+	TwistyPuzzle::RotationList rotationList;
+	if( !puzzle->Solve( rotationList ) )
+		wxMessageBox( "Failed to find solution.  I suck.", "Solution not found.", wxICON_ERROR | wxCENTRE, this );
+	else if( wxID_OK == wxMessageBox( "A solution was found with %d rotations.  Run solution?", "Solution found", wxICON_QUESTION | wxCENTRE, this ) )
+		puzzle->EnqueueRotationList( rotationList );
 }
 
 bool Frame::Save( void )
@@ -508,7 +515,7 @@ void Frame::OnUpdateUI( wxUpdateUIEvent& event )
 		{
 			case ID_Solve:
 			{
-				event.Enable( wxGetApp().GetPuzzle()->SolveSupported() ? true : false );
+				event.Enable( wxGetApp().GetPuzzle()->SupportsSolve() ? true : false );
 				break;
 			}
 			case ID_GoForward:

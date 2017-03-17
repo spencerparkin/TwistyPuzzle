@@ -17,6 +17,7 @@
 #include <Surface.h>
 #include <Random.h>
 #include <map>
+#include <Permutation.h>
 
 // TODO: It would be interesting if we based a puzzle off of, say, cone-shaped cut objects.
 //       This would require that we trace out parts of conic sections.  Calculus methods would be in order?
@@ -80,18 +81,17 @@ public:
 
 	typedef std::list< Rotation* > RotationList;
 
+	virtual bool SupportsSolve( void ) const { return false; }
+	virtual bool Solve( RotationList& rotationList ) const;
+	virtual wxString LocateStabChainFile( void ) const { return ""; }
+	virtual bool TranslatePermutation( const Permutation& permutation, RotationList& rotationList ) const;
 	virtual Rotation* CalculateNearestRotation( CutShape* cutShape );
 	virtual void EnqueueRandomRotations( _3DMath::Random& random, int rotationCount );
 	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation );
 	virtual double GetCutAndCaptureEpsilon( void ) { return EPSILON; }
 
-	// Compute and return a sequence of rotations that gets us closer, if
-	// not all the way, to the solved state of the puzzle.  The method is
-	// called until an empty list is returned.
-	virtual void IncrementallySolve( RotationList& rotationList ) const;
-	virtual bool SolveSupported( void ) const { return false; }
-
 	void EnqueueRotation( Rotation* rotation );
+	void EnqueueRotationList( RotationList& rotationList );
 	bool ProcessRotationQueue( const _3DMath::TimeKeeper& timeKeeper );
 	bool DequeueAndProcessNextRotation( void );
 	void FlushRotationQueue( void );
@@ -140,6 +140,9 @@ public:
 		bool DoesSurfaceCaptureFace( _3DMath::Surface* captureSurface, const Face* face );
 		void GetArrowTipPosition( const _3DMath::AffineTransform& transform, const _3DMath::LinearTransform& normalTransform, _3DMath::Vector& point ) const;
 
+		// In most cases, this will work, but for the jumble moves of the CurvyCopter,
+		// This will have to be dynamically assigned to the cut-shape objects.
+		Permutation ccwPermutation;
 		_3DMath::Surface* surface;
 		_3DMath::Line axisOfRotation;
 		_3DMath::Surface::Side captureSide;
@@ -218,6 +221,7 @@ public:
 	LabelMap labelMap;
 	ShaderProgram* shaderProgram;
 	bool canCut;
+	Permutation permutation;
 };
 
 // TwistyPuzzle.h
