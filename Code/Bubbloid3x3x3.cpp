@@ -17,6 +17,10 @@ Bubbloid3x3x3::Bubbloid3x3x3( void )
 
 /*virtual*/ void Bubbloid3x3x3::Reset( void )
 {
+	// TODO: I made a mistake.  I can't model this puzzle with the permutation group I chose,
+	//       because I didn't account for the corners.  I can go back and do that, but the group
+	//       might be too large for my library to handle.
+
 	Clear();
 
 	SetupStandardDynamicCornerTurningBoxLabels();

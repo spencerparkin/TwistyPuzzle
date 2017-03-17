@@ -12,6 +12,7 @@
 #include <wx/wfstream.h>
 #include <wx/msgdlg.h>
 #include <wx/scopedptr.h>
+#include <sstream>
 
 #if defined LINUX
 #	define sprintf_s snprintf
@@ -989,6 +990,16 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 
 	sprintf_s( buffer, sizeof( buffer ), "Triangles: %d", triangleCount );
 	fontSystem->DrawTextCPtr( buffer );
+
+	if( SupportsSolve() )
+	{
+		std::stringstream stringStream;
+		permutation.Print( stringStream );
+
+		glTranslatef( 0.f, fontSystem->GetLineHeight() * 1.5, 0.f );
+
+		fontSystem->DrawTextCPtr( stringStream.str().c_str() );
+	}
 
 	glPopAttrib();
 }
