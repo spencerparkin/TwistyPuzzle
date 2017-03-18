@@ -281,6 +281,27 @@ void TwistyPuzzle::BindCutShapeToCapturedFaces( CutShape* cutShape, FaceList& ca
 	}
 }
 
+/*virtual*/ bool TwistyPuzzle::ApplyRotationToPermutation( CutShape* cutShape, const Rotation* rotation )
+{
+	int turnCount = int( rotation->turnCount );
+	
+	Permutation* turnPermutation = &cutShape->ccwPermutation;
+	
+	Permutation cwPermutation;
+	if( ( turnCount > 0 && rotation->direction == Rotation::DIR_CW ) ||
+		( turnCount < 0 && rotation->direction == Rotation::DIR_CCW ) )
+	{
+		cutShape->ccwPermutation.GetInverse( cwPermutation );
+		turnPermutation = &cwPermutation;
+	}
+
+	turnCount = abs( turnCount );
+	for( int i = 0; i < turnCount; i++ )
+		permutation.MultiplyOnRight( *turnPermutation );
+
+	return true;
+}
+
 /*virtual*/ bool TwistyPuzzle::ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation )
 {
 	double eps = GetCutAndCaptureEpsilon();
@@ -294,25 +315,13 @@ void TwistyPuzzle::BindCutShapeToCapturedFaces( CutShape* cutShape, FaceList& ca
 
 	if( rotation )
 	{
+		if( SupportsSolve() )
+			ApplyRotationToPermutation( cutShape, rotation );
+
 		double rotationAngle = rotation->turnCount * cutShape->rotationAngleForSingleTurn;
 		if( rotation->direction == Rotation::DIR_CW )
 			rotationAngle = -rotationAngle;
 		rotationAngle = fmod( rotationAngle, 2.0 * M_PI );
-
-		int turnCount = int( rotation->turnCount );
-		if( double( turnCount ) == rotation->turnCount && turnCount > 0 )
-		{
-			Permutation* turnPermutation = &cutShape->ccwPermutation;
-			Permutation cwPermutation;
-			if( rotation->direction == Rotation::DIR_CW )
-			{
-				cutShape->ccwPermutation.GetInverse( cwPermutation );
-				turnPermutation = &cwPermutation;
-			}
-
-			for( int i = 0; i < turnCount; i++ )
-				permutation.MultiplyOnRight( *turnPermutation );
-		}
 
 		_3DMath::AffineTransform transform;
 		transform.SetRotation( cutShape->axisOfRotation, rotationAngle );

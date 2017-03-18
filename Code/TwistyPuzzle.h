@@ -88,6 +88,7 @@ public:
 	virtual Rotation* CalculateNearestRotation( CutShape* cutShape );
 	virtual void EnqueueRandomRotations( _3DMath::Random& random, int rotationCount );
 	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation );
+	virtual bool ApplyRotationToPermutation( CutShape* cutShape, const Rotation* rotation );
 	virtual double GetCutAndCaptureEpsilon( void ) { return EPSILON; }
 
 	void EnqueueRotation( Rotation* rotation );
