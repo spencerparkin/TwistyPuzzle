@@ -334,10 +334,13 @@ void Frame::OnSolve( wxCommandEvent& event )
 {
 	TwistyPuzzle* puzzle = wxGetApp().GetPuzzle();
 
+	// TODO: I have a bug where the permutation state of the puzzle is becoming
+	//       out of sync with the geometric state of the puzzle.  Easy repo: just
+	//       turn one corner, solve, then solve again.
 	TwistyPuzzle::RotationList rotationList;
 	if( !puzzle->Solve( rotationList ) )
 		wxMessageBox( "Failed to find solution.  I suck.", "Solution not found.", wxICON_ERROR | wxCENTRE, this );
-	else if( wxID_OK == wxMessageBox( "A solution was found with %d rotations.  Run solution?", "Solution found", wxICON_QUESTION | wxCENTRE, this ) )
+	else if( wxYES == wxMessageBox( wxString::Format( "A solution was found with %d rotations.  Run solution?", rotationList.size() ), "Solution found", wxICON_QUESTION | wxCENTRE | wxYES_NO, this ) )
 		puzzle->EnqueueRotationList( rotationList );
 }
 

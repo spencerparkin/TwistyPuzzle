@@ -16,7 +16,6 @@ public:
 	virtual void Reset( void ) override;
 	virtual bool SupportsSolve( void ) const override { return true; }
 	virtual wxString LocateStabChainFile( void ) const override;
-	virtual bool TranslatePermutation( const Permutation& permutation, RotationList& rotationList ) const override;
 };
 
 // Bubbloid3x3x3.h

@@ -13,6 +13,8 @@
 #include <wx/msgdlg.h>
 #include <wx/scopedptr.h>
 #include <sstream>
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
 
 #if defined LINUX
 #	define sprintf_s snprintf
@@ -711,6 +713,28 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 					return false;
 			}
 		}
+		else if( xmlNode->GetName() == "Permutation" )
+		{
+			wxXmlNode* xmlDataNode = xmlNode->GetChildren();
+			if( !xmlDataNode || xmlDataNode->GetType() != wxXML_CDATA_SECTION_NODE )
+				return false;
+
+			wxString jsonString = xmlDataNode->GetContent();
+
+			rapidjson::Document doc;
+			doc.Parse( jsonString.c_str() );
+			if( !doc.IsObject() )
+				return false;
+
+			if( !doc.HasMember( "data" ) )
+				return false;
+
+			rapidjson::Value permutationValue;
+			permutationValue = doc[ "data" ];
+
+			if( !permutation.SetFromJsonValue( permutationValue ) )
+				return false;
+		}
 	}
 
 	if( faceList.size() == 0 )
@@ -737,7 +761,26 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 			return false;
 	}
 
-	// TODO: We must save/restore the permutation.  Use CDATA with Json in it?
+	if( SupportsSolve() )
+	{
+		rapidjson::Document doc;
+		doc.SetObject();
+
+		rapidjson::Value permutationValue( rapidjson::kObjectType );
+		permutation.GetToJsonValue( permutationValue, doc.GetAllocator() );
+
+		doc.AddMember( "data", permutationValue, doc.GetAllocator() );
+
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer< rapidjson::StringBuffer > writer( buffer );
+		if( doc.Accept( writer ) )
+		{
+			wxString jsonString = buffer.GetString();
+			wxXmlNode* xmlPermutationNode = new wxXmlNode( xmlRootNode, wxXML_ELEMENT_NODE, "Permutation" );
+			wxXmlNode* xmlDataNode = new wxXmlNode( xmlPermutationNode, wxXML_CDATA_SECTION_NODE, "Data" );
+			xmlDataNode->SetContent( jsonString );
+		}
+	}
 
 	// TODO: Save/restore history?
 
@@ -764,17 +807,73 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	if( !stabChainGroup->FactorInverse( permutation, invPermutation ) )
 		return false;
 
-	// TODO: We might want to run a simple compression here on the permutation word.
+	// Sanity check: Did we actually find the inverse?
+	Permutation product;
+	product.Multiply( permutation, invPermutation );
+	if( !product.IsIdentity() )
+		return false;
 
-	if( !TranslatePermutation( invPermutation, rotationList ) )
+	CompressInfo compressInfo;
+	if( !stabChainGroup->MakeCompressInfo( compressInfo ) )
+		return false;
+
+	if( !invPermutation.CompressWord( compressInfo ) )
+		return false;
+
+	if( !TranslatePermutation( invPermutation, compressInfo, rotationList ) )
 		return false;
 
 	return true;
 }
 
-/*virtual*/ bool TwistyPuzzle::TranslatePermutation( const Permutation& permutation, RotationList& rotationList ) const
+/*virtual*/ bool TwistyPuzzle::TranslatePermutation( const Permutation& permutation, const CompressInfo& compressInfo, RotationList& rotationList ) const
 {
-	return false;
+	if( !permutation.word )
+		return false;
+
+	rotationList.clear();
+
+	for( ElementList::const_iterator iter = permutation.word->cbegin(); iter != permutation.word->cend(); iter++ )
+	{
+		const Element& element = *iter;
+
+		PermutationMap::const_iterator permIter = compressInfo.permutationMap.find( element.name );
+		if( permIter == compressInfo.permutationMap.end() )
+			return false;
+
+		const Permutation& generator = permIter->second;
+
+		CutShapeList::const_iterator cutShapeIter = cutShapeList.begin();
+		while( cutShapeIter != cutShapeList.end() )
+		{
+			const CutShape* cutShape = *cutShapeIter;
+
+			if( cutShape->ccwPermutation.IsEqualTo( generator ) )
+			{
+				Rotation* rotation = new Rotation( cutShape->GetHandle(), Rotation::DIR_CCW, element.exponent );
+				rotationList.push_back( rotation );
+				break;
+			}
+			else
+			{
+				Permutation cwPermutation;
+				cwPermutation.SetInverse( cutShape->ccwPermutation );
+				if( cwPermutation.IsEqualTo( generator ) )
+				{
+					Rotation* rotation = new Rotation( cutShape->GetHandle(), Rotation::DIR_CW, element.exponent );
+					rotationList.push_back( rotation );
+					break;
+				}
+			}
+
+			cutShapeIter++;
+		}
+
+		if( cutShapeIter == cutShapeList.end() )
+			return false;
+	}
+
+	return true;
 }
 
 /*virtual*/ TwistyPuzzle::Rotation* TwistyPuzzle::CalculateNearestRotation( CutShape* cutShape )

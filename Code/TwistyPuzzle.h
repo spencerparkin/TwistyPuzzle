@@ -84,7 +84,7 @@ public:
 	virtual bool SupportsSolve( void ) const { return false; }
 	virtual bool Solve( RotationList& rotationList ) const;
 	virtual wxString LocateStabChainFile( void ) const { return ""; }
-	virtual bool TranslatePermutation( const Permutation& permutation, RotationList& rotationList ) const;
+	virtual bool TranslatePermutation( const Permutation& permutation, const CompressInfo& compressInfo, RotationList& rotationList ) const;
 	virtual Rotation* CalculateNearestRotation( CutShape* cutShape );
 	virtual void EnqueueRandomRotations( _3DMath::Random& random, int rotationCount );
 	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation );

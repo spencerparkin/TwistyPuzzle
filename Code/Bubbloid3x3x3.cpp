@@ -17,10 +17,6 @@ Bubbloid3x3x3::Bubbloid3x3x3( void )
 
 /*virtual*/ void Bubbloid3x3x3::Reset( void )
 {
-	// TODO: I made a mistake.  I can't model this puzzle with the permutation group I chose,
-	//       because I didn't account for the corners.  I can go back and do that, but the group
-	//       might be too large for my library to handle.
-
 	Clear();
 
 	SetupStandardDynamicCornerTurningBoxLabels();
@@ -38,6 +34,9 @@ Bubbloid3x3x3::Bubbloid3x3x3( void )
 	cutShape->ccwPermutation.Define( 0, 4 );
 	cutShape->ccwPermutation.Define( 4, 7 );
 	cutShape->ccwPermutation.Define( 7, 0 );
+	cutShape->ccwPermutation.Define( 12, 13 );
+	cutShape->ccwPermutation.Define( 13, 14 );
+	cutShape->ccwPermutation.Define( 14, 12 );
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -49,6 +48,9 @@ Bubbloid3x3x3::Bubbloid3x3x3( void )
 	cutShape->ccwPermutation.Define( 1, 5 );
 	cutShape->ccwPermutation.Define( 5, 4 );
 	cutShape->ccwPermutation.Define( 4, 1 );
+	cutShape->ccwPermutation.Define( 15, 16 );
+	cutShape->ccwPermutation.Define( 16, 17 );
+	cutShape->ccwPermutation.Define( 17, 15 );
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -60,6 +62,9 @@ Bubbloid3x3x3::Bubbloid3x3x3( void )
 	cutShape->ccwPermutation.Define( 3, 7 );
 	cutShape->ccwPermutation.Define( 7, 6 );
 	cutShape->ccwPermutation.Define( 6, 3 );
+	cutShape->ccwPermutation.Define( 21, 22 );
+	cutShape->ccwPermutation.Define( 22, 23 );
+	cutShape->ccwPermutation.Define( 23, 21 );
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -71,6 +76,9 @@ Bubbloid3x3x3::Bubbloid3x3x3( void )
 	cutShape->ccwPermutation.Define( 2, 6 );
 	cutShape->ccwPermutation.Define( 6, 5 );
 	cutShape->ccwPermutation.Define( 5, 2 );
+	cutShape->ccwPermutation.Define( 18, 19 );
+	cutShape->ccwPermutation.Define( 19, 20 );
+	cutShape->ccwPermutation.Define( 20, 18 );
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -82,6 +90,9 @@ Bubbloid3x3x3::Bubbloid3x3x3( void )
 	cutShape->ccwPermutation.Define( 0, 11 );
 	cutShape->ccwPermutation.Define( 11, 8 );
 	cutShape->ccwPermutation.Define( 8, 0 );
+	cutShape->ccwPermutation.Define( 24, 25 );
+	cutShape->ccwPermutation.Define( 25, 26 );
+	cutShape->ccwPermutation.Define( 26, 24 );
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -93,6 +104,9 @@ Bubbloid3x3x3::Bubbloid3x3x3( void )
 	cutShape->ccwPermutation.Define( 1, 8 );
 	cutShape->ccwPermutation.Define( 8, 9 );
 	cutShape->ccwPermutation.Define( 9, 1 );
+	cutShape->ccwPermutation.Define( 27, 28 );
+	cutShape->ccwPermutation.Define( 28, 29 );
+	cutShape->ccwPermutation.Define( 29, 27 );
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -104,6 +118,9 @@ Bubbloid3x3x3::Bubbloid3x3x3( void )
 	cutShape->ccwPermutation.Define( 3, 10 );
 	cutShape->ccwPermutation.Define( 10, 11 );
 	cutShape->ccwPermutation.Define( 11, 3 );
+	cutShape->ccwPermutation.Define( 33, 34 );
+	cutShape->ccwPermutation.Define( 34, 35 );
+	cutShape->ccwPermutation.Define( 35, 33 );
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -115,18 +132,15 @@ Bubbloid3x3x3::Bubbloid3x3x3( void )
 	cutShape->ccwPermutation.Define( 2, 9 );
 	cutShape->ccwPermutation.Define( 9, 10 );
 	cutShape->ccwPermutation.Define( 10, 2 );
+	cutShape->ccwPermutation.Define( 30, 31 );
+	cutShape->ccwPermutation.Define( 31, 32 );
+	cutShape->ccwPermutation.Define( 32, 30 );
 	cutShapeList.push_back( cutShape );
 }
 
 /*virtual*/ wxString Bubbloid3x3x3::LocateStabChainFile( void ) const
 {
 	return wxGetApp().ResolveRelativeResourcePath( "Data/StabChains/Bubbloid3x3x3.txt" );
-}
-
-/*virtual*/ bool Bubbloid3x3x3::TranslatePermutation( const Permutation& permutation, RotationList& rotationList ) const
-{
-	// TODO: We might only want to delegate to the derivative a translation of a single name.
-	return true;
 }
 
 // Bubbloid3x3x3.cpp
