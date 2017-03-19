@@ -1,9 +1,9 @@
 // Frame.cpp
 
+#include "TwistyPuzzle.h"
 #include "Frame.h"
 #include "Canvas.h"
 #include "Application.h"
-#include "TwistyPuzzle.h"
 #include "GLRenderer.h"
 #include "HtmlFrame.h"
 #include <wx/sizer.h>
@@ -338,7 +338,7 @@ void Frame::OnSolve( wxCommandEvent& event )
 	TwistyPuzzle::RotationList rotationList;
 	if( !puzzle->Solve( rotationList ) )
 		wxMessageBox( "Failed to find solution.  I suck.", "Solution not found.", wxICON_ERROR | wxCENTRE, this );
-	else if( wxYES == wxMessageBox( wxString::Format( "A solution was found with %d rotations.  Run solution?", rotationList.size() ), "Solution found", wxICON_QUESTION | wxCENTRE | wxYES_NO, this ) )
+	else if( wxYES == wxMessageBox( wxString::Format( "A solution was found with %d rotations.  Run solution?", int( rotationList.size() ) ), "Solution found", wxICON_QUESTION | wxCENTRE | wxYES_NO, this ) )
 		puzzle->EnqueueRotationList( rotationList );
 	else
 		_3DMath::FreeList< TwistyPuzzle::Rotation >( rotationList );

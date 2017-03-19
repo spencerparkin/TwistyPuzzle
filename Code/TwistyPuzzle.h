@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <Permutation.h>
 #include <GL/glew.h>
 #include <wx/glcanvas.h>
 #include <wx/xml/xml.h>
@@ -17,7 +18,6 @@
 #include <Surface.h>
 #include <Random.h>
 #include <map>
-#include <Permutation.h>
 
 // TODO: It would be interesting if we based a puzzle off of, say, cone-shaped cut objects.
 //       This would require that we trace out parts of conic sections.  Calculus methods would be in order?

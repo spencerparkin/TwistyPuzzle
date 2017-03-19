@@ -1,7 +1,7 @@
 // Canvas.cpp
 
-#include "Canvas.h"
 #include "TwistyPuzzle.h"
+#include "Canvas.h"
 #include "Application.h"
 #include "GLRenderer.h"
 #include "Frame.h"

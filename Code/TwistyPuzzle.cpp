@@ -1,5 +1,7 @@
 // TwistyPuzzle.cpp
 
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
 #include "TwistyPuzzle.h"
 #include "Application.h"
 #include "Frame.h"
@@ -13,8 +15,6 @@
 #include <wx/msgdlg.h>
 #include <wx/scopedptr.h>
 #include <sstream>
-#include <rapidjson/document.h>
-#include <rapidjson/writer.h>
 
 #if defined LINUX
 #	define sprintf_s snprintf
