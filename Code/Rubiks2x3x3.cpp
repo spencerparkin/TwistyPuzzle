@@ -102,7 +102,6 @@ Rubiks2x3x3::Rubiks2x3x3( void )
 	cutShapeList.push_back( cutShape );
 }
 
-
 /*virtual*/ wxString Rubiks2x3x3::LocateStabChainFile( void ) const
 {
 	return wxGetApp().ResolveRelativeResourcePath( "Data/StabChains/Rubiks2x3x3.txt" );
