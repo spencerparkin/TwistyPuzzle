@@ -19,7 +19,7 @@ parts:
     plugin: scons
     source: https://github.com/spencerparkin/TwistyPuzzle.git
     source-branch: stable-release
-    after: [desktop-gtk3, fontsystem, 3dmath]
+    after: [desktop-gtk3, fontsystem, 3dmath, permutationgroup, rapidjson]
 
   fontsystem:
     plugin: scons
@@ -29,4 +29,14 @@ parts:
   3dmath:
     plugin: scons
     source: https://github.com/spencerparkin/3DMath.git
+    source-branch: master
+
+  permutationgroup:
+    plugin: scons
+    source: https://github.com/spencerparkin/PermutationGroup.git
+    source-branch: master
+
+  rapidjson:
+    plugin: dump 
+    source: https://github.com/miloyip/rapidjson.git
     source-branch: master
