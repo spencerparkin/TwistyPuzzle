@@ -807,13 +807,13 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	if( !file.ReadAll( &jsonString ) )
 		return false;
 
-	wxScopedPtr< StabilizerChainGroup > stabChainGroup( new StabilizerChainGroup() );
+	wxScopedPtr< StabilizerChain > stabChainGroup( new StabilizerChain() );
 	if( !stabChainGroup->LoadFromJsonString( ( const char* )jsonString.c_str() ) )
 		return false;
 
 	Permutation invPermutation;
 	invPermutation.word = new ElementList;
-	if( !stabChainGroup->FactorInverse( permutation, invPermutation ) )
+	if( !stabChainGroup->group->FactorInverse( permutation, invPermutation ) )
 		return false;
 
 	// Sanity check: Did we actually find the inverse?
@@ -823,7 +823,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 		return false;
 
 	CompressInfo compressInfo;
-	if( !stabChainGroup->MakeCompressInfo( compressInfo ) )
+	if( !stabChainGroup->group->MakeCompressInfo( compressInfo ) )
 		return false;
 
 	if( !invPermutation.CompressWord( compressInfo ) )

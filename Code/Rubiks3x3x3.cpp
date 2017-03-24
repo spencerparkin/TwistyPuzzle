@@ -86,7 +86,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	cutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	cutShape->axisOfRotation.normal.Set( 0.0, 0.0, -1.0 );
 	cutShape->label = 'B';
-	cutShape->ccwPermutation.DefineCycle( 32, 37, 39, 24 );
+	cutShape->ccwPermutation.DefineCycle( 32, 37, 39, 34 );
 	cutShape->ccwPermutation.DefineCycle( 33, 35, 38, 36 );
 	cutShape->ccwPermutation.DefineCycle( 2, 31, 45, 8 );
 	cutShape->ccwPermutation.DefineCycle( 1, 28, 46, 11 );
