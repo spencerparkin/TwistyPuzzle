@@ -34,7 +34,7 @@ Rubiks2x2x3::Rubiks2x2x3( void )
 	cutShape->ccwPermutation.DefineCycle( 5, 8 );
 	cutShape->ccwPermutation.DefineCycle( 11, 23 );
 	cutShape->ccwPermutation.DefineCycle( 12, 24 );
-	cutShape->ccwPermutation.DefineCycle( 13, 15 );
+	cutShape->ccwPermutation.DefineCycle( 13, 25 );
 	cutShapeList.push_back( cutShape );
 
 	cutShape = new CutShape();
@@ -47,7 +47,7 @@ Rubiks2x2x3::Rubiks2x2x3( void )
 	cutShape->ccwPermutation.DefineCycle( 15, 27 );
 	cutShape->ccwPermutation.DefineCycle( 14, 26 );
 	cutShape->ccwPermutation.DefineCycle( 21, 18 );
-	cutShape->ccwPermutation.DefineCycle( 20, 27 );
+	cutShape->ccwPermutation.DefineCycle( 20, 17 );
 	cutShape->ccwPermutation.DefineCycle( 19, 16 );
 	cutShapeList.push_back( cutShape );
 
