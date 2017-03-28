@@ -9,6 +9,16 @@ wxIMPLEMENT_DYNAMIC_CLASS( Rubiks3x3x3, TwistyPuzzle );
 
 Rubiks3x3x3::Rubiks3x3x3( void )
 {
+	posXSurfaceCutShape = nullptr;
+	posYSurfaceCutShape = nullptr;
+	posZSurfaceCutShape = nullptr;
+	negXSurfaceCutShape = nullptr;
+	negYSurfaceCutShape = nullptr;
+	negZSurfaceCutShape = nullptr;
+
+	leftCutShape = rightCutShape = nullptr;
+	upCutShape = downCutShape = nullptr;
+	frontCutShape = backCutShape = nullptr;
 }
 
 /*virtual*/ Rubiks3x3x3::~Rubiks3x3x3( void )
@@ -21,7 +31,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 
 	MakeBox( 10.0, 10.0, 10.0 );
 
-	CutShape* rightCutShape = new CutShape();
+	rightCutShape = new CutShape();
 	rightCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 5.0 - 10.0 / 3.0, 0.0, 0.0 ), _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
 	rightCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	rightCutShape->axisOfRotation.normal.Set( 1.0, 0.0, 0.0 );
@@ -33,7 +43,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	rightCutShape->ccwPermutation.DefineCycle( 7, 23, 47, 32 );
 	cutShapeList.push_back( rightCutShape );
 
-	CutShape* leftCutShape = new CutShape();
+	leftCutShape = new CutShape();
 	leftCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( -5.0 + 10.0 / 3.0, 0.0, 0.0 ), _3DMath::Vector( -1.0, 0.0, 0.0 ) ) );
 	leftCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	leftCutShape->axisOfRotation.normal.Set( -1.0, 0.0, 0.0 );
@@ -45,7 +55,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	leftCutShape->ccwPermutation.DefineCycle( 5, 34, 45, 21 );
 	cutShapeList.push_back( leftCutShape );
 
-	CutShape* upCutShape = new CutShape();
+	upCutShape = new CutShape();
 	upCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 5.0 - 10.0 / 3.0, 0.0 ), _3DMath::Vector( 0.0, 1.0, 0.0 ) ) );
 	upCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	upCutShape->axisOfRotation.normal.Set( 0.0, 1.0, 0.0 );
@@ -57,7 +67,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	upCutShape->ccwPermutation.DefineCycle( 10, 18, 26, 34 );
 	cutShapeList.push_back( upCutShape );
 
-	CutShape* downCutShape = new CutShape();
+	downCutShape = new CutShape();
 	downCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, -5.0 + 10 / 3.0, 0.0 ), _3DMath::Vector( 0.0, -1.0, 0.0 ) ) );
 	downCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	downCutShape->axisOfRotation.normal.Set( 0.0, -1.0, 0.0 );
@@ -69,19 +79,19 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	downCutShape->ccwPermutation.DefineCycle( 15, 39, 31, 23 );
 	cutShapeList.push_back( downCutShape );
 
-	CutShape* forwardCutShape = new CutShape();
-	forwardCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, 5.0 - 10.0 / 3.0 ), _3DMath::Vector( 0.0, 0.0, 1.0 ) ) );
-	forwardCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
-	forwardCutShape->axisOfRotation.normal.Set( 0.0, 0.0, 1.0 );
-	forwardCutShape->label = 'F';
-	forwardCutShape->ccwPermutation.DefineCycle( 16, 21, 23, 18 );
-	forwardCutShape->ccwPermutation.DefineCycle( 17, 19, 22, 20 );
-	forwardCutShape->ccwPermutation.DefineCycle( 5, 15, 42, 24 );
-	forwardCutShape->ccwPermutation.DefineCycle( 6, 12, 41, 27 );
-	forwardCutShape->ccwPermutation.DefineCycle( 7, 10, 40, 29 );
-	cutShapeList.push_back( forwardCutShape );
+	frontCutShape = new CutShape();
+	frontCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, 5.0 - 10.0 / 3.0 ), _3DMath::Vector( 0.0, 0.0, 1.0 ) ) );
+	frontCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
+	frontCutShape->axisOfRotation.normal.Set( 0.0, 0.0, 1.0 );
+	frontCutShape->label = 'F';
+	frontCutShape->ccwPermutation.DefineCycle( 16, 21, 23, 18 );
+	frontCutShape->ccwPermutation.DefineCycle( 17, 19, 22, 20 );
+	frontCutShape->ccwPermutation.DefineCycle( 5, 15, 42, 24 );
+	frontCutShape->ccwPermutation.DefineCycle( 6, 12, 41, 27 );
+	frontCutShape->ccwPermutation.DefineCycle( 7, 10, 40, 29 );
+	cutShapeList.push_back( frontCutShape );
 
-	CutShape* backCutShape = new CutShape();
+	backCutShape = new CutShape();
 	backCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, -5.0 + 10.0 / 3.0 ), _3DMath::Vector( 0.0, 0.0, -1.0 ) ) );
 	backCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	backCutShape->axisOfRotation.normal.Set( 0.0, 0.0, -1.0 );
@@ -95,16 +105,16 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 
 	Permutation cwLeft, cwRight;
 	Permutation cwUp, cwDown;
-	Permutation cwBack, cwForward;
+	Permutation cwBack, cwFront;
 
 	leftCutShape->ccwPermutation.GetInverse( cwLeft );
 	rightCutShape->ccwPermutation.GetInverse( cwRight );
 	upCutShape->ccwPermutation.GetInverse( cwUp );
 	downCutShape->ccwPermutation.GetInverse( cwDown );
 	backCutShape->ccwPermutation.GetInverse( cwBack );
-	forwardCutShape->ccwPermutation.GetInverse( cwForward );
+	frontCutShape->ccwPermutation.GetInverse( cwFront );
 
-	DoubleSurfaceCutShape* posXSurfaceCutShape = new DoubleSurfaceCutShape();
+	posXSurfaceCutShape = new DoubleSurfaceCutShape();
 	posXSurfaceCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 5.0 - 10.0 / 3.0, 0.0, 0.0 ), _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
 	posXSurfaceCutShape->additionalSurface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( -5.0 + 10.0 / 3.0, 0.0, 0.0 ), _3DMath::Vector( -1.0, 0.0, 0.0 ) ) );
 	posXSurfaceCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
@@ -115,7 +125,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	posXSurfaceCutShape->ccwPermutation.Multiply( cwRight, leftCutShape->ccwPermutation );
 	cutShapeList.push_back( posXSurfaceCutShape );
 
-	DoubleSurfaceCutShape* posYSurfaceCutShape = new DoubleSurfaceCutShape();
+	posYSurfaceCutShape = new DoubleSurfaceCutShape();
 	posYSurfaceCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 5.0 - 10.0 / 3.0, 0.0 ), _3DMath::Vector( 0.0, 1.0, 0.0 ) ) );
 	posYSurfaceCutShape->additionalSurface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, -5.0 + 10 / 3.0, 0.0 ), _3DMath::Vector( 0.0, -1.0, 0.0 ) ) );
 	posYSurfaceCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
@@ -126,7 +136,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	posYSurfaceCutShape->ccwPermutation.Multiply( cwUp, downCutShape->ccwPermutation );
 	cutShapeList.push_back( posYSurfaceCutShape );
 
-	DoubleSurfaceCutShape* posZSurfaceCutShape = new DoubleSurfaceCutShape();
+	posZSurfaceCutShape = new DoubleSurfaceCutShape();
 	posZSurfaceCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, 5.0 - 10.0 / 3.0 ), _3DMath::Vector( 0.0, 0.0, 1.0 ) ) );
 	posZSurfaceCutShape->additionalSurface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, -5.0 + 10.0 / 3.0 ), _3DMath::Vector( 0.0, 0.0, -1.0 ) ) );
 	posZSurfaceCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
@@ -134,10 +144,10 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	posZSurfaceCutShape->vectorLength = 12.0;
 	posZSurfaceCutShape->label = 'Z';
 	posZSurfaceCutShape->captureSide = _3DMath::Surface::INSIDE;
-	posZSurfaceCutShape->ccwPermutation.Multiply( cwForward, backCutShape->ccwPermutation );
+	posZSurfaceCutShape->ccwPermutation.Multiply( cwFront, backCutShape->ccwPermutation );
 	cutShapeList.push_back( posZSurfaceCutShape );
 
-	DoubleSurfaceCutShape* negXSurfaceCutShape = new DoubleSurfaceCutShape();
+	negXSurfaceCutShape = new DoubleSurfaceCutShape();
 	negXSurfaceCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 5.0 - 10.0 / 3.0, 0.0, 0.0 ), _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
 	negXSurfaceCutShape->additionalSurface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( -5.0 + 10.0 / 3.0, 0.0, 0.0 ), _3DMath::Vector( -1.0, 0.0, 0.0 ) ) );
 	negXSurfaceCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
@@ -148,7 +158,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	negXSurfaceCutShape->ccwPermutation.SetInverse( posXSurfaceCutShape->ccwPermutation );
 	cutShapeList.push_back( negXSurfaceCutShape );
 
-	DoubleSurfaceCutShape* negYSurfaceCutShape = new DoubleSurfaceCutShape();
+	negYSurfaceCutShape = new DoubleSurfaceCutShape();
 	negYSurfaceCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 5.0 - 10.0 / 3.0, 0.0 ), _3DMath::Vector( 0.0, 1.0, 0.0 ) ) );
 	negYSurfaceCutShape->additionalSurface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, -5.0 + 10 / 3.0, 0.0 ), _3DMath::Vector( 0.0, -1.0, 0.0 ) ) );
 	negYSurfaceCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
@@ -159,7 +169,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	negYSurfaceCutShape->ccwPermutation.SetInverse( posYSurfaceCutShape->ccwPermutation );
 	cutShapeList.push_back( negYSurfaceCutShape );
 
-	DoubleSurfaceCutShape* negZSurfaceCutShape = new DoubleSurfaceCutShape();
+	negZSurfaceCutShape = new DoubleSurfaceCutShape();
 	negZSurfaceCutShape->surface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, 5.0 - 10.0 / 3.0 ), _3DMath::Vector( 0.0, 0.0, 1.0 ) ) );
 	negZSurfaceCutShape->additionalSurface = new _3DMath::PlaneSurface( _3DMath::Plane( _3DMath::Vector( 0.0, 0.0, -5.0 + 10.0 / 3.0 ), _3DMath::Vector( 0.0, 0.0, -1.0 ) ) );
 	negZSurfaceCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
@@ -173,9 +183,101 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	SetupDynamicLabelsUsingCutShapeList();
 }
 
+/*virtual*/ void Rubiks3x3x3::Clear( void )
+{
+	TwistyPuzzle::Clear();
+
+	posXSurfaceCutShape = nullptr;
+	posYSurfaceCutShape = nullptr;
+	posZSurfaceCutShape = nullptr;
+	negXSurfaceCutShape = nullptr;
+	negYSurfaceCutShape = nullptr;
+	negZSurfaceCutShape = nullptr;
+
+	leftCutShape = rightCutShape = nullptr;
+	upCutShape = downCutShape = nullptr;
+	frontCutShape = backCutShape = nullptr;
+}
+
 /*virtual*/ wxString Rubiks3x3x3::LocateStabChainFile( void ) const
 {
 	return wxGetApp().ResolveRelativeResourcePath( "Data/StabChains/Rubiks3x3x3.txt" );
+}
+
+/*virtual*/ bool Rubiks3x3x3::ApplyRotationToPermutation( CutShape* cutShape, const Rotation* rotation )
+{
+	if( !TwistyPuzzle::ApplyRotationToPermutation( cutShape, rotation ) )
+		return false;
+
+	typedef std::vector< CutShape* > CutShapeArray;
+	CutShapeArray cutShapeArray;
+	int rollDir = 1;
+	int rollCount = 0;
+
+	if( rotation->direction == Rotation::DIR_CW )
+		rollDir *= -1;
+
+	if( rotation->turnCount < 0.0 )
+		rollDir *= -1;
+
+	// This is rather complicated, but if we want to support the middle slices,
+	// we need to account for them as actually rotated outer slices while also
+	// re-orienting the entire puzzle.
+	if( cutShape == posXSurfaceCutShape || cutShape == negXSurfaceCutShape )
+	{
+		cutShapeArray.push_back( backCutShape );
+		cutShapeArray.push_back( upCutShape );
+		cutShapeArray.push_back( frontCutShape );
+		cutShapeArray.push_back( downCutShape );
+		
+		if( cutShape == negXSurfaceCutShape )
+			rollDir *= -1;
+	}
+	else if( cutShape == posYSurfaceCutShape || cutShape == negYSurfaceCutShape )
+	{
+		cutShapeArray.push_back( frontCutShape );
+		cutShapeArray.push_back( rightCutShape );
+		cutShapeArray.push_back( backCutShape );
+		cutShapeArray.push_back( leftCutShape );
+
+		if( cutShape == negYSurfaceCutShape )
+			rollDir *= -1;
+	}
+	else if( cutShape == posZSurfaceCutShape || cutShape == negZSurfaceCutShape )
+	{
+		cutShapeArray.push_back( rightCutShape );
+		cutShapeArray.push_back( upCutShape );
+		cutShapeArray.push_back( leftCutShape );
+		cutShapeArray.push_back( downCutShape );
+
+		if( cutShape == negZSurfaceCutShape )
+			rollDir *= -1;
+	}
+
+	if( cutShapeArray.size() > 0 )
+	{
+		while( rollCount > 0 )
+		{
+			if( rollDir < 0 )
+			{
+				Permutation ccwPermutation = cutShapeArray[0]->ccwPermutation;
+				for( uint i = 0; i < cutShapeArray.size() - 1; i++ )
+					cutShapeArray[i]->ccwPermutation = cutShapeArray[ i + 1 ]->ccwPermutation;
+				cutShapeArray[ cutShapeArray.size() - 1 ]->ccwPermutation = ccwPermutation;
+			}
+			else
+			{
+				Permutation ccwPermutation = cutShapeArray[ cutShapeArray.size() - 1 ]->ccwPermutation;
+				for( uint i = cutShapeArray.size() - 1; i > 0; i-- )
+					cutShapeArray[i]->ccwPermutation = cutShapeArray[ i - 1 ]->ccwPermutation;
+				cutShapeArray[0]->ccwPermutation = ccwPermutation;
+			}
+
+			rollCount--;
+		}
+	}
+
+	return true;
 }
 
 // Rubiks3x3x3.cpp
