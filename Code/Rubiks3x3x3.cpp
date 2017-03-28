@@ -103,6 +103,9 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	backCutShape->ccwPermutation.DefineCycle( 0, 26, 47, 13 );
 	cutShapeList.push_back( backCutShape );
 
+	// Disable for now; this is too much of a pain in the butt.
+	// I believe there is a way to do this, but I'm too lazy to get it correct right now.
+#if 0
 	Permutation cwLeft, cwRight;
 	Permutation cwUp, cwDown;
 	Permutation cwBack, cwFront;
@@ -179,6 +182,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	negZSurfaceCutShape->captureSide = _3DMath::Surface::INSIDE;
 	negZSurfaceCutShape->ccwPermutation.SetInverse( posZSurfaceCutShape->ccwPermutation );
 	cutShapeList.push_back( negZSurfaceCutShape );
+#endif
 
 	SetupDynamicLabelsUsingCutShapeList();
 }
@@ -209,10 +213,11 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	if( !TwistyPuzzle::ApplyRotationToPermutation( cutShape, rotation ) )
 		return false;
 
+#if 0
 	typedef std::vector< CutShape* > CutShapeArray;
 	CutShapeArray cutShapeArray;
 	int rollDir = 1;
-	int rollCount = 0;
+	int rollCount = ( int )abs( rotation->turnCount );
 
 	if( rotation->direction == Rotation::DIR_CW )
 		rollDir *= -1;
@@ -245,10 +250,10 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 	}
 	else if( cutShape == posZSurfaceCutShape || cutShape == negZSurfaceCutShape )
 	{
-		cutShapeArray.push_back( rightCutShape );
-		cutShapeArray.push_back( upCutShape );
-		cutShapeArray.push_back( leftCutShape );
 		cutShapeArray.push_back( downCutShape );
+		cutShapeArray.push_back( leftCutShape );
+		cutShapeArray.push_back( upCutShape );
+		cutShapeArray.push_back( rightCutShape );
 
 		if( cutShape == negZSurfaceCutShape )
 			rollDir *= -1;
@@ -276,6 +281,7 @@ Rubiks3x3x3::Rubiks3x3x3( void )
 			rollCount--;
 		}
 	}
+#endif
 
 	return true;
 }
