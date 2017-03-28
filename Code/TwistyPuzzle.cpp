@@ -807,23 +807,28 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 	if( !file.ReadAll( &jsonString ) )
 		return false;
 
-	wxScopedPtr< StabilizerChain > stabChainGroup( new StabilizerChain() );
-	if( !stabChainGroup->LoadFromJsonString( ( const char* )jsonString.c_str() ) )
+	wxScopedPtr< StabilizerChain > stabChain( new StabilizerChain() );
+	if( !stabChain->LoadFromJsonString( ( const char* )jsonString.c_str() ) )
+		return false;
+
+	// We might want to add more short words to this later.
+	PermutationSet trembleSet;
+	for( PermutationSet::iterator iter = stabChain->group->generatorSet.begin(); iter != stabChain->group->generatorSet.end(); iter++ )
+		trembleSet.insert( *iter );
+
+	CompressInfo compressInfo;
+	if( !stabChain->group->MakeCompressInfo( compressInfo ) )
 		return false;
 
 	Permutation invPermutation;
 	invPermutation.word = new ElementList;
-	if( !stabChainGroup->group->FactorInverse( permutation, invPermutation ) )
+	if( !stabChain->group->FactorInverseWithTrembling( permutation, invPermutation, trembleSet, compressInfo ) )
 		return false;
 
 	// Sanity check: Did we actually find the inverse?
 	Permutation product;
 	product.Multiply( permutation, invPermutation );
 	if( !product.IsIdentity() )
-		return false;
-
-	CompressInfo compressInfo;
-	if( !stabChainGroup->group->MakeCompressInfo( compressInfo ) )
 		return false;
 
 	if( !invPermutation.CompressWord( compressInfo ) )
