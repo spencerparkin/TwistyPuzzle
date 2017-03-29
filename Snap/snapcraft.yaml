@@ -2,11 +2,14 @@ name: twistypuzzle
 version: "1.0"
 summary: A 3D simulator for a variety of twisty puzzles.
 description: Simulate and manipulate a variety of 3D twisty puzzles
-  such as the Rubik's Cube, Square-One, Pryaminx, Megaminx, Gem 6,
+  such as Rubik's Cube, Square-One, Pryaminx, Megaminx, Gem 6,
   Curvy Copter, and many more.  Experiment with your own
-  algorithms, move forward and backward through your own rotation
-  history, save your progress to disk for later restoration,
+  algorithms, move forward and backward through your rotation
+  history, save your progress to disk for later,
   have a chance to play with a virtual puzzle before owning the real thing. 
+  But seriously; do you really want to download this crappy software?
+  No, of course you don't.  Stop wasting your time, go get a job, and
+  move out of your parent's basement.
 confinement: strict
 
 apps:
@@ -20,6 +23,7 @@ parts:
     source: https://github.com/spencerparkin/TwistyPuzzle.git
     source-branch: stable-release
     after:
+      - desktop-gtk3
       - fontsystem
       - 3dmath
       - permutationgroup
