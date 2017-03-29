@@ -14,6 +14,8 @@ public:
 	virtual ~Rubiks2x2x3( void );
 
 	virtual void Reset( void ) override;
+	virtual bool SupportsSolve( void ) const override { return true; }
+	virtual wxString LocateStabChainFile( void ) const override;
 };
 
 // Rubiks2x2x3.h
