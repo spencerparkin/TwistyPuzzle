@@ -19,7 +19,11 @@ parts:
     plugin: scons
     source: https://github.com/spencerparkin/TwistyPuzzle.git
     source-branch: stable-release
-    after: [desktop-gtk3, fontsystem, 3dmath, permutationgroup, rapidjson]
+    after:
+      - fontsystem
+      - 3dmath
+      - permutationgroup
+      - rapidjson
 
   fontsystem:
     plugin: scons
