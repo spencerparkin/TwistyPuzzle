@@ -13,7 +13,7 @@ obj_env.Append( CCFLAGS = '-I../../3dmath/install/include' )
 obj_env.Append( CCFLAGS = '-I../rapidjson/include' )
 obj_env.Append( CCFLAGS = '-I../../rapidjson/src/include' )
 obj_env.Append( CCFLAGS = '-I../PermutationGroup/Code' )
-obj_env.Append( CCFLAGS = '-I../../PermutationGroup/src/Code' )
+obj_env.Append( CCFLAGS = '-I../../permutationgroup/install/include' )
 #obj_env.Append( CCFLAGS = '-ggdb' )
 
 cpp_source_list = Glob( 'Code/*.cpp' )
