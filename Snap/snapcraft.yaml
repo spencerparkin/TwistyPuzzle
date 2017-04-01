@@ -19,6 +19,12 @@ parts:
     plugin: scons
     source: https://github.com/spencerparkin/TwistyPuzzle.git
     source-branch: stable-release
+    prime:
+      - usr/lib/x86_64-linux-gnu/libmirclient.so.9
+      - usr/lib/x86_64-linux-gnu/libmircommon.so.5
+      - usr/lib/x86_64-linux-gnu/libmirprotobuf.so.3
+      - bin/TwistyPuzzle
+      - share/TwistyPuzzle/Data/*
     after:
       - desktop-gtk3
       - fontsystem
