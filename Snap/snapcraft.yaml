@@ -1,5 +1,5 @@
 name: twistypuzzle
-version: "1.0"
+version: "2.0"
 summary: A 3D simulator for a variety of twisty puzzles.
 description: Simulate and manipulate a variety of 3D twisty puzzles
   such as Rubik's Cube, Square-One, Pryaminx, Megaminx, Gem 6,
