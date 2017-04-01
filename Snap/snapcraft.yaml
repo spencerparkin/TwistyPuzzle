@@ -7,9 +7,6 @@ description: Simulate and manipulate a variety of 3D twisty puzzles
   algorithms, move forward and backward through your rotation
   history, save your progress to disk for later,
   have a chance to play with a virtual puzzle before owning the real thing. 
-  But seriously; do you really want to download this crappy software?
-  No, of course you don't.  Stop wasting your time, go get a job, and
-  move out of your parent's basement.
 confinement: strict
 
 apps:
