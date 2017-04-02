@@ -1,0 +1,113 @@
+<html>
+	<head>
+		<title>The Bagua</title>
+	</head>
+	<body>
+		<h1>The Bagua</h1>
+		<p>
+		To-date, the Bagua has given me the most trouble.  It is a wonderfully difficult puzzle.
+		It can become horribly bandaged, and one can go in circles trying to make any head-way.
+		Here's what I did to solve this thing.
+		</p>
+		<h2>Step 1: Get it into semi-cube shape.</h2>
+		<p>
+		By this I mean that it is in cube shape, save the small bumps that are made by the
+		short, rectangular, thin peices making up two parts an edge block.  The bandaging can be bad
+		enough that it seems impossible to get anywhere.  All I can say is that with some trial
+		and error, you can get to situations where the following becomes easier, and that is to use
+		corner-orientation moves (with setup moves that are multiples of a 1/2 turn) until all corner
+		pieces are in corner locations and all edge pieces are in edge locations.
+		</p>
+		<h2>Step 2: Get it into cube shape.</h2>
+		<p>
+		At this point, small bumps may protrude from the edge blocks in a way that is more or less
+		bandaging.  In any case, you'll eventually be able to use the following sequence...
+		</p>
+		<p>
+		<center><code>X = (1/2)Fi,(1/2)Bi,2U,(1/2)Fi,(1/2)Bi</code></center>
+		</p>
+		<p>
+		...to create what I like to call "V-pairs".  These are the said protrusions, two on a single
+		edge block, and both on the same side of that block.  Once you have 4 V-pairs in a single top layer,
+		and poking out the sides of the cube (not the top), then you can easiliy collapse them down to 0 V-pairs
+		by moving the 4 corners to the 4 edge locations, and vice-versa.  Of course, the number of V-pairs
+		you have to get rid of may not be a multiple of 4.  Not really seeing how to eliminate a single V-pair,
+		I could see how to create a new one from an existing one.  What I did is move half of one away
+		using a classic edge permutation sequence, and then resolve the semi-cube shape.  (That's not terribly
+		precise, but it's all I can remember at the moment.)  After working your way up to 4 V-pairs, you can
+		eliminate them all as already stated, and all V-pairs are now gone.
+		</p>
+		<h2>Step 3: Solve half the tiny triangles.</h2>
+		<p>
+		There are 8 tiny triangles per face, but in this step, you only need to solve half of them.
+		The half you solve are those that point along the dialgonals of the cube, not the horizontals or verticals.
+		Further, you only need them positioned up to being on their correct face, or the opposite of their correct face.
+		For example, get the 4 tiny white triangles and 4 tiny yellow triangles distributed between the white
+		and yellow faces.  You'll return to these pieces later in step 5.
+		</p>
+		<h2>Step 4: Solve the edge blocks.</h2>
+		<p>
+		Solving the edge blocks is time-consuming and tedious, but with patience, you can easily get to the
+		point where you have all but two of them solved.  You're just using the sequence X given above after
+		positioning and orienting the edge blocks in preparation for that move.  Careful planning is required.
+		To put a single edge block together, you have to build 3 different peices of it in 3 different locations,
+		then bring them together with 2 applications of the sequence X.
+		</p>
+		<p>
+		When it comes down to the
+		last two edge blocks, the following sequence is helpful.
+		</p>
+		<p>
+		<center><code>K = 3[X,Y,Xi,Yi]</code></center>
+		</p>
+		<p>
+		Here, X is as already given, and Y is given by...
+		</p>
+		<p>
+		<center><code>Y = Fi,L,D,Li,Di,Fi,D,2F</code></center>
+		</p>
+		<p>
+		The sequence K will swap a pair of quadrilateral faces on each of two opposing edge blocks in the
+		top layer, while also flipping the triangular pieces in the center of each edge block.
+		</p>
+		<p>
+		To tri-cycle 3 tiny triangular peices spread across a pair of opposing edge blocks in the top layer,
+		use the following sequence...
+		</p>
+		<p>
+		<center><code>Q = B,A,Y,Ai,Yi,Bi</code></center>
+		</p>
+		<p>
+		...where A is given by...
+		</p>
+		<p>
+		<center><code>A = (1/2)Fi,(1/2)Bi,L,3[F,U,Fi,Ui],Li,(1/2)B,(1/2)F</code></center>
+		</p>
+		<p>
+		Lastly, the following sequence is the secret sauce of solving the last two edge blocks.
+		Again, these need to be on opposite sides in a top layer.  Executing the sequence...
+		</p>
+		<p>
+		<center><code>2[Q,X]</code></center>
+		</p>
+		<p>
+		...will tri-cycle 3 quadrilateral faces while leaving the rest of the puzzle invariant!
+		If you find that you need to swap a pair of such faces, then you can still use this sequence
+		if you involve a third quadrilateral of the same color as one of the two you need to swap.
+		</p>
+		<h2>Step 5: Solve the remaining tiny triangles.</h2>
+		<p>
+		This is a trivial matter of solving an even number of pairs of such triangles on opposite
+		sides of the cube by temporarily breaking 2 pairs of edge blocks in one solve, then fixing
+		them in another solve.  If you need to solve an odd number of tiny triangle pairs, then
+		on the last pair, simply swap two tiny triangles of the same color to break 2 pairs of edge
+		blocks, then fix them while solving the last pair of tiny triangles.
+		</p>
+		<h2>Step 6: Solve as you would a 3x3x3.</h2>
+		<p>
+		At last, solve the 3x3x3.  I'm faily sure that it's not possible for a single edge
+		to be flipped or for some other sort of problem to occur.  Bask in the glory of having
+		solved this infernal puzzle!
+		</p>
+	</body>
+</html>
