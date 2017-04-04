@@ -38,15 +38,33 @@
 		...to create what I like to call "V-pairs".  These are the said protrusions, two on a single
 		edge block, and both on the same side of that block.  Once you have 4 V-pairs in a single top layer,
 		and poking out the sides of the cube (not the top), then you can easiliy collapse them down to 0 V-pairs
-		by moving the 4 corners to the 4 edge locations, and vice-versa.  Of course, the number of V-pairs
+		by moving the 4 corners to the 4 edge locations, and vice-versa.  Swapping a pair of corners and edges
+		can be accomplished with...
+		</p>
+		<p>
+		<center><code>F,3[R,U,Ri,Ui],Fi,(1/2)R,F,3[R,U,Ri,Ui],Fi,(1/2)Ri</code></center>
+		</p>
+		<p>
+		...so two applications of this in the right contexts will reduce the 4 V-pairs down to zero.
+		</p>
+		Of course, the number of V-pairs
 		you have to get rid of may not be a multiple of 4.  Not really seeing how to eliminate a single V-pair,
-		I could see how to create a new one from an existing one.  What I did is move half of one away
-		using a classic edge permutation sequence, and then resolve the semi-cube shape.  (That's not terribly
-		precise, but it's all I can remember at the moment.)  After working your way up to 4 V-pairs, you can
-		eliminate them all as already stated, and all V-pairs are now gone.
+		I could see how to create a new V-pair.  (Reverse this idea, I suppose, to eliminate V-pairs one by one.)
+		Once you work your way up to 4 again, you can collapse them back down to 0 as already prescribed.
+		The basic move is as follows...
+		</p>
+		<p>
+		<center><code>(1/2)Di,M,2U,Mi,D</code></center>
+		</p>
+		<p>
+		This puts you back at step 1, but you're just a single tri-cycle and a flattening away from being back in semi-cube shape;
+		and furthermore, you've created one V-pair and two edge blocks that can be combine to form another new V-pair.
+		If you only wanted to create 1 V-pair in total, then you do the above sequence involving edge blocks
+		that are half-V-blocks, instead of non-V-blocks (i.e., solved edge blocks in terms of shape.)
 		</p>
 		<h2>Step 3: Solve half the tiny triangles.</h2>
 		<p>
+		The cube is now back in perfect cube shape, so now we start to focus on some color.
 		There are 8 tiny triangles per face, but in this step, you only need to solve half of them.
 		The half you solve are those that point along the dialgonals of the cube, not the horizontals or verticals.
 		Further, you only need them positioned up to being on their correct face, or the opposite of their correct face.
