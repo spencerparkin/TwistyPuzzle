@@ -24,7 +24,7 @@
 		</p>
 		<p>
 		...and its variants to re-orient the center bits of the edge blocks.  Getting these "flaps" to lay
-		down flat will significantly minimize bandaging.
+		down flat will significantly minimize bandaging.  I refer to this as a "flattening" later on.
 		</p>
 		<h2>Step 2: Get it into cube shape.</h2>
 		<p>
@@ -70,6 +70,24 @@
 		Further, you only need them positioned up to being on their correct face, or the opposite of their correct face.
 		For example, get the 4 tiny white triangles and 4 tiny yellow triangles distributed between the white
 		and yellow faces.  You'll return to these pieces later in step 5.
+		</p>
+		<p>
+		So the crux of the problem is to move tiny triangles across adjacent faces.  To do this, I use...
+		</p>
+		<p>
+		<center><code>(1/2)Li,(1/2)B,R,2U,Ri,Ui,R,Ui,Ri,(1/2)Bi,W,(1/2)L</code></center>
+		</p>
+		<p>
+		Here, the move W is to rotate the whole puzzle on the positive Y-axis -90 degrees,
+		then do the well-known tri-cycle...
+		</p>
+		<center><code>2U,Mi,2U,M</code></center>
+		</p>
+		<p>
+		...then rotate on the positive Y-axis 90 degrees before finishing the sequence with (1/2)L.
+		Yes, this actually puts you back in step 1, but you're just one tri-cycle and one flattening away from solving that
+		stage again, and you can skip step 2 completely; so it's really not so bad.  To understand what tiny triangles
+		are being moved here, take a careful look at what the move is trying to accomplish in terms of edge cycling.
 		</p>
 		<h2>Step 4: Solve the edge blocks.</h2>
 		<p>
