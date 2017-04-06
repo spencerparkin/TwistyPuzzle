@@ -12,7 +12,7 @@
 		<h2>Step 1: Get it into semi-cube shape.</h2>
 		<p>
 		By this I mean that it is in cube shape, save the small bumps that are made by the
-		short, rectangular, thin peices making up two parts of an edge block.  The bandaging can be bad
+		short, rectangular, thin peices making up one or two parts of an edge block.  The bandaging can be bad
 		enough that it seems impossible to get anywhere.  All I can say is that with some trial
 		and error, you can get to situations where the following becomes easier, and that is to use
 		corner-orientation moves (with setup moves that are multiples of a 1/2 turn) until all corner
@@ -24,12 +24,21 @@
 		</p>
 		<p>
 		...and its variants to re-orient the center bits of the edge blocks.  Getting these "flaps" to lay
-		down flat will significantly minimize bandaging.  I refer to this as a "flattening" later on.
+		down flat against the cube will significantly minimize bandaging.  I refer to this as "flattening" later on.
+		Many useful sequence will require you to subsequently resolve some edge and corner peices, then reflatten a few edge block
+		center bits.  The well-known corner tri-cycle I use is...
 		</p>
-		<h2>Step 2: Get it into cube shape.</h2>
+		<p>
+		<center><code>U,R,Ui,Li,U,Ri,Ui,L</code></center>
+		</p>
+		<p>
+		...which usually needs to be setup with a half turn in order to interchange corner pieces and center bits of edge blocks.
+		</p>
+		<h2>Step 2: Get it into cube shape and solve half the tiny triangles.</h2>
 		<p>
 		At this point, small bumps may protrude from the edge blocks in a way that is more or less
-		bandaging.  In any case, you'll eventually be able to use the following sequence...
+		bandaging, but the general shape of the puzzle is more cube-shaped than ever before.  In any case,
+		you'll eventually be able to use the following sequence...
 		</p>
 		<p>
 		<center><code>X = (1/2)Fi,(1/2)Bi,2U,(1/2)F,(1/2)B</code></center>
@@ -45,7 +54,7 @@
 		<center><code>F,3[R,U,Ri,Ui],Fi,(1/2)R,F,3[R,U,Ri,Ui],Fi,(1/2)Ri</code></center>
 		</p>
 		<p>
-		...so two applications of this in the right contexts will reduce the 4 V-pairs down to zero.
+		...so two applications of this in the right contexts (from the right perspectives) will reduce the 4 V-pairs down to zero.
 		</p>
 		Of course, the number of V-pairs
 		you have to get rid of may not be a multiple of 4.  Not really seeing how to eliminate a single V-pair,
@@ -54,52 +63,53 @@
 		The basic move is as follows...
 		</p>
 		<p>
-		<center><code>(1/2)Di,M,2U,Mi,D</code></center>
+		<center><code>(1/2)Di,M,2U,Mi,(1/2)D</code></center>
 		</p>
 		<p>
 		This puts you back at step 1, but you're just a single tri-cycle and a flattening away from being back in semi-cube shape;
 		and furthermore, you've created one V-pair and two edge blocks that can be combine to form another new V-pair.
-		If you only wanted to create 1 V-pair in total, then you do the above sequence involving edge blocks
-		that are half-V-blocks, instead of non-V-blocks (i.e., solved edge blocks in terms of shape.)
-		</p>
-		<h2>Step 3: Solve half the tiny triangles.</h2>
-		<p>
-		The cube is now back in perfect cube shape, so now we start to focus on some color.
-		There are 8 tiny triangles per face, but in this step, you only need to solve half of them.
-		The half you solve are those that point along the dialgonals of the cube, not the horizontals or verticals.
-		Further, you only need them positioned up to being on their correct face, or the opposite of their correct face.
-		For example, get the 4 tiny white triangles and 4 tiny yellow triangles distributed between the white
-		and yellow faces.  You'll return to these pieces later in step 5.
+		If you only wanted to create 1 V-pair in total, then you do the above sequence involving an edge block
+		that is a half-V-block, instead of a non-V-block (i.e., a solved edge block in terms of shape only, not color.)
 		</p>
 		<p>
-		So the crux of the problem is to move tiny triangles across adjacent faces.  To do this, I use...
+		With what's been said thus far, we can go from semi-cube shape to cube shape; problem is, however, that we have
+		to combine this step with the problem of getting half the tiny triangles solved in the corner positions, at least
+		up to being positioned on their correct or opposite faces.  Think about the process that takes 4 V-pairs to 0 V-pairs.
+		It will effectively swap 4 of the 8 tiny triangles on a face with the other 4.  Of course, we can do this on any face
+		for which we have yet to resolve the triangles we care about.  On the last face, we can avoid the problem by breaking
+		the V-pairs (using the sequence X above) and then resolving them (again using X) in such a way that the vertex of the "V"
+		in the V-pair contains a tiny triangle of the desired color.  This lets you kill the last 4 V-pairs without destroying the
+		work you've done to solve the 4 tiny triangles that live in the 4 corners of the face.
 		</p>
 		<p>
-		<center><code>(1/2)Li,(1/2)B,R,2U,Ri,Ui,R,Ui,Ri,(1/2)Bi,W,(1/2)L</code></center>
+		So the last thing to describe here is how we can move the tiny triangles around.  What I've done is use...
 		</p>
 		<p>
-		Here, the move W is to rotate the whole puzzle on the positive Y-axis -90 degrees,
-		then do the well-known tri-cycle...
-		</p>
-		<center><code>2U,Mi,2U,M</code></center>
+		<center><code>(1/2)R,2U,F,3[R,U,Ri,Ui],Fi,(1/2)Ri,(1/2)L,U,B,Ui,Fi,U,Bi,Ui,(1/2)Li</code></center>
 		</p>
 		<p>
-		...then rotate on the positive Y-axis 90 degrees before finishing the sequence with (1/2)L.
-		Yes, this actually puts you back in step 1, but you're just one tri-cycle and one flattening away from solving that
-		stage again, and you can skip step 2 completely; so it's really not so bad.  To understand what tiny triangles
-		are being moved here, take a careful look at what the move is trying to accomplish in terms of edge cycling.
+		...after setting up for the move so that a tiny triangle from an edge lands where I want it to land in a corner.
+		This sequence will bring you back to step 1, but you're only one flattening away from getting back to step 2
+		with some additional progress made.  Note that this also creates V-pairs, so it's give and take between the
+		problem of solving the tiny corner triangles and eliminating the V-pairs.
 		</p>
-		<h2>Step 4: Solve the edge blocks.</h2>
+		<h2>Step 3: Solve the edge blocks.</h2>
 		<p>
-		Solving the edge blocks is time-consuming and tedious, but with patience, you can easily get to the
+		The cube now being back in perfect cube shape, we turn out attention to solving the colors of the edge blocks.
+		Doing so is time-consuming and tedious, but with patience, you can easily get to the
 		point where you have all but two of them solved.  You're just using the sequence X given above after
 		positioning and orienting the edge blocks in preparation for that move.  Careful planning is required.
 		To put a single edge block together, you have to build 3 different peices of it in 3 different locations,
-		then bring them together with 2 applications of the sequence X.
+		then bring them together with 2 applications of the sequence X.  As you go about this, and throughout this
+		entire step, you need not worry about the tiny corner triangles you solved in the last step, as long as
+		you stick to the sequence X (from any perspective.)  We will easily
+		address these tiny corner triangles for the last time in step 4.  You do, however, need to make sure that
+		you don't break a solved edge block while solving a new one;
+		or at least, that you only temporarily break any existing edge blocks while solving a new one.
 		</p>
 		<p>
-		When it comes down to the
-		last two edge blocks, the following sequence is helpful.
+		The crux of this step occurs when we come down to solving the
+		last two edge blocks.  The following sequence is helpful.
 		</p>
 		<p>
 		<center><code>K = 3[X,Y,Xi,Yi]</code></center>
@@ -141,17 +151,19 @@
 		If you find that you need to swap a pair of such faces, then you can still use this sequence
 		if you involve a third quadrilateral of the same color as one of the two you need to swap.
 		</p>
-		<h2>Step 5: Solve the remaining tiny triangles.</h2>
+		<h2>Step 4: Solve the remaining tiny triangles.</h2>
 		<p>
 		This is a trivial matter of solving an even number of pairs of such triangles on opposite
 		sides of the cube by temporarily breaking 2 pairs of edge blocks in one solve, then fixing
 		them in another solve.  If you need to solve an odd number of tiny triangle pairs, then
 		on the last pair, simply swap two tiny triangles of the same color to break 2 pairs of edge
 		blocks, then fix them while solving the last pair of tiny triangles.
+		Of coures, these breaks and fixes are accomplished with the sequence X with preparation
+		between applications.
 		</p>
-		<h2>Step 6: Solve as you would a 3x3x3.</h2>
+		<h2>Step 5: Solve as you would a 3x3x3.</h2>
 		<p>
-		At last, solve the 3x3x3.  I'm faily sure that it's not possible for a single edge
+		At last, solve the 3x3x3.  I'm fairly sure that it's not possible for a single edge
 		to be flipped or for some other sort of problem to occur.  Bask in the glory of having
 		solved this infernal puzzle!
 		</p>
