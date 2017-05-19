@@ -172,7 +172,26 @@
 		as the solver being unable to get the edge centers oriented with respect to the edge sliver peices.
 		From what I've heard from a friend, rotating one face 45 degrees, then resolving shape is a way
 		of dealing with the error.  Knowing if you have the parity issue might be possible by looking
-		at the orientation of the centers.
+		at the orientation of the centers.  In any case, I have reason to suspect that the following
+		sequence toggles the parity.
+		</p>
+		<p>
+		<center><code>(1/2)Ui,W,(1/2)U,W,(3/2)U,W,(1/2)U,W,(3/2)U,W,2U,4[7T,U],Ui</code></center>
+		</p>
+		...where...
+		<p>
+		<center><code>W = R,3[U,F,Ui,Fi],Ri</code></center>
+		</p>
+		...and...
+		<p>
+		<center><code>T = 2L,D,2L,Di</code></center>
+		</p>
+		<p>
+		Without needing to memorize any of this, the idea is simply to do the 45 degree rotation
+		of the top, then swap corners with edge-centers, then kill the V-pairs as usual.
+		I wish I understood the exact nature of the parity, and must admit to not really being able
+		to take any credit whatsoever in coming up with a solution to it.  Yes, the sequence above is mine,
+		but it is a direct consequence of following 3rd-hand advice from somewhere on the internet.
 		</p>
 		<h2>Step 4: Solve the remaining tiny triangles.</h2>
 		<p>
