@@ -167,6 +167,7 @@
     <ClInclude Include="Code\GLRenderer.h" />
     <ClInclude Include="Code\HtmlFrame.h" />
     <ClInclude Include="Code\IcosahedronSkewb.h" />
+    <ClInclude Include="Code\LatchCube.h" />
     <ClInclude Include="Code\MasterPyraminx.h" />
     <ClInclude Include="Code\Megaminx.h" />
     <ClInclude Include="Code\MixupCube.h" />
@@ -207,6 +208,7 @@
     <ClCompile Include="Code\GLRenderer.cpp" />
     <ClCompile Include="Code\HtmlFrame.cpp" />
     <ClCompile Include="Code\IcosahedronSkewb.cpp" />
+    <ClCompile Include="Code\LatchCube.cpp" />
     <ClCompile Include="Code\MasterPyraminx.cpp" />
     <ClCompile Include="Code\Megaminx.cpp" />
     <ClCompile Include="Code\MixupCube.cpp" />

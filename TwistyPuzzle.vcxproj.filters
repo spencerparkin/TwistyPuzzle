@@ -127,6 +127,9 @@
     <ClInclude Include="Code\Bagua.h">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClInclude>
+    <ClInclude Include="Code\LatchCube.h">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -241,6 +244,9 @@
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
     <ClCompile Include="Code\Bagua.cpp">
+      <Filter>Code\PuzzleDerivatives</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\LatchCube.cpp">
       <Filter>Code\PuzzleDerivatives</Filter>
     </ClCompile>
   </ItemGroup>

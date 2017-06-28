@@ -304,6 +304,9 @@ void TwistyPuzzle::BindCutShapeToCapturedFaces( CutShape* cutShape, FaceList& ca
 
 /*virtual*/ bool TwistyPuzzle::ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation )
 {
+	if( !cutShape )
+		cutShape = ( CutShape* )CutShape::Dereference( rotation->cutShapeHandle );
+
 	double eps = GetCutAndCaptureEpsilon();
 
 	FaceList capturedFaceList;
@@ -325,6 +328,8 @@ void TwistyPuzzle::BindCutShapeToCapturedFaces( CutShape* cutShape, FaceList& ca
 
 		_3DMath::AffineTransform transform;
 		transform.SetRotation( cutShape->axisOfRotation, rotationAngle );
+
+		ApplyingTransformWithRotation( transform, rotation );
 
 		for( FaceList::iterator iter = capturedFaceList.begin(); iter != capturedFaceList.end(); iter++ )
 		{
