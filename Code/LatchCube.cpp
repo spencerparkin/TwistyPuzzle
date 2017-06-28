@@ -189,16 +189,24 @@ bool LatchCube::CanRotate( const Rotation* rotation ) const
 	else
 		return false;
 
-	// Without changing the constraints of the puzzle, we could allow a
-	// CW or CCW turn on any face that does not have apposing arrows, but
-	// let's stay true to the physical constraints of the puzzle.
+	int ccwCount = 0;
+	int cwCount = 0;
+
 	for( ConstraintList::const_iterator iter = constraintList.cbegin(); iter != constraintList.cend(); iter++ )
 	{
 		const Constraint& constraint = *iter;
 		double* component = ( double* )&constraint.location.x;
-		if( fabs( component[ offset ] - target ) < eps && constraint.direction != rotation->direction )
-			return false;
+		if( fabs( component[ offset ] - target ) < eps )
+		{
+			if( constraint.direction == Rotation::DIR_CCW )
+				ccwCount++;
+			else if( constraint.direction == Rotation::DIR_CW )
+				cwCount++;
+		}
 	}
+
+	if( ccwCount > 0 && cwCount > 0 )
+		return false;
 
 	return true;
 }
