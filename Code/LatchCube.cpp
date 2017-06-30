@@ -12,6 +12,24 @@ LatchCube::LatchCube( void )
 {
 }
 
+/*virtual*/ bool LatchCube::LoadFromXml( const wxXmlDocument& xmlDocument )
+{
+	if( !TwistyPuzzle::LoadFromXml( xmlDocument ) )
+		return false;
+
+	// TODO: Load constraint data.
+	return true;
+}
+
+/*virtual*/ bool LatchCube::SaveToXml( wxXmlDocument& xmlDocument ) const
+{
+	if( !TwistyPuzzle::SaveToXml( xmlDocument ) )
+		return false;
+
+	// TODO: Save constraint data.
+	return true;
+}
+
 /*virtual*/ void LatchCube::Reset( void )
 {
 	Rubiks3x3x3::Reset();

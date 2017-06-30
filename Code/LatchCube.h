@@ -19,6 +19,8 @@ public:
 	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, int renderFlags ) override;
 	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation ) override;
 	virtual void ApplyingTransformWithRotation( const _3DMath::AffineTransform& transform, const Rotation* rotation ) override;
+	virtual bool LoadFromXml( const wxXmlDocument& xmlDocument ) override;
+	virtual bool SaveToXml( wxXmlDocument& xmlDocument ) const override;
 
 	struct Constraint
 	{
