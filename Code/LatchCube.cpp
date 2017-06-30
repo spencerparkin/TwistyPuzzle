@@ -101,6 +101,7 @@ LatchCube::LatchCube( void )
 		_3DMath::Vector position( constraint.location );
 		position.Scale( 10.0 / 3.0 );
 		position.AddScale( vector, -0.5 );
+		position.AddScale( axis, -10.0 / 6.5 );
 
 		_3DMath::Vector color( 0.5, 0.5, 0.5 );
 
@@ -110,7 +111,7 @@ LatchCube::LatchCube( void )
 		transform.Transform( position );
 		normalTransform.Transform( vector );
 
-		renderer.DrawVector( vector, position, color );
+		renderer.DrawVector( vector, position, color, 1.0, 0.5 );
 	}
 }
 
