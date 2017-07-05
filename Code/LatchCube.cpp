@@ -52,8 +52,8 @@ LatchCube::LatchCube( void )
 	constraint.location.Set( 2.0, -1.0, 0.0 );
 	constraintList.push_back( constraint );
 
-	// -Y -> ccw
-	constraint.direction = Rotation::DIR_CCW;
+	// -Y -> cw
+	constraint.direction = Rotation::DIR_CW;
 	constraint.location.Set( 0.0, -2.0, -1.0 );
 	constraintList.push_back( constraint );
 	constraint.location.Set( 0.0, -2.0, 1.0 );
@@ -73,8 +73,8 @@ LatchCube::LatchCube( void )
 	constraint.location.Set( 1.0, 0.0, -2.0 );
 	constraintList.push_back( constraint );
 
-	// +Z -> cw
-	constraint.direction = Rotation::DIR_CW;
+	// +Z -> ccw
+	constraint.direction = Rotation::DIR_CCW;
 	constraint.location.Set( -1.0, 0.0, 2.0 );
 	constraintList.push_back( constraint );
 	constraint.location.Set( 1.0, 0.0, 2.0 );
