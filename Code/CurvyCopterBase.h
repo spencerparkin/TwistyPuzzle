@@ -19,7 +19,10 @@ public:
 	virtual bool SpecialAction( double wheelClicks, int selectedObjectHandle, int flags ) override;
 	virtual void EnqueueRandomRotations( _3DMath::Random& random, int rotationCount ) override;
 	virtual double CalcJumbleTurnAmount( void ) = 0;
-	virtual _3DMath::Surface* MakeCutSphereSurfaceForEdge( const _3DMath::Vector& edgeCenter ) = 0;
+	virtual _3DMath::Surface* MakeCutSphereSurfaceForEdge( const _3DMath::Vector& edgeCenter ) { return nullptr; }
+	virtual CutShape* GetEdgeCutShapeByLetter( char letter );
+
+	void PopulateJumbleMap( void );
 
 	struct Jumble
 	{

@@ -161,6 +161,7 @@
     <ClInclude Include="Code\FaceTurningOctahedron.h" />
     <ClInclude Include="Code\FisherCube.h" />
     <ClInclude Include="Code\FlowerBox.h" />
+    <ClInclude Include="Code\FlowerCopter.h" />
     <ClInclude Include="Code\Frame.h" />
     <ClInclude Include="Code\Gem6.h" />
     <ClInclude Include="Code\Gem8.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="Code\FaceTurningOctahedron.cpp" />
     <ClCompile Include="Code\FisherCube.cpp" />
     <ClCompile Include="Code\FlowerBox.cpp" />
+    <ClCompile Include="Code\FlowerCopter.cpp" />
     <ClCompile Include="Code\Frame.cpp" />
     <ClCompile Include="Code\Gem6.cpp" />
     <ClCompile Include="Code\Gem8.cpp" />

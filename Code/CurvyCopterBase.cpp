@@ -132,89 +132,107 @@ CurvyCopterBase::CurvyCopterBase( void )
 	cutShapeL->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShapeL );
 
+	PopulateJumbleMap();
+}
+
+/*virtual*/ CurvyCopterBase::CutShape* CurvyCopterBase::GetEdgeCutShapeByLetter( char letter )
+{
+	int count = letter - 'A';
+	for( CutShapeList::iterator iter = cutShapeList.begin(); iter != cutShapeList.end(); iter++ )
+	{
+		CutShape* cutShape = *iter;
+		if( count == 0 )
+			return cutShape;
+		count--;
+	}
+	return nullptr;
+}
+
+void CurvyCopterBase::PopulateJumbleMap( void )
+{
 	Jumble* jumble = new Jumble;
-	jumble->adjCutShapeHandles.push_back( cutShapeD->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeL->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeJ->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeC->GetHandle() );
-	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeA->GetHandle(), jumble ) );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('D')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('L')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('J')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('C')->GetHandle() );
+	jumbleMap.insert( std::pair< int, Jumble* >( GetEdgeCutShapeByLetter('A')->GetHandle(), jumble ) );
 
 	jumble = new Jumble;
-	jumble->adjCutShapeHandles.push_back( cutShapeC->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeI->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeK->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeD->GetHandle() );
-	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeB->GetHandle(), jumble ) );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('C')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('I')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('K')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('D')->GetHandle() );
+	jumbleMap.insert( std::pair< int, Jumble* >( GetEdgeCutShapeByLetter('B')->GetHandle(), jumble ) );
 
 	jumble = new Jumble;
-	jumble->adjCutShapeHandles.push_back( cutShapeK->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeA->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeL->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeB->GetHandle() );
-	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeC->GetHandle(), jumble ) );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('K')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('A')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('L')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('B')->GetHandle() );
+	jumbleMap.insert( std::pair< int, Jumble* >( GetEdgeCutShapeByLetter('C')->GetHandle(), jumble ) );
 
 	jumble = new Jumble;
-	jumble->adjCutShapeHandles.push_back( cutShapeJ->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeB->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeA->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeI->GetHandle() );
-	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeD->GetHandle(), jumble ) );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('J')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('B')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('A')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('I')->GetHandle() );
+	jumbleMap.insert( std::pair< int, Jumble* >( GetEdgeCutShapeByLetter('D')->GetHandle(), jumble ) );
 
 	jumble = new Jumble;
-	jumble->adjCutShapeHandles.push_back( cutShapeG->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeJ->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeL->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeH->GetHandle() );
-	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeE->GetHandle(), jumble ) );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('G')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('J')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('L')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('H')->GetHandle() );
+	jumbleMap.insert( std::pair< int, Jumble* >( GetEdgeCutShapeByLetter('E')->GetHandle(), jumble ) );
 
 	jumble = new Jumble;
-	jumble->adjCutShapeHandles.push_back( cutShapeK->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeH->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeG->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeI->GetHandle() );
-	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeF->GetHandle(), jumble ) );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('K')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('H')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('G')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('I')->GetHandle() );
+	jumbleMap.insert( std::pair< int, Jumble* >( GetEdgeCutShapeByLetter('F')->GetHandle(), jumble ) );
 
 	jumble = new Jumble;
-	jumble->adjCutShapeHandles.push_back( cutShapeL->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeF->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeK->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeE->GetHandle() );
-	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeG->GetHandle(), jumble ) );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('L')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('F')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('K')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('E')->GetHandle() );
+	jumbleMap.insert( std::pair< int, Jumble* >( GetEdgeCutShapeByLetter('G')->GetHandle(), jumble ) );
 
 	jumble = new Jumble;
-	jumble->adjCutShapeHandles.push_back( cutShapeI->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeE->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeJ->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeF->GetHandle() );
-	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeH->GetHandle(), jumble ) );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('I')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('E')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('J')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('F')->GetHandle() );
+	jumbleMap.insert( std::pair< int, Jumble* >( GetEdgeCutShapeByLetter('H')->GetHandle(), jumble ) );
 
 	jumble = new Jumble;
-	jumble->adjCutShapeHandles.push_back( cutShapeD->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeF->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeB->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeH->GetHandle() );
-	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeI->GetHandle(), jumble ) );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('D')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('F')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('B')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('H')->GetHandle() );
+	jumbleMap.insert( std::pair< int, Jumble* >( GetEdgeCutShapeByLetter('I')->GetHandle(), jumble ) );
 
 	jumble = new Jumble;
-	jumble->adjCutShapeHandles.push_back( cutShapeA->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeH->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeE->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeD->GetHandle() );
-	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeJ->GetHandle(), jumble ) );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('A')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('H')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('E')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('D')->GetHandle() );
+	jumbleMap.insert( std::pair< int, Jumble* >( GetEdgeCutShapeByLetter('J')->GetHandle(), jumble ) );
 
 	jumble = new Jumble;
-	jumble->adjCutShapeHandles.push_back( cutShapeB->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeG->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeC->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeF->GetHandle() );
-	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeK->GetHandle(), jumble ) );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('B')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('G')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('C')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('F')->GetHandle() );
+	jumbleMap.insert( std::pair< int, Jumble* >( GetEdgeCutShapeByLetter('K')->GetHandle(), jumble ) );
 
 	jumble = new Jumble;
-	jumble->adjCutShapeHandles.push_back( cutShapeE->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeC->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeG->GetHandle() );
-	jumble->adjCutShapeHandles.push_back( cutShapeA->GetHandle() );
-	jumbleMap.insert( std::pair< int, Jumble* >( cutShapeL->GetHandle(), jumble ) );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('E')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('C')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('G')->GetHandle() );
+	jumble->adjCutShapeHandles.push_back( GetEdgeCutShapeByLetter('A')->GetHandle() );
+	jumbleMap.insert( std::pair< int, Jumble* >( GetEdgeCutShapeByLetter('L')->GetHandle(), jumble ) );
 }
 
 // TODO: How do you jumble if you're using the command-line interface?
