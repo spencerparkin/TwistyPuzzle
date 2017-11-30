@@ -305,7 +305,7 @@ void CurvyCopterBase::EnqueueJumble( JumbleMap::iterator iter, int flags )
 			TwistyPuzzle::EnqueueRandomRotations( random, 1 );
 		else
 		{
-			int i = random.Integer( 0, cutShapeList.size() - 1 );
+			int i = random.Integer( 0, jumbleMap.size() - 1 );
 			JumbleMap::iterator iter = jumbleMap.begin();
 			while( i > 0 )
 			{
@@ -313,7 +313,7 @@ void CurvyCopterBase::EnqueueJumble( JumbleMap::iterator iter, int flags )
 				i--;
 			}
 
-			EnqueueJumble( iter, random.Integer( 1, 8 ) );
+			EnqueueJumble( iter, random.Integer( 1, 3 ) );
 		}
 
 		rotationCount--;
