@@ -172,6 +172,7 @@
     <ClInclude Include="Code\MasterPyraminx.h" />
     <ClInclude Include="Code\Megaminx.h" />
     <ClInclude Include="Code\MixupCube.h" />
+    <ClInclude Include="Code\PentacleCube.h" />
     <ClInclude Include="Code\Pyraminx.h" />
     <ClInclude Include="Code\PyraminxBase.h" />
     <ClInclude Include="Code\Rubiks2x2x2.h" />
@@ -214,6 +215,7 @@
     <ClCompile Include="Code\MasterPyraminx.cpp" />
     <ClCompile Include="Code\Megaminx.cpp" />
     <ClCompile Include="Code\MixupCube.cpp" />
+    <ClCompile Include="Code\PentacleCube.cpp" />
     <ClCompile Include="Code\Pyraminx.cpp" />
     <ClCompile Include="Code\PyraminxBase.cpp" />
     <ClCompile Include="Code\Rubiks2x2x2.cpp" />
