@@ -309,8 +309,6 @@ void Frame::OnAutoSelectAxis( wxCommandEvent& event )
 
 void Frame::OnScramble( wxCommandEvent& event )
 {
-	wxBusyCursor busyCursor;
-
 	timer.Stop();
 
 	int rotationCount = ( int )wxGetNumberFromUser( "Scramble with how many rotations?", "Scrambles:", "Scramble", 50, 1, 500, wxGetApp().GetFrame() );
@@ -324,6 +322,7 @@ void Frame::OnScramble( wxCommandEvent& event )
 	rotation->newRotationSpeedCoeficient = 20.0;
 	puzzle->EnqueueRotation( rotation );
 
+	wxBusyCursor busyCursor;
 	puzzle->EnqueueRandomRotations( random, rotationCount );
 
 	rotation = new TwistyPuzzle::Rotation(0);
