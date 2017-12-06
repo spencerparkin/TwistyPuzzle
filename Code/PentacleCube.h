@@ -15,6 +15,8 @@ public:
 
 	virtual void Reset( void ) override;
 	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation ) override;
+	virtual bool LoadFromXml( const wxXmlDocument& xmlDocument ) override;
+	virtual bool SaveToXml( wxXmlDocument& xmlDocument ) const override;
 };
 
 // PentacleCube.h

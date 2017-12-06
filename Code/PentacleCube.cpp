@@ -270,7 +270,7 @@ PentacleCube::PentacleCube( void )
 		
 	cutShape = new CutShape();
 	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, 0.0, 5.0 ), 5.0 ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 5.0;
+	cutShape->rotationAngleForSingleTurn = M_PI / 10.0;
 	cutShape->axisOfRotation.normal.Set( 0.0, 0.0, 1.0 );
 	cutShape->vectorLength = 12.0;
 	cutShape->label = 'f';
@@ -279,7 +279,7 @@ PentacleCube::PentacleCube( void )
 
 	cutShape = new CutShape();
 	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, 0.0, -5.0 ), 5.0 ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 5.0;
+	cutShape->rotationAngleForSingleTurn = M_PI / 10.0;
 	cutShape->axisOfRotation.normal.Set( 0.0, 0.0, -1.0 );
 	cutShape->vectorLength = 12.0;
 	cutShape->label = 'b';
@@ -288,7 +288,7 @@ PentacleCube::PentacleCube( void )
 
 	cutShape = new CutShape();
 	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, 5.0, 0.0 ), 5.0 ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 5.0;
+	cutShape->rotationAngleForSingleTurn = M_PI / 10.0;
 	cutShape->axisOfRotation.normal.Set( 0.0, 1.0, 0.0 );
 	cutShape->vectorLength = 12.0;
 	cutShape->label = 'u';
@@ -297,7 +297,7 @@ PentacleCube::PentacleCube( void )
 
 	cutShape = new CutShape();
 	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, -5.0, 0.0 ), 5.0 ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 5.0;
+	cutShape->rotationAngleForSingleTurn = M_PI / 10.0;
 	cutShape->axisOfRotation.normal.Set( 0.0, -1.0, 0.0 );
 	cutShape->vectorLength = 12.0;
 	cutShape->label = 'd';
@@ -306,7 +306,7 @@ PentacleCube::PentacleCube( void )
 
 	cutShape = new CutShape();
 	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, 0.0, 0.0 ), 5.0 ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 5.0;
+	cutShape->rotationAngleForSingleTurn = M_PI / 10.0;
 	cutShape->axisOfRotation.normal.Set( 1.0, 0.0, 0.0 );
 	cutShape->vectorLength = 12.0;
 	cutShape->label = 'r';
@@ -315,7 +315,7 @@ PentacleCube::PentacleCube( void )
 
 	cutShape = new CutShape();
 	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, 0.0, 0.0 ), 5.0 ) );
-	cutShape->rotationAngleForSingleTurn = 2.0 * M_PI / 5.0;
+	cutShape->rotationAngleForSingleTurn = M_PI / 10.0;
 	cutShape->axisOfRotation.normal.Set( -1.0, 0.0, 0.0 );
 	cutShape->vectorLength = 12.0;
 	cutShape->label = 'l';
@@ -325,9 +325,30 @@ PentacleCube::PentacleCube( void )
 
 /*virtual*/ bool PentacleCube::ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation )
 {
+	if( !TwistyPuzzle::ApplyCutShapeWithRotation( cutShape, rotation ) )
+		return false;
+
 	// TODO: Keep track of which of the 4 sides is unlocked for every given face.
 	//       Reject a rotation if not all 4 adjacent sides are unlocked on the captured face.
 	return false;
+}
+
+/*virtual*/ bool PentacleCube::LoadFromXml( const wxXmlDocument& xmlDocument )
+{
+	if( !TwistyPuzzle::LoadFromXml( xmlDocument ) )
+		return false;
+
+	//...
+	return true;
+}
+
+/*virtual*/ bool PentacleCube::SaveToXml( wxXmlDocument& xmlDocument ) const
+{
+	if( !TwistyPuzzle::SaveToXml( xmlDocument ) )
+		return false;
+
+	//...
+	return true;
 }
 
 // PentacleCube.cpp
