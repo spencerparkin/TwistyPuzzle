@@ -321,16 +321,99 @@ PentacleCube::PentacleCube( void )
 	cutShape->label = 'l';
 	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
+
+	vectorMap.insert( std::pair< char, _3DMath::Vector >( 'u', _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
+	vectorMap.insert( std::pair< char, _3DMath::Vector >( 'd', _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
+	vectorMap.insert( std::pair< char, _3DMath::Vector >( 'f', _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
+	vectorMap.insert( std::pair< char, _3DMath::Vector >( 'b', _3DMath::Vector( 1.0, 0.0, 0.0 ) ) );
+	vectorMap.insert( std::pair< char, _3DMath::Vector >( 'l', _3DMath::Vector( 0.0, 0.0, 1.0 ) ) );
+	vectorMap.insert( std::pair< char, _3DMath::Vector >( 'r', _3DMath::Vector( 0.0, 0.0, 1.0 ) ) );
+}
+
+/*virtual*/ void PentacleCube::Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform& transform, GLenum renderMode, int selectedObjectHandle, int renderFlags )
+{
+	TwistyPuzzle::Render( renderer, transform, renderMode, selectedObjectHandle, renderFlags );
+
+	for( VectorMap::iterator iter = vectorMap.begin(); iter != vectorMap.end(); iter++ )
+	{
+		_3DMath::Vector vector = iter->second;
+
+		_3DMath::Vector position;
+		if( iter->first == 'u' )
+			position.Set( 0.0, 5.5, 0.0 );
+		else if( iter->first == 'd' )
+			position.Set( 0.0, -5.0, 0.0 );
+		else if( iter->first == 'l' )
+			position.Set( -5.5, 0.0, 0.0 );
+		else if( iter->first == 'r' )
+			position.Set( 5.5, 0.0, 0.0 );
+		else if( iter->first == 'f' )
+			position.Set( 0.0, 0.0, 5.5 );
+		else if( iter->first == 'b' )
+			position.Set( 0.0, 0.0, -5.5 );
+
+		_3DMath::Vector color( 0.5, 0.5, 0.5 );
+
+		_3DMath::LinearTransform normalTransform;
+		transform.linearTransform.GetNormalTransform( normalTransform );
+
+		transform.Transform( position );
+		normalTransform.Transform( vector );
+
+		renderer.DrawVector( vector, position, color, 1.0, 0.5 );
+	}
+}
+
+void PentacleCube::GetAdjacentSides( char side, std::list< char >& sideList )
+{
+	if( side == 'U' || side == 'D' )
+	{
+		sideList.push_back('l');
+		sideList.push_back('r');
+		sideList.push_back('f');
+		sideList.push_back('b');
+	}
+	else if( side == 'L' || side == 'R' )
+	{
+		sideList.push_back('u');
+		sideList.push_back('d');
+		sideList.push_back('f');
+		sideList.push_back('b');
+	}
+	else if( side == 'F' || side == 'B' )
+	{
+		sideList.push_back('l');
+		sideList.push_back('r');
+		sideList.push_back('u');
+		sideList.push_back('d');
+	}
 }
 
 /*virtual*/ bool PentacleCube::ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation )
 {
-	if( !TwistyPuzzle::ApplyCutShapeWithRotation( cutShape, rotation ) )
-		return false;
+	std::string upperLabels = "UDLRFB";
 
-	// TODO: Keep track of which of the 4 sides is unlocked for every given face.
-	//       Reject a rotation if not all 4 adjacent sides are unlocked on the captured face.
-	return false;
+	if( upperLabels.find( cutShape->label ) != -1 )
+	{
+		std::list< char > labelList;
+		GetAdjacentSides( cutShape->label.c_str()[0], labelList );
+
+		for( std::list< char >::iterator iter = labelList.begin(); iter != labelList.end(); iter++ )
+		{
+			const _3DMath::Vector& vector = vectorMap.find( *iter )->second;
+			double angle = vector.AngleBetween( cutShape->axisOfRotation.normal );
+			if( angle > 1e-5 )
+				return false; // The face is locked; it cannot turn.
+		}
+	}
+	
+	_3DMath::Vector& vector = vectorMap.find( ::tolower( cutShape->label.c_str()[0] ) )->second;
+	double angle = ( ( rotation->direction == Rotation::DIR_CCW ) ? M_PI / 2.0 : -M_PI / 2.0 ) * float( rotation->turnCount );
+	_3DMath::LinearTransform transform;
+	transform.SetRotation( cutShape->axisOfRotation.normal, angle );
+	transform.Transform( vector );
+
+	return TwistyPuzzle::ApplyCutShapeWithRotation( cutShape, rotation );
 }
 
 /*virtual*/ bool PentacleCube::LoadFromXml( const wxXmlDocument& xmlDocument )
@@ -338,7 +421,8 @@ PentacleCube::PentacleCube( void )
 	if( !TwistyPuzzle::LoadFromXml( xmlDocument ) )
 		return false;
 
-	//...
+	// TODO: Load the vector map here.
+
 	return true;
 }
 
@@ -347,8 +431,46 @@ PentacleCube::PentacleCube( void )
 	if( !TwistyPuzzle::SaveToXml( xmlDocument ) )
 		return false;
 
-	//...
+	// TODO: Save the vector map here.
+
 	return true;
+}
+
+/*virtual*/ void PentacleCube::EnqueueRandomRotations( _3DMath::Random& random, int rotationCount )
+{
+	// Here, instead of just enqueueing rotations, we're actually just going to do the scramble directly.
+	// This is because we have to flush each iteration of this loop.
+
+	while( rotationCount > 0 )
+	{
+		const char sideArray[6] = { 'U', 'D', 'L', 'R', 'F', 'B' };
+		CutShape* cutShape = FindCutShapeWithLabel( sideArray[ random.Integer( 0, 5 ) ] );
+
+		std::list< char > labelList;
+		GetAdjacentSides( cutShape->label.c_str()[0], labelList );
+
+		for( std::list< char >::iterator iter = labelList.begin(); iter != labelList.end(); iter++ )
+		{
+			const _3DMath::Vector& vector = vectorMap.find( *iter )->second;
+			CutShape* sphereCutShape = FindCutShapeWithLabel( *iter );
+
+			while( true )
+			{
+				double angle = vector.AngleBetween( cutShape->axisOfRotation.normal );
+				if( angle <= 1e-5 )
+					break;
+
+				EnqueueRotation( new Rotation( sphereCutShape->GetHandle(), Rotation::DIR_CCW ) );
+				FlushRotationQueue();
+			}
+		}
+
+		Rotation::Direction direction = random.Integer( 0, 1 ) ? Rotation::DIR_CCW : Rotation::DIR_CW;
+		EnqueueRotation( new Rotation( cutShape->GetHandle(), direction ) );
+		FlushRotationQueue();
+
+		rotationCount--;
+	}
 }
 
 // PentacleCube.cpp

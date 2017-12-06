@@ -309,6 +309,8 @@ void Frame::OnAutoSelectAxis( wxCommandEvent& event )
 
 void Frame::OnScramble( wxCommandEvent& event )
 {
+	wxBusyCursor busyCursor;
+
 	timer.Stop();
 
 	int rotationCount = ( int )wxGetNumberFromUser( "Scramble with how many rotations?", "Scrambles:", "Scramble", 50, 1, 500, wxGetApp().GetFrame() );
