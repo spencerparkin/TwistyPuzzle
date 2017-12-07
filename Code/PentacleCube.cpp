@@ -229,6 +229,7 @@ PentacleCube::PentacleCube( void )
 	rightCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	rightCutShape->axisOfRotation.normal.Set( 1.0, 0.0, 0.0 );
 	rightCutShape->label = 'R';
+	rightCutShape->vectorLength = 6.0;
 	cutShapeList.push_back( rightCutShape );
 
 	CutShape* leftCutShape = new CutShape();
@@ -236,6 +237,7 @@ PentacleCube::PentacleCube( void )
 	leftCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	leftCutShape->axisOfRotation.normal.Set( -1.0, 0.0, 0.0 );
 	leftCutShape->label = 'L';
+	leftCutShape->vectorLength = 6.0;
 	cutShapeList.push_back( leftCutShape );
 
 	CutShape* upCutShape = new CutShape();
@@ -243,6 +245,7 @@ PentacleCube::PentacleCube( void )
 	upCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	upCutShape->axisOfRotation.normal.Set( 0.0, 1.0, 0.0 );
 	upCutShape->label = 'U';
+	upCutShape->vectorLength = 6.0;
 	cutShapeList.push_back( upCutShape );
 
 	CutShape* downCutShape = new CutShape();
@@ -250,6 +253,7 @@ PentacleCube::PentacleCube( void )
 	downCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	downCutShape->axisOfRotation.normal.Set( 0.0, -1.0, 0.0 );
 	downCutShape->label = 'D';
+	downCutShape->vectorLength = 6.0;
 	cutShapeList.push_back( downCutShape );
 
 	CutShape* frontCutShape = new CutShape();
@@ -257,6 +261,7 @@ PentacleCube::PentacleCube( void )
 	frontCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	frontCutShape->axisOfRotation.normal.Set( 0.0, 0.0, 1.0 );
 	frontCutShape->label = 'F';
+	frontCutShape->vectorLength = 6.0;
 	cutShapeList.push_back( frontCutShape );
 
 	CutShape* backCutShape = new CutShape();
@@ -264,6 +269,7 @@ PentacleCube::PentacleCube( void )
 	backCutShape->rotationAngleForSingleTurn = M_PI / 2.0;
 	backCutShape->axisOfRotation.normal.Set( 0.0, 0.0, -1.0 );
 	backCutShape->label = 'B';
+	backCutShape->vectorLength = 6.0;
 	cutShapeList.push_back( backCutShape );
 
 	CutShape* cutShape = nullptr;
@@ -272,7 +278,7 @@ PentacleCube::PentacleCube( void )
 	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, 0.0, 5.0 ), 5.0 ) );
 	cutShape->rotationAngleForSingleTurn = M_PI / 10.0;
 	cutShape->axisOfRotation.normal.Set( 0.0, 0.0, 1.0 );
-	cutShape->vectorLength = 12.0;
+	cutShape->vectorLength = 7.0;
 	cutShape->label = 'f';
 	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
@@ -281,7 +287,7 @@ PentacleCube::PentacleCube( void )
 	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, 0.0, -5.0 ), 5.0 ) );
 	cutShape->rotationAngleForSingleTurn = M_PI / 10.0;
 	cutShape->axisOfRotation.normal.Set( 0.0, 0.0, -1.0 );
-	cutShape->vectorLength = 12.0;
+	cutShape->vectorLength = 7.0;
 	cutShape->label = 'b';
 	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
@@ -290,7 +296,7 @@ PentacleCube::PentacleCube( void )
 	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, 5.0, 0.0 ), 5.0 ) );
 	cutShape->rotationAngleForSingleTurn = M_PI / 10.0;
 	cutShape->axisOfRotation.normal.Set( 0.0, 1.0, 0.0 );
-	cutShape->vectorLength = 12.0;
+	cutShape->vectorLength = 7.0;
 	cutShape->label = 'u';
 	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
@@ -299,7 +305,7 @@ PentacleCube::PentacleCube( void )
 	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 0.0, -5.0, 0.0 ), 5.0 ) );
 	cutShape->rotationAngleForSingleTurn = M_PI / 10.0;
 	cutShape->axisOfRotation.normal.Set( 0.0, -1.0, 0.0 );
-	cutShape->vectorLength = 12.0;
+	cutShape->vectorLength = 7.0;
 	cutShape->label = 'd';
 	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
@@ -308,7 +314,7 @@ PentacleCube::PentacleCube( void )
 	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( 5.0, 0.0, 0.0 ), 5.0 ) );
 	cutShape->rotationAngleForSingleTurn = M_PI / 10.0;
 	cutShape->axisOfRotation.normal.Set( 1.0, 0.0, 0.0 );
-	cutShape->vectorLength = 12.0;
+	cutShape->vectorLength = 7.0;
 	cutShape->label = 'r';
 	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
@@ -317,7 +323,7 @@ PentacleCube::PentacleCube( void )
 	cutShape->surface = new _3DMath::SphereSurface( _3DMath::Sphere( _3DMath::Vector( -5.0, 0.0, 0.0 ), 5.0 ) );
 	cutShape->rotationAngleForSingleTurn = M_PI / 10.0;
 	cutShape->axisOfRotation.normal.Set( -1.0, 0.0, 0.0 );
-	cutShape->vectorLength = 12.0;
+	cutShape->vectorLength = 7.0;
 	cutShape->label = 'l';
 	cutShape->captureSide = _3DMath::Surface::INSIDE;
 	cutShapeList.push_back( cutShape );
@@ -337,12 +343,13 @@ PentacleCube::PentacleCube( void )
 	for( VectorMap::iterator iter = vectorMap.begin(); iter != vectorMap.end(); iter++ )
 	{
 		_3DMath::Vector vector = iter->second;
+		vector.Scale( 4.0 );
 
 		_3DMath::Vector position;
 		if( iter->first == 'u' )
 			position.Set( 0.0, 5.5, 0.0 );
 		else if( iter->first == 'd' )
-			position.Set( 0.0, -5.0, 0.0 );
+			position.Set( 0.0, -5.5, 0.0 );
 		else if( iter->first == 'l' )
 			position.Set( -5.5, 0.0, 0.0 );
 		else if( iter->first == 'r' )
@@ -421,7 +428,23 @@ void PentacleCube::GetAdjacentSides( char side, std::list< char >& sideList )
 	if( !TwistyPuzzle::LoadFromXml( xmlDocument ) )
 		return false;
 
-	// TODO: Load the vector map here.
+	const wxXmlNode* xmlRootNode = xmlDocument.GetRoot();
+
+	wxXmlNode* xmlVectorMapNode = xmlRootNode->GetChildren();
+	while( xmlVectorMapNode )
+	{
+		if( xmlVectorMapNode->GetName() == "vectorMap" )
+			break;
+
+		xmlVectorMapNode = xmlVectorMapNode->GetNext();
+	}
+
+	if( !xmlVectorMapNode )
+		return false;
+
+	for( VectorMap::iterator iter = vectorMap.begin(); iter != vectorMap.end(); iter++ )
+		if( !LoadVector( iter->first, xmlVectorMapNode, iter->second ) )
+			return false;
 
 	return true;
 }
@@ -431,7 +454,14 @@ void PentacleCube::GetAdjacentSides( char side, std::list< char >& sideList )
 	if( !TwistyPuzzle::SaveToXml( xmlDocument ) )
 		return false;
 
-	// TODO: Save the vector map here.
+	wxXmlNode* xmlRootNode = xmlDocument.GetRoot();
+
+	wxXmlNode* xmlVectorMapNode = new wxXmlNode( wxXmlNodeType::wxXML_ELEMENT_NODE, "vectorMap" );
+	for( VectorMap::const_iterator iter = vectorMap.cbegin(); iter != vectorMap.cend(); iter++ )
+		if( !SaveVector( iter->first, xmlVectorMapNode, iter->second ) )
+			return false;
+
+	xmlRootNode->AddChild( xmlVectorMapNode );
 
 	return true;
 }

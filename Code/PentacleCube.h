@@ -20,6 +20,7 @@ public:
 	virtual bool LoadFromXml( const wxXmlDocument& xmlDocument ) override;
 	virtual bool SaveToXml( wxXmlDocument& xmlDocument ) const override;
 	virtual void EnqueueRandomRotations( _3DMath::Random& random, int rotationCount ) override;
+	virtual double GetCutAndCaptureEpsilon( void ) override { return 0.03; }
 
 	void GetAdjacentSides( char side, std::list< char >& sideList );
 
