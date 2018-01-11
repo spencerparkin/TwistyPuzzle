@@ -181,6 +181,7 @@
     <ClInclude Include="Code\Rubiks3x3x3.h" />
     <ClInclude Include="Code\ShaderProgram.h" />
     <ClInclude Include="Code\Skewb.h" />
+    <ClInclude Include="Code\Skewb2.h" />
     <ClInclude Include="Code\SkewbDiamond.h" />
     <ClInclude Include="Code\SkewbUltimate.h" />
     <ClInclude Include="Code\SquareOne.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="Code\Rubiks3x3x3.cpp" />
     <ClCompile Include="Code\ShaderProgram.cpp" />
     <ClCompile Include="Code\Skewb.cpp" />
+    <ClCompile Include="Code\Skewb2.cpp" />
     <ClCompile Include="Code\SkewbDiamond.cpp" />
     <ClCompile Include="Code\SkewbUltimate.cpp" />
     <ClCompile Include="Code\SquareOne.cpp" />
