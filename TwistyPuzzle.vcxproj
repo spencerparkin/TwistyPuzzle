@@ -158,6 +158,7 @@
     <ClInclude Include="Code\CurvyCopter3.h" />
     <ClInclude Include="Code\CurvyCopterBase.h" />
     <ClInclude Include="Code\Dogic.h" />
+    <ClInclude Include="Code\DreidelCube.h" />
     <ClInclude Include="Code\FaceTurningOctahedron.h" />
     <ClInclude Include="Code\FisherCube.h" />
     <ClInclude Include="Code\FlowerBox.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="Code\CurvyCopter3.cpp" />
     <ClCompile Include="Code\CurvyCopterBase.cpp" />
     <ClCompile Include="Code\Dogic.cpp" />
+    <ClCompile Include="Code\DreidelCube.cpp" />
     <ClCompile Include="Code\FaceTurningOctahedron.cpp" />
     <ClCompile Include="Code\FisherCube.cpp" />
     <ClCompile Include="Code\FlowerBox.cpp" />
