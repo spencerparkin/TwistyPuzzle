@@ -1,0 +1,9 @@
+[submodule "ThirdParty/PermutationGroup"]
+	path = ThirdParty/PermutationGroup
+	url = git@github.spencerparkin:spencerparkin/PermutationGroup.git
+[submodule "ThirdParty/3DMath"]
+	path = ThirdParty/3DMath
+	url = git@github.spencerparkin:spencerparkin/3DMath.git
+[submodule "ThirdParty/FontSystem"]
+	path = ThirdParty/FontSystem
+	url = git@github.spencerparkin:spencerparkin/FontSystem.git
