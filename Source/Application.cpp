@@ -45,12 +45,12 @@ void Application::SetPuzzle( TwistyPuzzle* puzzle )
 
 wxString Application::ResolveRelativeResourcePath( const wxString& relPath )
 {
-	wxString fullPath = relPath;
+	wxString fullPath = wxGetCwd() + "/" + relPath;
 
 #if defined LINUX
 	wxString snapDir;
 	if( wxGetEnv( "SNAP", &snapDir ) )
-		fullPath = snapDir + "/share/TwistyPuzzle/" + fullPath;
+		fullPath = snapDir + "/share/TwistyPuzzle/" + relPath;
 #endif
 
 	return fullPath;

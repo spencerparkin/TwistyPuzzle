@@ -41,7 +41,8 @@ After determining that the program is a peice of crap, you can uninstall it simi
 
 ## Building
 
-Make sure all sub-modules are cloned, then use `cmake` as usual.
+Make sure all sub-modules are cloned, then use `cmake` as usual.  Note that you must use `-DCMAKE_BUILD_TYPE=Debug`
+at configuration time (not built time) in order to build everything with debug-info so that the debugger will work.
 
 ## Snapping
 

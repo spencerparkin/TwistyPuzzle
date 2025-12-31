@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch to TwistyPuzzle app",
+            "name": "Launch TwistyPuzzle app",
             "type": "cppdbg",
             "request": "launch",
             "MIMode": "gdb",
@@ -14,7 +14,7 @@
             "environment": [
                 {"name": "GDK_BACKEND", "value": "x11"}
             ],
-            "externalConsole": false
+            "externalConsole": true
         }
     ]
 }
