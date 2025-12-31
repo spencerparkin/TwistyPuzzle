@@ -429,7 +429,7 @@ void Frame::OnAbout( wxCommandEvent& event )
 	aboutDialogInfo.SetName( "Twisty Puzzle" );
 	aboutDialogInfo.SetVersion( "1.0" );
 	aboutDialogInfo.SetDescription( "This program is distributed under the MIT license." );
-	aboutDialogInfo.SetCopyright( "Copyright (C) 2017 Spencer T. Parkin (spencertparkin@gmail.com)" );
+	aboutDialogInfo.SetCopyright( "Copyright (C) 2017 Spencer T. Parkin (spencer.parkin@proton.me)" );
 	aboutDialogInfo.SetWebSite( "https://github.com/spencerparkin/TwistyPuzzle" );
 
 	wxAboutBox( aboutDialogInfo );

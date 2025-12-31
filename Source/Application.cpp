@@ -3,7 +3,7 @@
 #include "Application.h"
 #include "Frame.h"
 #include "TwistyPuzzle.h"
-#include "Rubiks3x3x3.h"
+#include "Puzzles/Rubiks3x3x3.h"
 
 wxIMPLEMENT_APP( Application );
 

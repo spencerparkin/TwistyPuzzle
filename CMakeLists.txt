@@ -22,90 +22,90 @@ endif()
 set(TWISTY_PUZZLE_SOURCES
     Source/Application.cpp
     Source/Application.h
-    Source/Bagua.cpp
-    Source/Bagua.h
-    Source/BauhiniaDodecahedron.cpp
-    Source/BauhiniaDodecahedron.h
-    Source/Bubbloid3x3x3.cpp
-    Source/Bubbloid3x3x3.h
-    Source/Bubbloid4x4x5.cpp
-    Source/Bubbloid4x4x5.h
     Source/Canvas.cpp
     Source/Canvas.h
-    Source/CornerTurningOctahedron.cpp
-    Source/CornerTurningOctahedron.h
-    Source/Cuboid3x3x3.cpp
-    Source/Cuboid3x3x3.h
-    Source/Cuboid3x3x3Base.cpp
-    Source/Cuboid3x3x3Base.h
-    Source/CurvyCopter.cpp
-    Source/CurvyCopter.h
-    Source/CurvyCopter3.cpp
-    Source/CurvyCopter3.h
-    Source/CurvyCopterBase.cpp
-    Source/CurvyCopterBase.h
-    Source/Dogic.cpp
-    Source/Dogic.h
-    Source/DreidelCube.cpp
-    Source/DreidelCube.h
-    Source/FaceTurningOctahedron.cpp
-    Source/FaceTurningOctahedron.h
-    Source/FisherCube.cpp
-    Source/FisherCube.h
-    Source/FlowerBox.cpp
-    Source/FlowerBox.h
-    Source/FlowerCopter.cpp
-    Source/FlowerCopter.h
     Source/Frame.cpp
     Source/Frame.h
-    Source/GLRenderer.cpp
-    Source/GLRenderer.h
-    Source/Gem6.cpp
-    Source/Gem6.h
-    Source/Gem8.cpp
-    Source/Gem8.h
     Source/HtmlFrame.cpp
     Source/HtmlFrame.h
-    Source/IcosahedronSkewb.cpp
-    Source/IcosahedronSkewb.h
-    Source/LatchCube.cpp
-    Source/LatchCube.h
-    Source/MasterPyraminx.cpp
-    Source/MasterPyraminx.h
-    Source/Megaminx.cpp
-    Source/Megaminx.h
-    Source/MixupCube.cpp
-    Source/MixupCube.h
-    Source/PentacleCube.cpp
-    Source/PentacleCube.h
-    Source/Pyraminx.cpp
-    Source/Pyraminx.h
-    Source/PyraminxBase.cpp
-    Source/PyraminxBase.h
-    Source/Rubiks2x2x2.cpp
-    Source/Rubiks2x2x2.h
-    Source/Rubiks2x2x3.cpp
-    Source/Rubiks2x2x3.h
-    Source/Rubiks2x3x3.cpp
-    Source/Rubiks2x3x3.h
-    Source/Rubiks3x3x3.cpp
-    Source/Rubiks3x3x3.h
     Source/ShaderProgram.cpp
     Source/ShaderProgram.h
-    Source/Skewb.cpp
-    Source/Skewb.h
-    Source/Skewb2.cpp
-    Source/Skewb2.h
-    Source/SkewbDiamond.cpp
-    Source/SkewbDiamond.h
-    Source/SkewbUltimate.cpp
-    Source/SkewbUltimate.h
-    Source/SquareOne.cpp
-    Source/SquareOne.h
     Source/TwistyPuzzle.cpp
     Source/TwistyPuzzle.h
     Source/wxTimeKeeper.cpp
     Source/wxTimeKeeper.h
+    Source/GLRenderer.cpp
+    Source/GLRenderer.h
+    Source/Puzzles/Bagua.cpp
+    Source/Puzzles/Bagua.h
+    Source/Puzzles/BauhiniaDodecahedron.cpp
+    Source/Puzzles/BauhiniaDodecahedron.h
+    Source/Puzzles/Bubbloid3x3x3.cpp
+    Source/Puzzles/Bubbloid3x3x3.h
+    Source/Puzzles/Bubbloid4x4x5.cpp
+    Source/Puzzles/Bubbloid4x4x5.h
+    Source/Puzzles/CornerTurningOctahedron.cpp
+    Source/Puzzles/CornerTurningOctahedron.h
+    Source/Puzzles/Cuboid3x3x3.cpp
+    Source/Puzzles/Cuboid3x3x3.h
+    Source/Puzzles/Cuboid3x3x3Base.cpp
+    Source/Puzzles/Cuboid3x3x3Base.h
+    Source/Puzzles/CurvyCopter.cpp
+    Source/Puzzles/CurvyCopter.h
+    Source/Puzzles/CurvyCopter3.cpp
+    Source/Puzzles/CurvyCopter3.h
+    Source/Puzzles/CurvyCopterBase.cpp
+    Source/Puzzles/CurvyCopterBase.h
+    Source/Puzzles/Dogic.cpp
+    Source/Puzzles/Dogic.h
+    Source/Puzzles/DreidelCube.cpp
+    Source/Puzzles/DreidelCube.h
+    Source/Puzzles/FaceTurningOctahedron.cpp
+    Source/Puzzles/FaceTurningOctahedron.h
+    Source/Puzzles/FisherCube.cpp
+    Source/Puzzles/FisherCube.h
+    Source/Puzzles/FlowerBox.cpp
+    Source/Puzzles/FlowerBox.h
+    Source/Puzzles/FlowerCopter.cpp
+    Source/Puzzles/FlowerCopter.h
+    Source/Puzzles/Gem6.cpp
+    Source/Puzzles/Gem6.h
+    Source/Puzzles/Gem8.cpp
+    Source/Puzzles/Gem8.h
+    Source/Puzzles/IcosahedronSkewb.cpp
+    Source/Puzzles/IcosahedronSkewb.h
+    Source/Puzzles/LatchCube.cpp
+    Source/Puzzles/LatchCube.h
+    Source/Puzzles/MasterPyraminx.cpp
+    Source/Puzzles/MasterPyraminx.h
+    Source/Puzzles/Megaminx.cpp
+    Source/Puzzles/Megaminx.h
+    Source/Puzzles/MixupCube.cpp
+    Source/Puzzles/MixupCube.h
+    Source/Puzzles/PentacleCube.cpp
+    Source/Puzzles/PentacleCube.h
+    Source/Puzzles/Pyraminx.cpp
+    Source/Puzzles/Pyraminx.h
+    Source/Puzzles/PyraminxBase.cpp
+    Source/Puzzles/PyraminxBase.h
+    Source/Puzzles/Rubiks2x2x2.cpp
+    Source/Puzzles/Rubiks2x2x2.h
+    Source/Puzzles/Rubiks2x2x3.cpp
+    Source/Puzzles/Rubiks2x2x3.h
+    Source/Puzzles/Rubiks2x3x3.cpp
+    Source/Puzzles/Rubiks2x3x3.h
+    Source/Puzzles/Rubiks3x3x3.cpp
+    Source/Puzzles/Rubiks3x3x3.h
+    Source/Puzzles/Skewb.cpp
+    Source/Puzzles/Skewb.h
+    Source/Puzzles/Skewb2.cpp
+    Source/Puzzles/Skewb2.h
+    Source/Puzzles/SkewbDiamond.cpp
+    Source/Puzzles/SkewbDiamond.h
+    Source/Puzzles/SkewbUltimate.cpp
+    Source/Puzzles/SkewbUltimate.h
+    Source/Puzzles/SquareOne.cpp
+    Source/Puzzles/SquareOne.h
 )
 
 add_executable(TwistyPuzzle ${TWISTY_PUZZLE_SOURCES})
@@ -120,5 +120,7 @@ target_link_libraries(TwistyPuzzle PRIVATE
     FontSystem
     3DMathLibrary
 )
+
+target_include_directories(TwistyPuzzle PRIVATE Source)
 
 target_compile_definitions(TwistyPuzzle PRIVATE LINUX)
