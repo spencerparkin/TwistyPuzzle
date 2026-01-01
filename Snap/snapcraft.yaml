@@ -1,5 +1,5 @@
 name: twistypuzzle
-version: "1.0"
+version: "1.1"
 summary: A 3D simulator for a variety of twisty puzzles.
 description: Simulate and manipulate a variety of 3D twisty puzzles
   such as the Rubik's Cube, Square-One, Pryaminx, Megaminx, Gem 6,
@@ -16,17 +16,7 @@ apps:
 
 parts:
   twistypuzzle:
-    plugin: scons
+    plugin: cmake
     source: https://github.com/spencerparkin/TwistyPuzzle.git
     source-branch: stable-release
     after: [desktop-gtk3, fontsystem, 3dmath]
-
-  fontsystem:
-    plugin: scons
-    source: https://github.com/spencerparkin/FontSystem.git
-    source-branch: master
-
-  3dmath:
-    plugin: scons
-    source: https://github.com/spencerparkin/3DMath.git
-    source-branch: master

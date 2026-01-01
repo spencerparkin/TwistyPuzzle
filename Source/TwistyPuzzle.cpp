@@ -826,7 +826,7 @@ bool TwistyPuzzle::Save( const wxString& file ) const
 		return false;
 
 	Permutation invPermutation;
-	invPermutation.word = new ElementList;
+	invPermutation.word = std::make_unique<ElementList>();
 	if( !stabChain->group->FactorInverseWithTrembling( permutation, invPermutation, trembleSet, compressInfo ) )
 		return false;
 
