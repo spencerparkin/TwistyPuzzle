@@ -68,27 +68,30 @@ void Canvas::OnKeyDown( wxKeyEvent& event )
 
 void Canvas::OnMouseRightDown( wxMouseEvent& event )
 {
-	wxPoint mousePos = event.GetPosition();
-	selectedObjectHandle = 0;
-	Render( GL_SELECT, &mousePos, &selectedObjectHandle );
-	mouseDragMode = DRAG_MODE_ROTATE_FACES;
-	mouseDragLastPos = mousePos;
-	mouseDragClickPos = mousePos;
-	CaptureMouse();
-
-	TwistyPuzzle::CutShape* cutShape = dynamic_cast< TwistyPuzzle::CutShape* >( _3DMath::HandleObject::Dereference( selectedObjectHandle ) );
-	if( cutShape )
+	if( mouseDragMode == DRAG_MODE_NONE )
 	{
-		wxString text;
-		if( !cutShape->label.empty() )
-			text = "Selected rotation axis labeled: " + cutShape->label;
-		wxGetApp().GetFrame()->GetStatusBar()->SetStatusText( text );
-	}
+		wxPoint mousePos = event.GetPosition();
+		selectedObjectHandle = 0;
+		Render( GL_SELECT, &mousePos, &selectedObjectHandle );
+		mouseDragMode = DRAG_MODE_ROTATE_FACES;
+		mouseDragLastPos = mousePos;
+		mouseDragClickPos = mousePos;
+		CaptureMouse();
 
-	if( grip )
-	{
-		delete grip;
-		grip = nullptr;
+		TwistyPuzzle::CutShape* cutShape = dynamic_cast< TwistyPuzzle::CutShape* >( _3DMath::HandleObject::Dereference( selectedObjectHandle ) );
+		if( cutShape )
+		{
+			wxString text;
+			if( !cutShape->label.empty() )
+				text = "Selected rotation axis labeled: " + cutShape->label;
+			wxGetApp().GetFrame()->GetStatusBar()->SetStatusText( text );
+		}
+
+		if( grip )
+		{
+			delete grip;
+			grip = nullptr;
+		}
 	}
 }
 
@@ -127,9 +130,12 @@ void Canvas::OnMouseRightUp( wxMouseEvent& event )
 
 void Canvas::OnMouseLeftDown( wxMouseEvent& event )
 {
-	mouseDragMode = DRAG_MODE_ORIENT_PUZZLE;
-	mouseDragLastPos = event.GetPosition();
-	CaptureMouse();
+	if( mouseDragMode == DRAG_MODE_NONE )
+	{
+		mouseDragMode = DRAG_MODE_ORIENT_PUZZLE;
+		mouseDragLastPos = event.GetPosition();
+		CaptureMouse();
+	}
 }
 
 void Canvas::OnMouseLeftUp( wxMouseEvent& event )
@@ -141,9 +147,12 @@ void Canvas::OnMouseLeftUp( wxMouseEvent& event )
 
 void Canvas::OnMouseMiddleDown( wxMouseEvent& event )
 {
-	mouseDragMode = DRAG_MODE_ORIENT_PUZZLE;
-	mouseDragLastPos = event.GetPosition();
-	CaptureMouse();
+	if( mouseDragMode == DRAG_MODE_NONE )
+	{
+		mouseDragMode = DRAG_MODE_ORIENT_PUZZLE;
+		mouseDragLastPos = event.GetPosition();
+		CaptureMouse();
+	}
 }
 
 void Canvas::OnMouseMiddleUp( wxMouseEvent& event )

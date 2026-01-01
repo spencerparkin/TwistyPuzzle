@@ -3,7 +3,7 @@
 #include "Application.h"
 #include "Frame.h"
 #include "TwistyPuzzle.h"
-#include "Rubiks3x3x3.h"
+#include "Puzzles/Rubiks3x3x3.h"
 
 wxIMPLEMENT_APP( Application );
 
@@ -45,12 +45,12 @@ void Application::SetPuzzle( TwistyPuzzle* puzzle )
 
 wxString Application::ResolveRelativeResourcePath( const wxString& relPath )
 {
-	wxString fullPath = relPath;
+	wxString fullPath = wxGetCwd() + "/" + relPath;
 
 #if defined LINUX
 	wxString snapDir;
 	if( wxGetEnv( "SNAP", &snapDir ) )
-		fullPath = snapDir + "/share/TwistyPuzzle/" + fullPath;
+		fullPath = snapDir + "/share/TwistyPuzzle/" + relPath;
 #endif
 
 	return fullPath;

@@ -1,0 +1,122 @@
+<html>
+	<head>
+		<title>Katsuhiko Okamoto's Latch Cube</title>
+	</head>
+	<body>
+		<h1>Katsuhiko Okamoto's Latch Cube</h1>
+		<p>
+		I've had this puzzle for several weeks now and I've only been able to solve it twice!
+		It's difficulty and need for being very methodical at every step, make it a great puzzle!
+		</p>
+		<p>
+		I have a strategy that works with some effort, but it requires some trial and error, and
+		so I must confess that there is probably much I still don't see in the puzzle.  I can
+		get it solved with enough effort, though, but not without feeling like I have to grope through
+		the dark and bump into a few dead-ends before finally reaching the objective.
+		In contrast, when solving the regular Rubik's Cube, you always know, from any given
+		state, how to get it into a new state that is closer to the solved state.  With the
+		Latch Cube, some sequences can't always be applied in full, and you cannot always
+		detect this before trying the sequence, so sometimes you have to abort (i.e., back
+		the partial sequence out.)  Also, while I'm not sure if it is always necessary, sometimes
+		only lateral moves can be made in the sense that, from the Rubik's Cube perspective,
+		you're not getting the cube closer to the solved state, but possibly doing a move
+		that's needed to get you into a position where you finally can move it closer.
+		</p>
+		<p>
+		So here's my strategy...
+		</p>
+		<h2>Step 1: Ignore the corners, and solve the edges first.</h2>
+		<p>
+		With some intuitive moves, you can get something like the white cross, but for the
+		most part, stick with the simplest kind of edge permutation sequence: a commutator
+		of two adjacent faces.  This tri-cycles 3 edges that surround a corner, or that
+		form a line between 2 corners.  You can prevent a need to abort the sequence by
+		first checking that both involved faces are unlocked (can turn), and that the arrows, if any,
+		on the sides of the edges that are not on one of the two involved faces agree with the unlocked direction
+		of the appropriate one of those two faces it will land on during the course of the sequence.
+		That's a mouth-full, but with practice, identifying when the full commutator will go entirely through or not
+		becomes an easy and routine check.  Interestingly, even if the commutator goes through once, it will
+		not necessarily go through a second time, but this is less likely if all edges are
+		already solved in terms of position and orientation.  (That is, after this first step,
+		it is more likely that any commutator can be repeated indefinitely, if it can be done at all.)
+		</p>
+		<p>
+		While positioning edges, try to get them oriented correctly at the same time.
+		For the said commutator, memorize what orientation the edge cubies land in as they
+		permute.  This will help you to get them to land in the correct position and orientation.
+		</p>
+		<p>
+		The end-game of solving the edges is the crux of the entire puzzle, in my opinion.  You can
+		sometimes get everything positioned properly, but then have an even number of edges
+		misoriented.  Looking at a corner of the cube, and labeling the faces X,Y,Z as you
+		would a standard right-handed system, I found the following sequence helpful.
+		</p>
+		<p>
+		<center><code>Q = Xi,Z,X,Zi,rot(2pi/3),Z,Xi,Zi,X,rot(-2pi/3)</code></center>
+		</p>
+		<p>
+		Here, <code>rot(...)</code> means to rotate the entire puzzle on the axis of the corner
+		you're looking at by the given angle in radians.
+		Following convention, X is a clock-wise rotation while Xi is counter-clockwise, as
+		can be said for Y and Z.  Of course, replace Xi with 3X, if needed, or X with 3Xi.
+		To keep yourself from getting confused about the need to do this replacement, memorize
+		which cubie needs to move and where-to during the execution of the commutator instead of
+		memorizing which face needs to move and in which direction during the execution.
+		</p>
+		<p>
+		The net effect of the sequence Q, (if it will go through), is to simply flip the
+		two edges on the north side of the X and Z faces.
+		</p>
+		<p>
+		Note that setup moves can be used to get this step done in the way that such moves
+		are traditionally useful in solving the regular 3x3x3; however, on the Latch Cube, they
+		can also be used to temporarily unlock a needed face.  I have found this to be extremely
+		useful on many occations.  Keep this in your bag of tricks for Steps 2 and 3 also.
+		</p>
+		<p>
+		I've also observed that sometimes you can use a setup move mid-sequence.  That is, if
+		you start a sequence that can't be finished, you may still be able to finish it by
+		performing a setup move that unlocks the blocked face, finish the sequence (or a certain
+		part of it), then undo the setup move.  Sometimes, some elaborate combination of setup moves can be
+		interwoven with your sequence, but you have to be careful to remember them well so
+		that you can undo them in the right order and in the appropriate places.
+		</p>
+		<h2>Step 2: Position the corners.</h2>
+		<p>
+		If R denotes any commutator between 2 adjacent faces, then 3R will preserve Step 1
+		while permuting corners; specifically, it performs a pair of corner swaps.  With some
+		trial and error, and setup moves, I believe you can always get all the corners positioned this way.
+		</p>
+		<h2>Step 3: Orient the corners.</h2>
+		<p>
+		Finally, to orient the corners, I found 2Q to be a helpful sequence.  This will do
+		two pairs of edge twisting, rotating 4 corners total.  The end-game, however, will
+		sometimes come down to a need to twist just two corners.  To do this, take 2R in
+		an appropriate commutator of a single face as is conventional to rotate just 2 corners
+		of the regular 3x3x3.  Sometimes, however, you're blocked by locked faces, and must
+		finish the sequence by rotating an unintended corner.  Eventually, however, you should
+		be able to get that last pair of corners done.
+		</p>
+		<h2>Concluding Thoughts</h2>
+		<p>
+		Such a great puzzle!  I really thought I would never get it solved, but I perservered
+		and refused to look at any help.  The more time I spent with the puzzle, the more tricks
+		I seemed to find to get things where and how I wanted them.
+		</p>
+		<p>
+		There are some obvious variations that could be made on the idea of this puzzle.
+		For example, we could put arrows on some of the corner cubie faces instead of the
+		edge cubie faces.  In that case, solving corners first would probably be the best
+		strategy.  And then dare I say, we might put arrows on some edges and some corners!
+		</p>
+		<p>
+		There are other bandaging puzzles (e.g., just put tape on a regular 3x3x3), but the
+		bandaging on the Latch Cube has a much more complicated quality to it that I can't quite
+		put my finger on.  In any case, it falls under a category of puzzles that can't be
+		modeled in group theory using a permutation group.  Instead, something called a groupoid
+		must be used, I believe.  Solving the group factorization problem is straight-forward
+		given a word stabilizer chain of the group, but I'm not at all certain if there exists
+		something like that for a groupoid.
+		</p>
+	</body>
+</html>

@@ -34,6 +34,24 @@ SquareOne::SquareOne( void )
 	wedgeArray = nullptr;
 }
 
+/*virtual*/ bool SquareOne::LoadFromXml( const wxXmlDocument& xmlDocument )
+{
+	if( !TwistyPuzzle::LoadFromXml( xmlDocument ) )
+		return false;
+
+	// TODO: Load wedge data.
+	return true;
+}
+
+/*virtual*/ bool SquareOne::SaveToXml( wxXmlDocument& xmlDocument ) const
+{
+	if( !TwistyPuzzle::SaveToXml( xmlDocument ) )
+		return false;
+
+	// TODO: Save wedge data.
+	return true;
+}
+
 /*virtual*/ void SquareOne::Reset( void )
 {
 	Clear();

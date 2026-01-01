@@ -51,4 +51,4 @@ config.log
 .sconf_temp/
 TwistyPuzzle
 *.swp
-.vscode/
+build/

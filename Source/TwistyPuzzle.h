@@ -90,6 +90,7 @@ public:
 	virtual bool ApplyCutShapeWithRotation( CutShape* cutShape, const Rotation* rotation );
 	virtual bool ApplyRotationToPermutation( CutShape* cutShape, const Rotation* rotation );
 	virtual double GetCutAndCaptureEpsilon( void ) { return EPSILON; }
+	virtual void ApplyingTransformWithRotation( const _3DMath::AffineTransform& transform, const Rotation* rotation ) {}
 
 	void EnqueueRotation( Rotation* rotation );
 	void EnqueueRotationList( RotationList& rotationList );

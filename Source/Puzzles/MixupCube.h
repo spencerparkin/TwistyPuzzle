@@ -15,6 +15,8 @@ public:
 	virtual ~MixupCube( void );
 
 	virtual void Reset( void ) override;
+	virtual bool SupportsSolve( void ) const override { return true; }
+	virtual wxString LocateStabChainFile( void ) const override;
 };
 
 // MixupCube.h
