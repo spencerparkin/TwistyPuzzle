@@ -1,5 +1,9 @@
 name: twistypuzzle
+<<<<<<< HEAD
 version: "2.0"
+=======
+version: "1.1"
+>>>>>>> master
 summary: A 3D simulator for a variety of twisty puzzles.
 description: Simulate and manipulate a variety of 3D twisty puzzles
   such as Rubik's Cube, Square-One, Pryaminx, Megaminx, Gem 6,
@@ -19,6 +23,7 @@ parts:
     plugin: cmake
     source: https://github.com/spencerparkin/TwistyPuzzle.git
     source-branch: stable-release
+<<<<<<< HEAD
     prime:
       - usr/lib/x86_64-linux-gnu/libmirclient.so.9
       - usr/lib/x86_64-linux-gnu/libmircommon.so.5
@@ -31,6 +36,15 @@ parts:
       - 3dmath
       - permutationgroup
       - rapidjson
+
+  fontsystem:
+    plugin: scons
+    source: https://github.com/spencerparkin/FontSystem.git
+    source-branch: master
+
+  3dmath:
+    plugin: scons
+    source: https://github.com/spencerparkin/3DMath.git
     source-branch: master
 
   permutationgroup:
@@ -41,3 +55,7 @@ parts:
   rapidjson:
     plugin: dump 
     source: https://github.com/miloyip/rapidjson.git
+    source-branch: master
+=======
+    after: [desktop-gtk3, fontsystem, 3dmath]
+>>>>>>> master
