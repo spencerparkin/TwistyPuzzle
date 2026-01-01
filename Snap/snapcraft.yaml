@@ -18,7 +18,7 @@ parts:
   twistypuzzle:
     plugin: cmake
     source: https://github.com/spencerparkin/TwistyPuzzle.git
-    source-branch: stable-release
+    source-branch: master
     prime:
       - usr/lib/x86_64-linux-gnu/libmirclient.so.9
       - usr/lib/x86_64-linux-gnu/libmircommon.so.5
@@ -27,17 +27,3 @@ parts:
       - share/TwistyPuzzle/Data/*
     after:
       - desktop-gtk3
-      - fontsystem
-      - 3dmath
-      - permutationgroup
-      - rapidjson
-    source-branch: master
-
-  permutationgroup:
-    plugin: scons
-    source: https://github.com/spencerparkin/PermutationGroup.git
-    source-branch: master
-
-  rapidjson:
-    plugin: dump 
-    source: https://github.com/miloyip/rapidjson.git
